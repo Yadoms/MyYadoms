@@ -9,7 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.yadoms.yadroid.dummy.DummyContent
+import com.yadoms.yadroid.dummy.WidgetTypesContent
 
 /**
  * A fragment representing a list of Items.
@@ -47,7 +47,7 @@ class WidgetTypeFragment : Fragment() {
                         }
                     }
 
-                adapter = MyWidgetTypeRecyclerViewAdapter(DummyContent.ITEMS, onItemClickListener)
+                adapter = MyWidgetTypeRecyclerViewAdapter(WidgetTypesContent.WIDGET_TYPES, onItemClickListener)
             }
         }
         return view
