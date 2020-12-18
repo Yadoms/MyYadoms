@@ -1,4 +1,4 @@
-package com.yadoms.yadroid.dummy
+package com.yadoms.yadroid
 
 import java.util.*
 

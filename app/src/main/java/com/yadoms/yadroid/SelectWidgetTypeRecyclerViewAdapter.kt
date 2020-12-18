@@ -7,20 +7,21 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView.NO_POSITION
 
-import com.yadoms.yadroid.dummy.WidgetTypesContent.WidgetTypeItem
+import com.yadoms.yadroid.WidgetTypesContent.WidgetTypeItem
 
 /**
  * [RecyclerView.Adapter] that can display a [WidgetTypeItem].
  * TODO: Replace the implementation with code for your data type.
  */
-class MyWidgetTypeRecyclerViewAdapter(
+class SelectWidgetTypeRecyclerViewAdapter(
     private val values: List<WidgetTypeItem>,
     private val listener: OnItemClickListener
-) : RecyclerView.Adapter<MyWidgetTypeRecyclerViewAdapter.ViewHolder>() {
+) : RecyclerView.Adapter<SelectWidgetTypeRecyclerViewAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.fragment_item, parent, false)
+            .inflate(R.layout.select_widget_fragment_item, parent, false)
+
         return ViewHolder(view)
     }
 

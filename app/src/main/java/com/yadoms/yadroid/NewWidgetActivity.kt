@@ -21,5 +21,7 @@ class NewWidgetActivity : AppCompatActivity() {
         val navController = navHostFragment.navController
 
         setContentView(view)
+
+        supportActionBar?.title = "Add new widget"
     }
 }

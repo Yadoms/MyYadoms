@@ -6,15 +6,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.yadoms.yadroid.dummy.WidgetTypesContent
 
 /**
  * A fragment representing a list of Items.
  */
-class WidgetTypeFragment : Fragment() {
+class SelectDeviceFragment : Fragment() {
 
     private var columnCount = 1
 
@@ -30,7 +30,7 @@ class WidgetTypeFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_item_list, container, false)
+        val view = inflater.inflate(R.layout.fragment_select_device, container, false)
 
         // Set the adapter
         if (view is RecyclerView) {
@@ -41,15 +41,17 @@ class WidgetTypeFragment : Fragment() {
                 }
 
                 val onItemClickListener =
-                    object : MyWidgetTypeRecyclerViewAdapter.OnItemClickListener {
+                    object : SelectDeviceRecyclerViewAdapter.OnItemClickListener {
                         override fun onItemClick(position: Int) {
-                            Log.d("tag", "Position = $position")
+                            Log.d(SelectDeviceFragment::class.simpleName, "Position = $position")
+                            findNavController().navigate(SelectDeviceFragmentDirections.actionDeviceFragmentToKeywordFragment())
                         }
                     }
 
-                adapter = MyWidgetTypeRecyclerViewAdapter(WidgetTypesContent.WIDGET_TYPES, onItemClickListener)
+                adapter = SelectDeviceRecyclerViewAdapter(DevicesContent.DEVICES, onItemClickListener)
             }
         }
+
         return view
     }
 
@@ -61,7 +63,7 @@ class WidgetTypeFragment : Fragment() {
         // TODO: Customize parameter initialization
         @JvmStatic
         fun newInstance(columnCount: Int) =
-            WidgetTypeFragment().apply {
+            SelectDeviceFragment().apply {
                 arguments = Bundle().apply {
                     putInt(ARG_COLUMN_COUNT, columnCount)
                 }
