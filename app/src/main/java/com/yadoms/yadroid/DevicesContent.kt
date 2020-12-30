@@ -2,9 +2,6 @@ package com.yadoms.yadroid
 
 import android.util.Log
 import com.yadoms.yadroid.client.Client
-import io.ktor.client.*
-import io.ktor.client.request.*
-import kotlinx.coroutines.runBlocking
 import java.util.*
 
 
@@ -16,19 +13,11 @@ object DevicesContent {
     val DEVICES: MutableList<DeviceItem> = ArrayList()
 
     init {
-        testKtor()
-        Client ("https://fr.wikipedia.org/wiki", "", "").get("/Valence#France")
+        Client("http://10.0.2.2:8080/rest", "", "").get("/device", null) {
+            Log.d("testValence", it)
+        }
         addItem(DeviceItem("Device 1", 1))
         addItem(DeviceItem("Device 2", 2))
-    }
-
-    private fun testKtor() {
-        runBlocking {
-            val client = HttpClient()
-            val htmlContent = client.get<String>("https://en.wikipedia.org/wiki/Main_Page")
-            Log.d("testKtor", htmlContent)
-        }
-
     }
 
     private fun addItem(item: DeviceItem) = DEVICES.add(item)
