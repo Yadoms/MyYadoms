@@ -5,11 +5,14 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.yadoms.yadroid.yadomsApi.YadomsApi
+import kotlinx.coroutines.*
 
 /**
  * A fragment representing a list of Items.
@@ -48,7 +51,19 @@ class SelectDeviceFragment : Fragment() {
                         }
                     }
 
-                adapter = SelectDeviceRecyclerViewAdapter(DevicesContent.DEVICES, onItemClickListener)
+                val waitFor = CoroutineScope(Dispatchers.IO).async {
+                    val yadomsApi = YadomsApi("http://10.0.2.2:8080/rest", "", "")
+                    yadomsApi.getDeviceMatchKeywordCriteria(
+                        arrayOf("switch"),
+                        onOk = {
+                            adapter = SelectDeviceRecyclerViewAdapter(Devices.list, onItemClickListener)
+                        },
+                        onError = {
+                            Toast.makeText(this@SelectDeviceFragment.activity, "Unable to reach the server", Toast.LENGTH_SHORT)
+                                .show()
+                        })
+                }
+                adapter = SelectDeviceRecyclerViewAdapter(Devices.list, onItemClickListener)
             }
         }
 

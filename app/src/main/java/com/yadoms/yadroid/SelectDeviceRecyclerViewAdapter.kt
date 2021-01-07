@@ -8,7 +8,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView.NO_POSITION
 
 class SelectDeviceRecyclerViewAdapter(
-    private val values: List<DevicesContent.DeviceItem>,
+    private val values: List<Devices.Item>,
     private val listener: OnItemClickListener
 ) : RecyclerView.Adapter<SelectDeviceRecyclerViewAdapter.ViewHolder>() {
 
