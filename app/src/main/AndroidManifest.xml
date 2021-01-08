@@ -12,7 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Yadroid"
         android:usesCleartextTraffic="true">
-        <activity android:name=".NewWidgetActivity"></activity>
+        <activity android:name=".NewWidgetActivity" />
         <activity
             android:name=".ScrollingActivity"
             android:label="@string/app_name"

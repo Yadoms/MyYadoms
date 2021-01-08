@@ -11,13 +11,8 @@ import androidx.navigation.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.android.volley.Request
-import com.android.volley.Response
-import com.android.volley.VolleyLog
-import com.android.volley.toolbox.StringRequest
-import com.android.volley.toolbox.Volley
 import com.yadoms.yadroid.yadomsApi.YadomsApi
-import kotlinx.coroutines.*
+import java.util.*
 
 /**
  * A fragment representing a list of Items.
@@ -56,34 +51,30 @@ class SelectDeviceFragment : Fragment() {
                         }
                     }
 
-                val queue = Volley.newRequestQueue(activity)
-                VolleyLog.DEBUG = true
-                val url = "http://10.0.2.2:8080/rest/device"
-                val stringRequest = StringRequest(
-                    Request.Method.GET, url,
-                    Response.Listener<String> { response ->
-                        // Display the first 500 characters of the response string.
-                        Toast.makeText(activity, "OK", Toast.LENGTH_SHORT).show()
-                    },
-                    Response.ErrorListener {
-                        Toast.makeText(activity, "Unable to reach the server", Toast.LENGTH_SHORT).show()
-                    })
-                queue.add(stringRequest)
+                val list: MutableList<Devices.Item> = ArrayList()
 
-//                val waitFor = CoroutineScope(Dispatchers.IO).launch {
-//                    val yadomsApi = YadomsApi("http://10.0.2.2:8080/rest", "", "")
-//                    yadomsApi.getDeviceMatchKeywordCriteria(
-//                        arrayOf("switch"),
-//                        onOk = {
-//                            adapter = SelectDeviceRecyclerViewAdapter(Devices.list, onItemClickListener)
-//                        },
-//                        onError = {
-//                            CoroutineScope(Dispatchers.Main).launch {
-//                            Toast.makeText(activity, "Unable to reach the server", Toast.LENGTH_SHORT)
-//                                .show()}
-//                        })
-//                }
-                adapter = SelectDeviceRecyclerViewAdapter(Devices.list, onItemClickListener)
+                val yadomsApi = YadomsApi("http://10.0.2.2:8080/rest", "", "")
+                yadomsApi.getDeviceMatchKeywordCriteria(
+                    activity,
+                    expectedCapacity = arrayOf("switch"),
+                    onOk = {
+                        it.forEach { device ->
+                            list.add(
+                                Devices.Item(
+                                    device.friendlyName,
+                                    device.id
+                                )
+                            )
+                        }
+
+                        adapter?.notifyDataSetChanged();
+                    },
+                    onError = {
+                        Toast.makeText(activity, "Unable to reach the server", Toast.LENGTH_SHORT)
+                            .show()
+                    })
+
+                adapter = SelectDeviceRecyclerViewAdapter(list, onItemClickListener)
             }
         }
 

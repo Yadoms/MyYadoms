@@ -1,88 +1,111 @@
 package com.yadoms.yadroid.yadomsApi
 
+import android.content.Context
 import android.util.Log
+import com.android.volley.AuthFailureError
+import com.android.volley.toolbox.StringRequest
+import com.android.volley.toolbox.Volley
 import com.beust.klaxon.Klaxon
-import io.ktor.client.*
-import io.ktor.client.features.*
-import io.ktor.client.request.*
-import io.ktor.client.statement.*
-import kotlinx.coroutines.runBlocking
+import com.beust.klaxon.KlaxonException
+import org.json.JSONArray
+import org.json.JSONObject
+import java.io.StringReader
+import java.lang.Exception
+
 
 class YadomsApi(
     val baseUrl: String,
     val basicAuthentUser: String,
     val basicAuthentPassword: String
 ) {
-    private val client = HttpClient {
-        expectSuccess = false
-        install(HttpTimeout) {
-            requestTimeoutMillis = 2000 //TODO mettre à 5000
-        }
-//TODO remettre
-//        Auth { basic {
-//            username = basicAuthentUser
-//            password = basicAuthentPassword
-//            sendWithoutRequest = true //TODO utile ?
-//        } }
-//        Logging(logger = Logger.DEFAULT, level = LogLevel.ALL)
-    }
+    private val _logTag = javaClass.canonicalName
 
     private fun get(
         url: String,
         params: String? = null,
         onOk: (String) -> Unit
     ) {
-        runBlocking {
-            try {
-                val out = client.get<String>(baseUrl + url)
-                onOk(out)
-            } catch (exception: HttpRequestTimeoutException) {
-                Log.w("yadomsApi", "Timeout")
-
-            }
-        }
+        TODO()
     }
 
-    private fun post( //TODO passer à Volley ?
+    private fun post(
+        context: Context?,
         url: String,
         params: String? = null,
         body: String,
         onOk: (String) -> Unit,
-        onError: () -> Unit
+        onError: (String?) -> Unit
     ) {
-        runBlocking {
-            try {
-                val out = client.post<HttpResponse>(baseUrl + url, body = body)
-                onOk(out.toString())
-            } catch (exception:Throwable) {
-                onError()
+        val queue = Volley.newRequestQueue(context)
+
+        val stringRequest = object : StringRequest(
+            Method.POST,
+            baseUrl + url,
+            {
+                onOk(it)
+            },
+            {
+                onError(it.message)
+            }) {
+            override fun getBodyContentType(): String {
+                return "application/json"
+            }
+
+            @Throws(AuthFailureError::class)
+            override fun getBody(): ByteArray {
+                return body.toByteArray()
             }
         }
+
+        queue.add(stringRequest)
     }
 
+    data class Device(val id: Int, val pluginId: Int, val name: String, val friendlyName: String)
+
     fun getDeviceMatchKeywordCriteria(
+        context: Context?,
         expectedKeywordType: Array<String>? = null,
         expectedCapacity: Array<String>? = null,
         expectedKeywordAccess: Array<String>? = null,
-        onOk: (String) -> Unit,
-        onError: () -> Unit,
+        onOk: (Array<Device>) -> Unit,
+        onError: (String?) -> Unit,
     ) {
-        data class Body(
-            val expectedKeywordType: Array<String>? = null,
-            val expectedCapacity: Array<String>? = null,
-            val expectedKeywordAccess: Array<String>? = null
-        )
-
-        val body = Klaxon().toJsonString(Body(expectedKeywordType, expectedCapacity, expectedKeywordAccess))
-
+        val body = JSONObject()
+        if (expectedKeywordType != null)
+            body.put("expectedKeywordType", JSONArray(expectedKeywordType))
+        if (expectedCapacity != null)
+            body.put("expectedCapacity", JSONArray(expectedCapacity))
+        if (expectedKeywordAccess != null)
+            body.put("expectedKeywordAccess", JSONArray(expectedKeywordAccess))
 
         post(
+            context,
             url = "/device/matchkeywordcriteria",
-            body = body,
-            onOk = {onOk(it)},
-            onError = {onError()}
+            body = body.toString(),
+            onOk = {
+                try {
+                    val klaxon = Klaxon()
+                    val json = klaxon.parseJsonObject(StringReader(it))
+
+                    if (json.boolean("result") != true)
+                        onError(json.string("message"))
+                    else {
+                        val devicesNodes = json.obj("data")?.array<Any>("devices")
+                        val devices = devicesNodes?.let { deviceNode ->
+                            klaxon.parseFromJsonArray<Device>(deviceNode)
+                        }
+
+                        onOk(devices?.toTypedArray() ?: arrayOf())
+                    }
+                }
+                catch (e: KlaxonException)
+                {
+                    Log.e(_logTag, "Unable to parse JSON answer ($e) :")
+                    Log.e(_logTag, it)
+                    onError(null)
+                }
+            },
+            onError = { onError(it) }
         )
-
-
     }
 }
