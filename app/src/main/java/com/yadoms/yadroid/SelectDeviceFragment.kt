@@ -11,6 +11,7 @@ import androidx.navigation.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.yadoms.yadroid.yadomsApi.DeviceApi
 import com.yadoms.yadroid.yadomsApi.YadomsApi
 import java.util.*
 
@@ -51,21 +52,14 @@ class SelectDeviceFragment : Fragment() {
                         }
                     }
 
-                val list: MutableList<Devices.Item> = ArrayList()
+                val list: MutableList<DeviceApi.Device> = ArrayList()
 
-                val yadomsApi = YadomsApi("http://10.0.2.2:8080/rest", "", "")
-                yadomsApi.getDeviceMatchKeywordCriteria(
+                val yApi = YadomsApi("http://10.0.2.2:8080/rest", "", "")
+                DeviceApi(yApi).getDeviceMatchKeywordCriteria(
                     activity,
                     expectedCapacity = arrayOf("switch"),
                     onOk = {
-                        it.forEach { device ->
-                            list.add(
-                                Devices.Item(
-                                    device.friendlyName,
-                                    device.id
-                                )
-                            )
-                        }
+                        it.forEach { device -> list.add(device) }
 
                         adapter?.notifyDataSetChanged();
                     },

@@ -10,7 +10,6 @@ import com.beust.klaxon.KlaxonException
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.StringReader
-import java.lang.Exception
 
 
 class YadomsApi(
@@ -28,7 +27,7 @@ class YadomsApi(
         TODO()
     }
 
-    private fun post(
+    fun post(
         context: Context?,
         url: String,
         params: String? = null,
@@ -58,54 +57,5 @@ class YadomsApi(
         }
 
         queue.add(stringRequest)
-    }
-
-    data class Device(val id: Int, val pluginId: Int, val name: String, val friendlyName: String)
-
-    fun getDeviceMatchKeywordCriteria(
-        context: Context?,
-        expectedKeywordType: Array<String>? = null,
-        expectedCapacity: Array<String>? = null,
-        expectedKeywordAccess: Array<String>? = null,
-        onOk: (Array<Device>) -> Unit,
-        onError: (String?) -> Unit,
-    ) {
-        val body = JSONObject()
-        if (expectedKeywordType != null)
-            body.put("expectedKeywordType", JSONArray(expectedKeywordType))
-        if (expectedCapacity != null)
-            body.put("expectedCapacity", JSONArray(expectedCapacity))
-        if (expectedKeywordAccess != null)
-            body.put("expectedKeywordAccess", JSONArray(expectedKeywordAccess))
-
-        post(
-            context,
-            url = "/device/matchkeywordcriteria",
-            body = body.toString(),
-            onOk = {
-                try {
-                    val klaxon = Klaxon()
-                    val json = klaxon.parseJsonObject(StringReader(it))
-
-                    if (json.boolean("result") != true)
-                        onError(json.string("message"))
-                    else {
-                        val devicesNodes = json.obj("data")?.array<Any>("devices")
-                        val devices = devicesNodes?.let { deviceNode ->
-                            klaxon.parseFromJsonArray<Device>(deviceNode)
-                        }
-
-                        onOk(devices?.toTypedArray() ?: arrayOf())
-                    }
-                }
-                catch (e: KlaxonException)
-                {
-                    Log.e(_logTag, "Unable to parse JSON answer ($e) :")
-                    Log.e(_logTag, it)
-                    onError(null)
-                }
-            },
-            onError = { onError(it) }
-        )
     }
 }
