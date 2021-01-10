@@ -1,0 +1,27 @@
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory app:title="@string/preferences_server_connection">
+
+        <EditTextPreference
+            app:key="server_url"
+            app:title="@string/preference_server_url"
+            app:useSimpleSummaryProvider="true"
+            android:singleLine="true"/>
+
+        <EditTextPreference
+            app:key="server_port"
+            app:title="@string/preference_server_port"
+            android:inputType="number"
+            android:singleLine="true"
+            app:defaultValue="8080"
+            app:useSimpleSummaryProvider="true" />
+
+        <SwitchPreferenceCompat
+            app:key="server_basic_authentication"
+            app:title="@string/preference_server_use_basic_authentication"
+            app:defaultValue="false"/>
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

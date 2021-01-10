@@ -1,23 +1,24 @@
 package com.yadoms.yadroid.yadomsApi
 
 import android.content.Context
-import android.util.Log
+import android.content.SharedPreferences
+import androidx.preference.PreferenceManager
 import com.android.volley.AuthFailureError
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
-import com.beust.klaxon.Klaxon
-import com.beust.klaxon.KlaxonException
-import org.json.JSONArray
-import org.json.JSONObject
-import java.io.StringReader
 
 
 class YadomsApi(
-    val baseUrl: String,
-    val basicAuthentUser: String,
-    val basicAuthentPassword: String
+    private val appPreferences: SharedPreferences,
 ) {
     private val _logTag = javaClass.canonicalName
+    private val baseUrl:String
+
+    init {
+        val url = appPreferences.getString("server_url", "")
+        val port = appPreferences.getString("server_port", "8080")
+        baseUrl = "http://$url:$port/rest"
+    }
 
     private fun get(
         url: String,

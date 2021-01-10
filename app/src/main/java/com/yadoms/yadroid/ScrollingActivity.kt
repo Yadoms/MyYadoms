@@ -6,6 +6,7 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import com.yadoms.yadroid.databinding.ActivityScrollingBinding
+import com.yadoms.yadroid.preferences.SettingsActivity
 
 class ScrollingActivity : AppCompatActivity() {
 
@@ -40,7 +41,11 @@ class ScrollingActivity : AppCompatActivity() {
         // as you specify a parent activity in AndroidManifest.xml.
 
         return when (item.itemId) {
-            R.id.action_settings -> true
+            R.id.action_settings -> {
+                val intent = Intent(this@ScrollingActivity, SettingsActivity::class.java)
+                startActivity(intent)
+                true
+            }
             else -> super.onOptionsItemSelected(item)
         }
     }

@@ -12,6 +12,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Yadroid"
         android:usesCleartextTraffic="true">
+        <activity
+            android:name=".preferences.SettingsActivity"
+            android:label="@string/title_activity_settings" />
         <activity android:name=".NewWidgetActivity" />
         <activity
             android:name=".ScrollingActivity"

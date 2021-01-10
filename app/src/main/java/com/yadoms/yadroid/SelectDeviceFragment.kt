@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
+import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -54,7 +55,7 @@ class SelectDeviceFragment : Fragment() {
 
                 val list: MutableList<DeviceApi.Device> = ArrayList()
 
-                val yApi = YadomsApi("http://10.0.2.2:8080/rest", "", "")
+                val yApi = YadomsApi(PreferenceManager.getDefaultSharedPreferences(activity))
                 DeviceApi(yApi).getDeviceMatchKeywordCriteria(
                     activity,
                     expectedCapacity = arrayOf("switch"),
@@ -64,8 +65,10 @@ class SelectDeviceFragment : Fragment() {
                         adapter?.notifyDataSetChanged();
                     },
                     onError = {
-                        Toast.makeText(activity, "Unable to reach the server", Toast.LENGTH_SHORT)
-                            .show()
+                        if (activity != null)
+                            Toast.makeText(
+                                activity, "Unable to reach the server", Toast.LENGTH_SHORT
+                            ).show()
                     })
 
                 adapter = SelectDeviceRecyclerViewAdapter(list, onItemClickListener)
