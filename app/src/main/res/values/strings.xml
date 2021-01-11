@@ -11,4 +11,8 @@
     <string name="preference_server_url">Server URL</string>
     <string name="preference_server_port">Server port</string>
     <string name="preference_server_use_basic_authentication">Use basic authentication</string>
+    <string name="preference_server_basic_authentication_username">User name</string>
+    <string name="preference_server_basic_authentication_password">Password</string>
+    <string name="preference_server_use_https">Use HTTPS</string>
+    <string name="preference_server_https_port">Server HTTPS port</string>
 </resources>

@@ -38,23 +38,28 @@ class DeviceApi(private val yApi: YadomsApi) {
                     val klaxon = Klaxon()
                     val json = klaxon.parseJsonObject(StringReader(it))
 
-                    if (json.boolean("result") != true)
+                    if (json.boolean("result") != true) {
+                        Log.e(_logTag, "Server returns error (${json.string("message")}) :")//TODO gérer les erreurs dans la fonction post
                         onError(json.string("message"))
+                    }
                     else {
                         val devicesNodes = json.obj("data")?.array<Any>("devices")
                         val devices = devicesNodes?.let { deviceNode ->
                             klaxon.parseFromJsonArray<Device>(deviceNode)
                         }
 
-                        onOk(devices?: listOf())
+                        onOk(devices ?: listOf())
                     }
                 } catch (e: KlaxonException) {
-                    Log.e(_logTag, "Unable to parse JSON answer ($e) :")
+                    Log.e(_logTag, "Unable to parse JSON answer ($e) :")//TODO gérer les erreurs dans la fonction post
                     Log.e(_logTag, it)
                     onError(null)
                 }
             },
-            onError = { onError(it) }
+            onError = {
+                Log.e(_logTag, "Error sending request ($it) :")//TODO gérer les erreurs dans la fonction post
+                onError(it)
+            }
         )
     }
 }

@@ -2,22 +2,24 @@ package com.yadoms.yadroid.yadomsApi
 
 import android.content.Context
 import android.content.SharedPreferences
-import androidx.preference.PreferenceManager
+import android.util.Base64
 import com.android.volley.AuthFailureError
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 
 
-class YadomsApi(
-    private val appPreferences: SharedPreferences,
-) {
-    private val _logTag = javaClass.canonicalName
-    private val baseUrl:String
+class YadomsApi(private val appPreferences: SharedPreferences) {
+    private val baseUrl: String
 
     init {
         val url = appPreferences.getString("server_url", "")
-        val port = appPreferences.getString("server_port", "8080")
-        baseUrl = "http://$url:$port/rest"
+        val useHttps = appPreferences.getBoolean("server_use_https", false)
+        val protocol = if (useHttps) "https" else "http"
+        val port = if (useHttps) appPreferences.getString(
+            "server_https_port",
+            "443"
+        ) else appPreferences.getString("server_port", "8080")
+        baseUrl = "$protocol://$url:$port/rest"
     }
 
     private fun get(
@@ -47,8 +49,14 @@ class YadomsApi(
             {
                 onError(it.message)
             }) {
+            override fun getHeaders(): Map<String, String> {
+                val headers = buildAuthHeaders().toMutableMap()
+                headers["Content-Type"] = "application/json;charset=UTF-8"
+                return headers + super.getHeaders()
+            }
+
             override fun getBodyContentType(): String {
-                return "application/json"
+                return "application/json; charset=$paramsEncoding"
             }
 
             @Throws(AuthFailureError::class)
@@ -58,5 +66,18 @@ class YadomsApi(
         }
 
         queue.add(stringRequest)
+    }
+
+    private fun buildAuthHeaders(): Map<String, String> {
+        if (!appPreferences.getBoolean("server_use_basic_authentication", false))
+            return emptyMap()
+
+        val user = appPreferences.getString("server_basic_authentication_username", "")
+        val password = appPreferences.getString("server_basic_authentication_password", "")
+
+        val headers: MutableMap<String, String> = HashMap()
+        val credentials = "$user:$password"
+        headers["Authorization"] = ("Basic " + Base64.encodeToString(credentials.toByteArray(), Base64.NO_WRAP))
+        return headers
     }
 }
