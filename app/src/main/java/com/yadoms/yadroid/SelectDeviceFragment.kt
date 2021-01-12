@@ -16,9 +16,6 @@ import com.yadoms.yadroid.yadomsApi.DeviceApi
 import com.yadoms.yadroid.yadomsApi.YadomsApi
 import java.util.*
 
-/**
- * A fragment representing a list of Items.
- */
 class SelectDeviceFragment : Fragment() {
 
     private var columnCount = 1
@@ -45,22 +42,31 @@ class SelectDeviceFragment : Fragment() {
                     else -> GridLayoutManager(context, columnCount)
                 }
 
+                val preselectedDevices: MutableList<DeviceApi.Device> = ArrayList()
+                val preselectedKeywords: MutableList<DeviceApi.Keyword> = ArrayList()
+
                 val onItemClickListener =
                     object : SelectDeviceRecyclerViewAdapter.OnItemClickListener {
                         override fun onItemClick(position: Int) {
-                            Log.d(SelectDeviceFragment::class.simpleName, "Position = $position")
+                            (activity as NewWidgetActivity).selectedDeviceId = preselectedDevices[position].id
+                            Log.d(SelectDeviceFragment::class.simpleName, "Selected device = ${(activity as NewWidgetActivity).selectedDeviceId}")
+                            (activity as NewWidgetActivity).preselectedKeywords.clear()
+                            preselectedKeywords.forEach {
+                                if (it.deviceId == (activity as NewWidgetActivity).selectedDeviceId)
+                                    (activity as NewWidgetActivity).preselectedKeywords.add(it)
+                            }
+
                             findNavController().navigate(SelectDeviceFragmentDirections.actionDeviceFragmentToKeywordFragment())
                         }
                     }
-
-                val list: MutableList<DeviceApi.Device> = ArrayList()
 
                 val yApi = YadomsApi(PreferenceManager.getDefaultSharedPreferences(activity))
                 DeviceApi(yApi).getDeviceMatchKeywordCriteria(
                     activity,
                     expectedCapacity = arrayOf("switch"),
-                    onOk = {
-                        it.forEach { device -> list.add(device) }
+                    onOk = { devices: List<DeviceApi.Device>, keywords: List<DeviceApi.Keyword> ->
+                        devices.forEach { preselectedDevices.add(it) }
+                        keywords.forEach { preselectedKeywords.add(it) }
 
                         adapter?.notifyDataSetChanged();
                     },
@@ -71,7 +77,7 @@ class SelectDeviceFragment : Fragment() {
                             ).show()
                     })
 
-                adapter = SelectDeviceRecyclerViewAdapter(list, onItemClickListener)
+                adapter = SelectDeviceRecyclerViewAdapter(preselectedDevices, onItemClickListener)
             }
         }
 

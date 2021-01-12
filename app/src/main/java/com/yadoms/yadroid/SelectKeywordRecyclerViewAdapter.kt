@@ -6,9 +6,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView.NO_POSITION
+import com.yadoms.yadroid.yadomsApi.DeviceApi
 
 class SelectKeywordRecyclerViewAdapter(
-    private val values: List<KeywordsContent.KeywordItem>,
+    private val values: List<DeviceApi.Keyword>,
     private val listener: OnItemClickListener
 ) : RecyclerView.Adapter<SelectKeywordRecyclerViewAdapter.ViewHolder>() {
 

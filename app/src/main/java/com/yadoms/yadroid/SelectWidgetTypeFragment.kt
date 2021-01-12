@@ -43,7 +43,8 @@ class SelectWidgetTypeFragment : Fragment() {
                 val onItemClickListener =
                     object : SelectWidgetTypeRecyclerViewAdapter.OnItemClickListener {
                         override fun onItemClick(position: Int) {
-                            Log.d(SelectWidgetTypeFragment::class.simpleName, "Position = $position")
+                            Log.d(SelectWidgetTypeFragment::class.simpleName, "Selected widget type = $position")
+                            (activity as NewWidgetActivity).selectedWidgetType = position
                             findNavController().navigate(SelectWidgetTypeFragmentDirections.actionWidgetTypeFragmentToDeviceFragment())
                         }
                     }

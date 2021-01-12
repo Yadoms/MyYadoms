@@ -4,9 +4,14 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.NavHostFragment
 import com.yadoms.yadroid.databinding.ActivityNewWidgetBinding
-import com.yadoms.yadroid.databinding.ActivityScrollingBinding
+import com.yadoms.yadroid.yadomsApi.DeviceApi
 
 class NewWidgetActivity : AppCompatActivity() {
+
+    val preselectedKeywords: MutableList<DeviceApi.Keyword> = mutableListOf()
+    var selectedKeywordId: Int? = null
+    var selectedDeviceId: Int? = null
+    var selectedWidgetType: Int? = null
 
     private lateinit var binding: ActivityNewWidgetBinding
 

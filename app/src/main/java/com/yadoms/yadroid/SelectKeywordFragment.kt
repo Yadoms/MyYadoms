@@ -5,11 +5,15 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.navigation.findNavController
+import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.yadoms.yadroid.yadomsApi.DeviceApi
+import com.yadoms.yadroid.yadomsApi.YadomsApi
+import java.util.ArrayList
 
 class SelectKeywordFragment : Fragment() {
 
@@ -40,12 +44,14 @@ class SelectKeywordFragment : Fragment() {
                 val onItemClickListener =
                     object : SelectKeywordRecyclerViewAdapter.OnItemClickListener {
                         override fun onItemClick(position: Int) {
-                            Log.d(SelectKeywordFragment::class.simpleName, "Position = $position")
+                            (activity as NewWidgetActivity).selectedKeywordId = (activity as NewWidgetActivity).preselectedKeywords[position].id
+                            Log.d(SelectDeviceFragment::class.simpleName, "Selected keyword = ${(activity as NewWidgetActivity).selectedKeywordId}")
+
 //TODO                            findNavController().navigate( SelectKeywordFragmentDirections.actionSelectDeviceFragmentToEditLabelFragment())
                         }
                     }
 
-                adapter = SelectKeywordRecyclerViewAdapter(KeywordsContent.KEYWORDS, onItemClickListener)
+                adapter = SelectKeywordRecyclerViewAdapter((activity as NewWidgetActivity).preselectedKeywords, onItemClickListener)
             }
         }
 

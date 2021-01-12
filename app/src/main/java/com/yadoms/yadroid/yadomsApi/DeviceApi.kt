@@ -11,14 +11,15 @@ import java.io.StringReader
 class DeviceApi(private val yApi: YadomsApi) {
     private val _logTag = javaClass.canonicalName
 
-    data class Device(val id: Int, val pluginId: Int, val name: String, val friendlyName: String)
+    data class Device(val id: Int, val pluginId: Int, val friendlyName: String)
+    data class Keyword(val id: Int, val deviceId: Int, val friendlyName: String)
 
     fun getDeviceMatchKeywordCriteria(
         context: Context?,
         expectedKeywordType: Array<String>? = null,
         expectedCapacity: Array<String>? = null,
         expectedKeywordAccess: Array<String>? = null,
-        onOk: (List<Device>) -> Unit,
+        onOk: (List<Device>, List<Keyword>) -> Unit,
         onError: (String?) -> Unit,
     ) {
         val body = JSONObject()
@@ -41,14 +42,17 @@ class DeviceApi(private val yApi: YadomsApi) {
                     if (json.boolean("result") != true) {
                         Log.e(_logTag, "Server returns error (${json.string("message")}) :")//TODO gérer les erreurs dans la fonction post
                         onError(json.string("message"))
-                    }
-                    else {
+                    } else {
                         val devicesNodes = json.obj("data")?.array<Any>("devices")
                         val devices = devicesNodes?.let { deviceNode ->
                             klaxon.parseFromJsonArray<Device>(deviceNode)
                         }
+                        val keywordsNodes = json.obj("data")?.array<Any>("keywords")
+                        val keywords = keywordsNodes?.let { keywordsNode ->
+                            klaxon.parseFromJsonArray<Keyword>(keywordsNode)
+                        }
 
-                        onOk(devices ?: listOf())
+                        onOk(devices ?: emptyList(), keywords ?: emptyList())
                     }
                 } catch (e: KlaxonException) {
                     Log.e(_logTag, "Unable to parse JSON answer ($e) :")//TODO gérer les erreurs dans la fonction post

@@ -10,6 +10,26 @@ import com.android.volley.toolbox.Volley
 
 class YadomsApi(private val appPreferences: SharedPreferences) {
     private val baseUrl: String
+    private val commonHeaders = buildCommonHeaders()
+
+    private fun buildCommonHeaders(): MutableMap<String, String> {
+        val headers = buildAuthHeaders().toMutableMap()
+        headers["Content-Type"] = "application/json;charset=UTF-8"
+        return headers
+    }
+
+    private fun buildAuthHeaders(): Map<String, String> {
+        if (!appPreferences.getBoolean("server_use_basic_authentication", false))
+            return emptyMap()
+
+        val user = appPreferences.getString("server_basic_authentication_username", "")
+        val password = appPreferences.getString("server_basic_authentication_password", "")
+
+        val headers: MutableMap<String, String> = HashMap()
+        val credentials = "$user:$password"
+        headers["Authorization"] = ("Basic " + Base64.encodeToString(credentials.toByteArray(), Base64.NO_WRAP))
+        return headers
+    }
 
     init {
         val url = appPreferences.getString("server_url", "")
@@ -23,11 +43,29 @@ class YadomsApi(private val appPreferences: SharedPreferences) {
     }
 
     private fun get(
+        context: Context?,
         url: String,
         params: String? = null,
-        onOk: (String) -> Unit
+        onOk: (String) -> Unit,
+        onError: (String?) -> Unit
     ) {
-        TODO()
+        val queue = Volley.newRequestQueue(context)
+
+        val stringRequest = object : StringRequest(
+            Method.GET,
+            baseUrl + url,
+            {
+                onOk(it)
+            },
+            {
+                onError(it.message)
+            }) {
+            override fun getHeaders(): Map<String, String> {
+                return commonHeaders + super.getHeaders()
+            }
+        }
+
+        queue.add(stringRequest)
     }
 
     fun post(
@@ -50,9 +88,7 @@ class YadomsApi(private val appPreferences: SharedPreferences) {
                 onError(it.message)
             }) {
             override fun getHeaders(): Map<String, String> {
-                val headers = buildAuthHeaders().toMutableMap()
-                headers["Content-Type"] = "application/json;charset=UTF-8"
-                return headers + super.getHeaders()
+                return commonHeaders + super.getHeaders()
             }
 
             override fun getBodyContentType(): String {
@@ -66,18 +102,5 @@ class YadomsApi(private val appPreferences: SharedPreferences) {
         }
 
         queue.add(stringRequest)
-    }
-
-    private fun buildAuthHeaders(): Map<String, String> {
-        if (!appPreferences.getBoolean("server_use_basic_authentication", false))
-            return emptyMap()
-
-        val user = appPreferences.getString("server_basic_authentication_username", "")
-        val password = appPreferences.getString("server_basic_authentication_password", "")
-
-        val headers: MutableMap<String, String> = HashMap()
-        val credentials = "$user:$password"
-        headers["Authorization"] = ("Basic " + Base64.encodeToString(credentials.toByteArray(), Base64.NO_WRAP))
-        return headers
     }
 }
