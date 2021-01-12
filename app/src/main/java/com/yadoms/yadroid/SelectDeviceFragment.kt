@@ -20,6 +20,10 @@ class SelectDeviceFragment : Fragment() {
 
     private var columnCount = 1
 
+    fun newWidgetActivity(): NewWidgetActivity {
+        return activity as NewWidgetActivity
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -48,12 +52,12 @@ class SelectDeviceFragment : Fragment() {
                 val onItemClickListener =
                     object : SelectDeviceRecyclerViewAdapter.OnItemClickListener {
                         override fun onItemClick(position: Int) {
-                            (activity as NewWidgetActivity).selectedDeviceId = preselectedDevices[position].id
-                            Log.d(SelectDeviceFragment::class.simpleName, "Selected device = ${(activity as NewWidgetActivity).selectedDeviceId}")
-                            (activity as NewWidgetActivity).preselectedKeywords.clear()
+                            newWidgetActivity().selectedDeviceId = preselectedDevices[position].id
+                            Log.d(SelectDeviceFragment::class.simpleName, "Selected device = ${newWidgetActivity().selectedDeviceId}")
+                            newWidgetActivity().preselectedKeywords.clear()
                             preselectedKeywords.forEach {
-                                if (it.deviceId == (activity as NewWidgetActivity).selectedDeviceId)
-                                    (activity as NewWidgetActivity).preselectedKeywords.add(it)
+                                if (it.deviceId == newWidgetActivity().selectedDeviceId)
+                                    newWidgetActivity().preselectedKeywords.add(it)
                             }
 
                             findNavController().navigate(SelectDeviceFragmentDirections.actionDeviceFragmentToKeywordFragment())
@@ -63,7 +67,9 @@ class SelectDeviceFragment : Fragment() {
                 val yApi = YadomsApi(PreferenceManager.getDefaultSharedPreferences(activity))
                 DeviceApi(yApi).getDeviceMatchKeywordCriteria(
                     activity,
-                    expectedCapacity = arrayOf("switch"),
+                    expectedKeywordType = newWidgetActivity().selectedWidgetType!!.keywordFilter.expectedKeywordType,
+                    expectedCapacity = newWidgetActivity().selectedWidgetType!!.keywordFilter.expectedCapacity,
+                    expectedKeywordAccess = newWidgetActivity().selectedWidgetType!!.keywordFilter.expectedKeywordAccess,
                     onOk = { devices: List<DeviceApi.Device>, keywords: List<DeviceApi.Keyword> ->
                         devices.forEach { preselectedDevices.add(it) }
                         keywords.forEach { preselectedKeywords.add(it) }

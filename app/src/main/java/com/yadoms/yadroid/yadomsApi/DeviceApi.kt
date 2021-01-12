@@ -11,24 +11,89 @@ import java.io.StringReader
 class DeviceApi(private val yApi: YadomsApi) {
     private val _logTag = javaClass.canonicalName
 
+    enum class KeywordTypes(val yadomsApiKey: String) {
+        NoData("nodata"),
+        StringType("string"),
+        Numeric("numeric"),
+        Bool("bool"),
+        Json("json"),
+        Enum("enum"),
+        DateTime("datetime")
+    }
+
+    enum class StandardCapacities(val yadomsApiKey: String) {
+        Alarm("alarm"),
+        ApparentPower("apparentpower"),
+        ArmingAlarm("armingAlarm"),
+        BatteryLevel("batteryLevel"),
+        CameraMove("cameraMove"),
+        ColorRGB("colorrgb"),
+        ColorRGBW("colorrgbw"),
+        Counter("count"),
+        Current("current"),
+        Curtain("curtain"),
+        DateTime("datetime"),
+        Debit("debit"),
+        Dimmable("dimmable"),
+        Direction("direction"),
+        Distance("distance"),
+        Duration("duration"),
+        ElectricLoad("electricLoad"),
+        Energy("energy"),
+        Event("event"),
+        Frequency("frequency"),
+        Humidity("humidity"),
+        Illumination("illumination"),
+        IlluminationWm2("illuminationWm2"),
+        Load("load"),
+        Message("message"),
+        PluginState("pluginState"),
+        Power("power"),
+        PowerFactor("powerFactor"),
+        Pressure("pressure"),
+        Rain("rain"),
+        RainRate("rainrate"),
+        Rssi("rssi"),
+        SignalLevel("signalLevel"),
+        SignalPower("signalPower"),
+        Speed("speed"),
+        Switch("switch"),
+        Tamper("tamper"),
+        Temperature("temperature"),
+        Text("text"),
+        UpDownStop("upDownStop"),
+        UserCode("userCode"),
+        Uv("uv"),
+        Voltage("voltage"),
+        Volume("volume"),
+        WeatherCondition("weathercondition"),
+        Weight("weight")
+    }
+
+    enum class KeywordAccess(val yadomsApiKey: String) {
+        NoAccess("noaccess"),
+        Get("get"),
+        GetSet("getset")
+    }
+
     data class Device(val id: Int, val pluginId: Int, val friendlyName: String)
     data class Keyword(val id: Int, val deviceId: Int, val friendlyName: String)
 
     fun getDeviceMatchKeywordCriteria(
         context: Context?,
-        expectedKeywordType: Array<String>? = null,
-        expectedCapacity: Array<String>? = null,
-        expectedKeywordAccess: Array<String>? = null,
+        expectedKeywordType: Array<KeywordTypes> = arrayOf(),
+        expectedCapacity: Array<StandardCapacities> = arrayOf(),
+        expectedKeywordAccess: Array<KeywordAccess> = arrayOf(),
         onOk: (List<Device>, List<Keyword>) -> Unit,
         onError: (String?) -> Unit,
     ) {
         val body = JSONObject()
-        if (expectedKeywordType != null)
-            body.put("expectedKeywordType", JSONArray(expectedKeywordType))
-        if (expectedCapacity != null)
-            body.put("expectedCapacity", JSONArray(expectedCapacity))
-        if (expectedKeywordAccess != null)
-            body.put("expectedKeywordAccess", JSONArray(expectedKeywordAccess))
+        if (expectedKeywordType.isNotEmpty())
+            body.put("expectedKeywordType", JSONArray(expectedKeywordType.map { it.yadomsApiKey }))
+        if (expectedCapacity.isNotEmpty())
+            body.put("expectedCapacity", JSONArray(expectedCapacity.map { it.yadomsApiKey }))
+        if (expectedKeywordAccess.isNotEmpty())
+            body.put("expectedKeywordAccess", JSONArray(expectedKeywordAccess.map { it.yadomsApiKey }))
 
         yApi.post(
             context,

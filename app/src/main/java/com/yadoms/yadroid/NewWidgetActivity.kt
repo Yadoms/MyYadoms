@@ -11,7 +11,7 @@ class NewWidgetActivity : AppCompatActivity() {
     val preselectedKeywords: MutableList<DeviceApi.Keyword> = mutableListOf()
     var selectedKeywordId: Int? = null
     var selectedDeviceId: Int? = null
-    var selectedWidgetType: Int? = null
+    var selectedWidgetType: WidgetTypes.WidgetTypeItem? = null
 
     private lateinit var binding: ActivityNewWidgetBinding
 

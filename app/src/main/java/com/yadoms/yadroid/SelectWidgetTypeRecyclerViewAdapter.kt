@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView.NO_POSITION
 
-import com.yadoms.yadroid.WidgetTypesContent.WidgetTypeItem
+import com.yadoms.yadroid.WidgetTypes.WidgetTypeItem
 
 /**
  * [RecyclerView.Adapter] that can display a [WidgetTypeItem].
