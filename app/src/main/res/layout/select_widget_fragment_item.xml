@@ -1,22 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:gravity="center"
     android:orientation="horizontal">
 
-    <TextView
-        android:id="@+id/item_type"
-        android:layout_weight="2"
+    <ImageView
+        android:id="@+id/item_logo"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/text_margin"
-        android:textAppearance="?attr/textAppearanceListItem"
-        android:layout_width="0px" />
+        tools:src="@drawable/ic_switch"
+        android:contentDescription="@string/widget_logo"
+        app:tint="@color/yadomsBlue"
+        android:layout_margin="10dp"/>
 
-    <TextView
-        android:id="@+id/item_description"
-        android:layout_weight="3"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/text_margin"
-        android:textAppearance="?attr/textAppearanceListItem"
-        android:layout_width="0px" />
+        android:orientation="vertical"
+        android:layout_marginStart="5dp">
+
+        <TextView
+            android:id="@+id/item_type"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?attr/textAppearanceListItem"
+            tools:text="The widget name"
+            android:layout_marginBottom="5dp"/>
+
+        <TextView
+            android:id="@+id/item_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?attr/textAppearanceListItem"
+            android:textColor="@color/yadomsGrey"
+            tools:text="The full widget description" />
+    </LinearLayout>
 </LinearLayout>

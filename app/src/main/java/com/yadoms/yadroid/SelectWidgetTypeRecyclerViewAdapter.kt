@@ -4,6 +4,7 @@ import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView.NO_POSITION
 
@@ -27,6 +28,7 @@ class SelectWidgetTypeRecyclerViewAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = values[position]
+        holder.logoView.setImageResource(item.logo)
         holder.nameView.text = item.name
         holder.descriptionView.text = item.description
     }
@@ -34,6 +36,7 @@ class SelectWidgetTypeRecyclerViewAdapter(
     override fun getItemCount(): Int = values.size
 
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view), View.OnClickListener {
+        val logoView: ImageView = view.findViewById(R.id.item_logo)
         val nameView: TextView = view.findViewById(R.id.item_type)
         val descriptionView: TextView = view.findViewById(R.id.item_description)
 

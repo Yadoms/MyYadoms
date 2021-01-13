@@ -39,6 +39,7 @@ object WidgetTypes {
             WidgetTypeItem(
                 "Switch",
                 "A widget to drive ON/OFF devices",
+                R.drawable.ic_switch,
                 KeywordFilter(expectedKeywordType = arrayOf(DeviceApi.KeywordTypes.Bool))
             )
         )
@@ -46,6 +47,7 @@ object WidgetTypes {
             WidgetTypeItem(
                 "Numeric display",
                 "A widget to display numeric data",
+                R.drawable.ic_numeric,
                 KeywordFilter(expectedKeywordType = arrayOf(DeviceApi.KeywordTypes.Numeric))
             )
         )
@@ -56,7 +58,7 @@ object WidgetTypes {
     /**
      * The widget type item
      */
-    data class WidgetTypeItem(val name: String, val description: String, val keywordFilter: KeywordFilter) {
+    data class WidgetTypeItem(val name: String, val description: String, val logo: Int, val keywordFilter: KeywordFilter) {
         override fun toString(): String = name
     }
 }
