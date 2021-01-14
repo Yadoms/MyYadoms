@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.preference.PreferenceManager
@@ -44,6 +45,8 @@ class SelectKeywordFragment : Fragment() {
                     columnCount <= 1 -> LinearLayoutManager(context)
                     else -> GridLayoutManager(context, columnCount)
                 }
+
+                (activity as NewWidgetActivity).setOperationDescription(R.string.select_keyword)
 
                 val onItemClickListener =
                     object : SelectKeywordRecyclerViewAdapter.OnItemClickListener {

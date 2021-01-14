@@ -1,8 +1,10 @@
 package com.yadoms.yadroid
 
 import android.os.Bundle
-import android.util.Log
+import android.view.MenuItem
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.preference.PreferenceManager
 import com.beust.klaxon.JsonArray
@@ -19,6 +21,7 @@ class NewWidgetActivity : AppCompatActivity() {
     var selectedWidgetType: WidgetTypes.WidgetTypeItem? = null
 
     private lateinit var binding: ActivityNewWidgetBinding
+    private lateinit var navController: NavController
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,20 +29,40 @@ class NewWidgetActivity : AppCompatActivity() {
         binding = ActivityNewWidgetBinding.inflate(layoutInflater)
         val view = binding.root
 
-        val navHostFragment =
-            supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
-        val navController = navHostFragment.navController
+        val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        navController = navHostFragment.navController
 
         setContentView(view)
 
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.title = "Add new widget"
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+
+        return when (item.itemId) {
+            android.R.id.home -> {
+                if (!navController.navigateUp())
+                    finish()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    fun setOperationDescription(textId: Int) {
+        findViewById<TextView>(R.id.new_widget_operation_description).text = getString(textId)
     }
 
     fun addNewWidget(selectedKeywordId: Int) {
         val klaxon = Klaxon()
         val preferences = PreferenceManager.getDefaultSharedPreferences(this)
         val widgetsPreference = preferences.getString("widgets", "")
-        val widgetsJsonArray = if (widgetsPreference?.isNotEmpty() == true) klaxon.parseJsonArray(StringReader(widgetsPreference)) else JsonArray<JsonObject>()
+        val widgetsJsonArray =
+            if (widgetsPreference?.isNotEmpty() == true) klaxon.parseJsonArray(StringReader(widgetsPreference)) else JsonArray<JsonObject>()
 
         (widgetsJsonArray as JsonArray<JsonObject>).add(JsonObject(mapOf("name" to selectedWidgetType!!.name, "keywordId" to selectedKeywordId)))
         val preferencesEditor = preferences.edit()
