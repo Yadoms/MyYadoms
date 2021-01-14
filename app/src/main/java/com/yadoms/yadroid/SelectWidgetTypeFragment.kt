@@ -18,6 +18,10 @@ class SelectWidgetTypeFragment : Fragment() {
 
     private var columnCount = 1
 
+    fun newWidgetActivity(): NewWidgetActivity {
+        return activity as NewWidgetActivity
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -44,7 +48,7 @@ class SelectWidgetTypeFragment : Fragment() {
                     object : SelectWidgetTypeRecyclerViewAdapter.OnItemClickListener {
                         override fun onItemClick(position: Int) {
                             Log.d(SelectWidgetTypeFragment::class.simpleName, "Selected widget type = $position")
-                            (activity as NewWidgetActivity).selectedWidgetType = WidgetTypes.WidgetTypes[position]
+                            newWidgetActivity().selectedWidgetType = WidgetTypes.WidgetTypes[position]
                             findNavController().navigate(SelectWidgetTypeFragmentDirections.actionWidgetTypeFragmentToDeviceFragment())
                         }
                     }

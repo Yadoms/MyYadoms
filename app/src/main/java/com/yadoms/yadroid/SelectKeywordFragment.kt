@@ -19,6 +19,10 @@ class SelectKeywordFragment : Fragment() {
 
     private var columnCount = 1
 
+    fun newWidgetActivity(): NewWidgetActivity {
+        return activity as NewWidgetActivity
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -44,14 +48,16 @@ class SelectKeywordFragment : Fragment() {
                 val onItemClickListener =
                     object : SelectKeywordRecyclerViewAdapter.OnItemClickListener {
                         override fun onItemClick(position: Int) {
-                            (activity as NewWidgetActivity).selectedKeywordId = (activity as NewWidgetActivity).preselectedKeywords[position].id
-                            Log.d(SelectDeviceFragment::class.simpleName, "Selected keyword = ${(activity as NewWidgetActivity).selectedKeywordId}")
+                            val selectedKeywordId = newWidgetActivity().preselectedKeywords[position].id
+                            Log.d(SelectDeviceFragment::class.simpleName, "Selected keyword = $selectedKeywordId")
 
-//TODO                            findNavController().navigate( SelectKeywordFragmentDirections.actionSelectDeviceFragmentToEditLabelFragment())
+                            newWidgetActivity().addNewWidget(selectedKeywordId)
+
+                            newWidgetActivity().finish()
                         }
                     }
 
-                adapter = SelectKeywordRecyclerViewAdapter((activity as NewWidgetActivity).preselectedKeywords, onItemClickListener)
+                adapter = SelectKeywordRecyclerViewAdapter(newWidgetActivity().preselectedKeywords, onItemClickListener)
             }
         }
 
