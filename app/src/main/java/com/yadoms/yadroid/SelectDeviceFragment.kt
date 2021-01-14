@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
@@ -45,6 +46,8 @@ class SelectDeviceFragment : Fragment() {
                     columnCount <= 1 -> LinearLayoutManager(context)
                     else -> GridLayoutManager(context, columnCount)
                 }
+
+                newWidgetActivity().setOperationDescription(R.string.select_device)
 
                 val preselectedDevices: MutableList<DeviceApi.Device> = ArrayList()
                 val preselectedKeywords: MutableList<DeviceApi.Keyword> = ArrayList()

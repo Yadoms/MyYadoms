@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
@@ -39,6 +40,8 @@ class SelectWidgetTypeFragment : Fragment() {
                     columnCount <= 1 -> LinearLayoutManager(context)
                     else -> GridLayoutManager(context, columnCount)
                 }
+
+                (activity as NewWidgetActivity).setOperationDescription(R.string.select_widget_type)
 
                 val onItemClickListener =
                     object : SelectWidgetTypeRecyclerViewAdapter.OnItemClickListener {

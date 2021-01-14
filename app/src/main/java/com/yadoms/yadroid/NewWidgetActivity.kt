@@ -1,6 +1,7 @@
 package com.yadoms.yadroid
 
 import android.os.Bundle
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.NavHostFragment
 import com.yadoms.yadroid.databinding.ActivityNewWidgetBinding
@@ -28,5 +29,9 @@ class NewWidgetActivity : AppCompatActivity() {
         setContentView(view)
 
         supportActionBar?.title = "Add new widget"
+    }
+
+    fun setOperationDescription(textId: Int) {
+        findViewById<TextView>(R.id.new_widget_operation_description).text = getString(textId)
     }
 }
