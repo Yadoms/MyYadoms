@@ -1,5 +1,6 @@
 package com.yadoms.yadroid
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -13,6 +14,7 @@ import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.yadoms.yadroid.preferences.Preferences
 import com.yadoms.yadroid.yadomsApi.DeviceApi
 import com.yadoms.yadroid.yadomsApi.YadomsApi
 import java.util.*
@@ -67,7 +69,7 @@ class SelectDeviceFragment : Fragment() {
                         }
                     }
 
-                val yApi = YadomsApi(PreferenceManager.getDefaultSharedPreferences(activity))
+                val yApi = YadomsApi(Preferences(activity as Context).serverConnection)
                 DeviceApi(yApi).getDeviceMatchKeywordCriteria(
                     activity,
                     expectedKeywordType = newWidgetActivity().selectedWidgetType!!.keywordFilter.expectedKeywordType,

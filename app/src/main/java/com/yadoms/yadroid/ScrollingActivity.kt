@@ -6,6 +6,7 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import com.yadoms.yadroid.databinding.ActivityScrollingBinding
+import com.yadoms.yadroid.preferences.Preferences
 import com.yadoms.yadroid.preferences.SettingsActivity
 
 class ScrollingActivity : AppCompatActivity() {
@@ -18,6 +19,8 @@ class ScrollingActivity : AppCompatActivity() {
         binding = ActivityScrollingBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
+
+        var w = Preferences(this).widgets //TODO
 
         setSupportActionBar(binding.toolbar)
         with(binding) {
