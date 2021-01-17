@@ -8,17 +8,11 @@
     tools:context=".ScrollingActivity"
     tools:showIn="@layout/activity_scrolling">
 
-<!--    TODO mettre dans un fragment ?-->
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/list"
-        android:name="com.yadoms.yadroid.SelectDeviceFragment"
+        android:id="@+id/widgets_list"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        app:layoutManager="LinearLayoutManager"
-        tools:context=".SelectWidgetTypeFragment"
-        tools:listitem="@layout/select_device_fragment_item" />
+        android:layout_height="wrap_content"
+        tools:listitem="@layout/display_widget_item"/>
 
 
 </androidx.core.widget.NestedScrollView>

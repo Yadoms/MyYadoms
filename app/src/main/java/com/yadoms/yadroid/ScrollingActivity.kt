@@ -2,9 +2,12 @@ package com.yadoms.yadroid
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import androidx.navigation.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.yadoms.yadroid.databinding.ActivityScrollingBinding
 import com.yadoms.yadroid.preferences.Preferences
 import com.yadoms.yadroid.preferences.SettingsActivity
@@ -20,8 +23,6 @@ class ScrollingActivity : AppCompatActivity() {
         val view = binding.root
         setContentView(view)
 
-        var w = Preferences(this).widgets //TODO
-
         setSupportActionBar(binding.toolbar)
         with(binding) {
             toolbarLayout.title = title
@@ -30,6 +31,15 @@ class ScrollingActivity : AppCompatActivity() {
                 startActivity(intent)
             }
         }
+
+        val widgets = Preferences(this).widgets
+        
+        binding.contentScrollingLayout.widgetsList.layoutManager = LinearLayoutManager(this)
+        binding.contentScrollingLayout.widgetsList.adapter = DisplayWidgetRecyclerViewAdapter(widgets, object : DisplayWidgetRecyclerViewAdapter.OnItemClickListener {
+            override fun onItemClick(position: Int) {
+                Log.d("MainActivity", "widget clicked ! " + position.toString())
+            }
+        })
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
