@@ -6,7 +6,6 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
-import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.yadoms.yadroid.databinding.ActivityScrollingBinding
 import com.yadoms.yadroid.preferences.Preferences
@@ -35,7 +34,7 @@ class ScrollingActivity : AppCompatActivity() {
         val widgets = Preferences(this).widgets
         
         binding.contentScrollingLayout.widgetsList.layoutManager = LinearLayoutManager(this)
-        binding.contentScrollingLayout.widgetsList.adapter = DisplayWidgetRecyclerViewAdapter(widgets, object : DisplayWidgetRecyclerViewAdapter.OnItemClickListener {
+        binding.contentScrollingLayout.widgetsList.adapter = WidgetSwitchRecyclerViewAdapter(widgets, object : WidgetSwitchRecyclerViewAdapter.OnItemClickListener {
             override fun onItemClick(position: Int) {
                 Log.d("MainActivity", "widget clicked ! " + position.toString())
             }

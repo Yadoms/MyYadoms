@@ -6,6 +6,7 @@ import androidx.preference.PreferenceManager
 import com.beust.klaxon.JsonArray
 import com.beust.klaxon.JsonObject
 import com.beust.klaxon.Klaxon
+import com.yadoms.yadroid.WidgetTypes
 import java.io.StringReader
 
 class Preferences(private val context: Context) {
@@ -40,14 +41,22 @@ class Preferences(private val context: Context) {
         val widgetsJsonArray =
             if (widgetsPreference?.isNotEmpty() == true) klaxon.parseJsonArray(StringReader(widgetsPreference)) else JsonArray<JsonObject>()
 
-        (widgetsJsonArray as JsonArray<JsonObject>).add(JsonObject(mapOf("name" to widget.name, "keywordId" to widget.keywordId)))
+        (widgetsJsonArray as JsonArray<JsonObject>).add(
+            JsonObject(
+                mapOf(
+                    "widgetType" to widget.type.ordinal,
+                    "name" to widget.name,
+                    "keywordId" to widget.keywordId
+                )
+            )
+        )
         val preferencesEditor = sharedPreference.edit()
         preferencesEditor.putString("widgets", widgetsJsonArray.toJsonString())
         preferencesEditor.apply();
         preferencesEditor.commit();
     }
 
-    data class Widget(val name: String, val keywordId: Int)
+    data class Widget(val type: WidgetTypes.WidgetType, val name: String, val keywordId: Int)
 
     val widgets: List<Widget>
         get() {
@@ -55,6 +64,12 @@ class Preferences(private val context: Context) {
             val widgetsPreference = sharedPreference.getString("widgets", "")
             val widgetsJsonArray =
                 if (widgetsPreference?.isNotEmpty() == true) klaxon.parseJsonArray(StringReader(widgetsPreference)) else JsonArray<JsonObject>()
-            return widgetsJsonArray.map{Widget((it as JsonObject)["name"] as String, it["keywordId"] as Int) }
+            return widgetsJsonArray.map {
+                Widget(
+                    WidgetTypes.WidgetType.values()[(it as JsonObject)["widgetType"] as Int],
+                    it["name"] as String,
+                    it["keywordId"] as Int
+                )
+            }
         }
 }

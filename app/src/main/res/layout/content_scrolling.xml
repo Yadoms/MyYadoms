@@ -12,7 +12,7 @@
         android:id="@+id/widgets_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:listitem="@layout/display_widget_item"/>
+        tools:listitem="@layout/widget_switch_item" />
 
 
 </androidx.core.widget.NestedScrollView>

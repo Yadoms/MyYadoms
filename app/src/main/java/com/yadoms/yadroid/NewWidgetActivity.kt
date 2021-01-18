@@ -54,7 +54,7 @@ class NewWidgetActivity : AppCompatActivity() {
     }
 
     fun addNewWidget(selectedKeywordId: Int) {
-        Preferences(this).addNewWidget(Preferences.Widget(selectedWidgetType!!.name, selectedKeywordId))
+        Preferences(this).addNewWidget(Preferences.Widget(selectedWidgetType!!.type, "TODO nommer le widget", selectedKeywordId))
     }
 
 }
