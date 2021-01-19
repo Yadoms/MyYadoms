@@ -1,0 +1,14 @@
+<animation-list xmlns:android="http://schemas.android.com/apk/res/android"
+    android:oneshot="true">
+    <item android:drawable="@drawable/ic_switch1" android:duration="50" />
+    <item android:drawable="@drawable/ic_switch2" android:duration="30" />
+    <item android:drawable="@drawable/ic_switch3" android:duration="20" />
+    <item android:drawable="@drawable/ic_switch4" android:duration="10" />
+    <item android:drawable="@drawable/ic_switch5" android:duration="5" />
+    <item android:drawable="@drawable/ic_switch6" android:duration="5" />
+    <item android:drawable="@drawable/ic_switch7" android:duration="5" />
+    <item android:drawable="@drawable/ic_switch8" android:duration="10" />
+    <item android:drawable="@drawable/ic_switch9" android:duration="20" />
+    <item android:drawable="@drawable/ic_switch10" android:duration="30" />
+    <item android:drawable="@drawable/ic_switch11" android:duration="50" />
+</animation-list>

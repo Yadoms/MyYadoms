@@ -34,11 +34,7 @@ class ScrollingActivity : AppCompatActivity() {
         val widgets = Preferences(this).widgets
         
         binding.contentScrollingLayout.widgetsList.layoutManager = LinearLayoutManager(this)
-        binding.contentScrollingLayout.widgetsList.adapter = WidgetSwitchRecyclerViewAdapter(widgets, object : WidgetSwitchRecyclerViewAdapter.OnItemClickListener {
-            override fun onItemClick(position: Int) {
-                Log.d("MainActivity", "widget clicked ! " + position.toString())
-            }
-        })
+        binding.contentScrollingLayout.widgetsList.adapter = WidgetsRecyclerViewAdapter(widgets)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
