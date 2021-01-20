@@ -35,7 +35,7 @@ class YadomsApi(private val serverConnection: Preferences.ServerConnection) {
         baseUrl = "$protocol://${serverConnection.url}:$port/rest"
     }
 
-    private fun get(
+    fun get(
         context: Context?,
         url: String,
         params: String? = null,

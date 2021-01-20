@@ -6,6 +6,11 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.yadoms.yadroid.R
 import com.yadoms.yadroid.preferences.Preferences
+import com.yadoms.yadroid.yadomsApi.DateHelper
+import com.yadoms.yadroid.yadomsApi.DeviceApi
+import com.yadoms.yadroid.yadomsApi.YadomsApi
+import java.time.format.DateTimeFormatter
+import java.time.format.FormatStyle
 
 class SwitchViewHolder(val view: View) : WidgetViewHolder(view), View.OnClickListener {
     private var switchAnimation: AnimationDrawable
@@ -16,7 +21,7 @@ class SwitchViewHolder(val view: View) : WidgetViewHolder(view), View.OnClickLis
     private val nameView: TextView = view.findViewById(R.id.name)
     private val valueView: TextView = view.findViewById(R.id.value)
     private var state = false
-    private val lastUpdateDate = "19/01/2021 à 15:53" //TODO à récupérer de yadomsApi
+    private var widget: Preferences.Widget? = null
 
     init {
         itemView.setOnClickListener(this)
@@ -26,17 +31,39 @@ class SwitchViewHolder(val view: View) : WidgetViewHolder(view), View.OnClickLis
         get() = "Switch"
 
     override fun onBind(widget: Preferences.Widget) {
-        nameView.text = widget.name + widget.keywordId.toString() //TODO revoir
-        valueView.text = view.resources.getString(R.string.last_update, lastUpdateDate)
+        this.widget = widget
+
+        nameView.text = "${widget.name} ${widget.keywordId}" //TODO revoir
+        valueView.text = view.resources.getString(R.string.last_update, "-")
+
+        DeviceApi(YadomsApi(Preferences(view.context).serverConnection)).getKeyword(view.context, widget.keywordId, {
+            valueView.text = view.resources.getString(
+                R.string.last_update,
+                DateHelper.dateTimeFromApi(it.lastAcquisitionDate).format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.LONG, FormatStyle.SHORT))
+            )
+            setWidgetImage(it.lastAcquisitionValue == "1")
+        }, {})
+
     }
 
-    override fun onClick(p0: View?) {
+    fun setWidgetImage(state: Boolean) {
         when (state) {
-            false -> buttonView.setBackgroundResource(R.drawable.switch_animation_forward)
-            true -> buttonView.setBackgroundResource(R.drawable.switch_animation_reverse)
+            true -> buttonView.setBackgroundResource(R.drawable.switch_animation_forward)
+            false -> buttonView.setBackgroundResource(R.drawable.switch_animation_reverse)
         }
         switchAnimation = buttonView.background as AnimationDrawable
         switchAnimation.start()
+    }
+
+    override fun onClick(p0: View?) {
         state = !state
+        setWidgetImage(state)
+
+        widget?.keywordId?.let {
+            DeviceApi(YadomsApi(Preferences(view.context).serverConnection)).command(
+                view.context,
+                it,
+                if (state) "1" else "0", {}, {})
+        }
     }
 }

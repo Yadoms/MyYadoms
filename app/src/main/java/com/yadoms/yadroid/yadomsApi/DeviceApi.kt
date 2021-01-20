@@ -77,7 +77,7 @@ class DeviceApi(private val yApi: YadomsApi) {
     }
 
     data class Device(val id: Int, val pluginId: Int, val friendlyName: String)
-    data class Keyword(val id: Int, val deviceId: Int, val friendlyName: String)
+    data class Keyword(val id: Int, val deviceId: Int, val friendlyName: String, val lastAcquisitionValue: String, val lastAcquisitionDate: String)
 
     fun getDeviceMatchKeywordCriteria(
         context: Context?,
@@ -118,6 +118,80 @@ class DeviceApi(private val yApi: YadomsApi) {
                         }
 
                         onOk(devices ?: emptyList(), keywords ?: emptyList())
+                    }
+                } catch (e: KlaxonException) {
+                    Log.e(_logTag, "Unable to parse JSON answer ($e) :")//TODO gérer les erreurs dans la fonction post
+                    Log.e(_logTag, it)
+                    onError(null)
+                }
+            },
+            onError = {
+                Log.e(_logTag, "Error sending request ($it) :")//TODO gérer les erreurs dans la fonction post
+                onError(it)
+            }
+        )
+    }
+
+    fun getKeyword(
+        context: Context?,
+        keywordId: Int,
+        onOk: (Keyword) -> Unit,
+        onError: (String?) -> Unit,
+    ) {
+        yApi.get(
+            context,
+            url = "/device/keyword/$keywordId",
+            onOk = {
+                try {
+                    val klaxon = Klaxon()
+                    val json = klaxon.parseJsonObject(StringReader(it))
+
+                    if (json.boolean("result") != true) {
+                        Log.e(_logTag, "Server returns error (${json.string("message")}) :")//TODO gérer les erreurs dans la fonction post
+                        onError(json.string("message"))
+                    } else {
+                        val keyword = json.obj("data")?.let { dataNode -> klaxon.parseFromJsonObject<Keyword>(dataNode) }
+                        if (keyword == null) {
+                            Log.e(_logTag, "Server returns error (${json.string("message")}) :")//TODO gérer les erreurs dans la fonction post
+                            onError(json.string("message"))
+                        } else {
+                            onOk(keyword)
+                        }
+                    }
+                } catch (e: KlaxonException) {
+                    Log.e(_logTag, "Unable to parse JSON answer ($e) :")//TODO gérer les erreurs dans la fonction get
+                    Log.e(_logTag, it)
+                    onError(null)
+                }
+            },
+            onError = {
+                Log.e(_logTag, "Error sending request ($it) :")//TODO gérer les erreurs dans la fonction get
+                onError(it)
+            }
+        )
+    }
+
+    fun command(
+        context: Context?,
+        keywordId: Int,
+        command: String,
+        onOk: () -> Unit,
+        onError: (String?) -> Unit
+    ) {
+        yApi.post(
+            context,
+            url = "/device/keyword/${keywordId}/command",
+            body = command,
+            onOk = {
+                try {
+                    val klaxon = Klaxon()
+                    val json = klaxon.parseJsonObject(StringReader(it))
+
+                    if (json.boolean("result") != true) {
+                        Log.e(_logTag, "Server returns error (${json.string("message")}) :")//TODO gérer les erreurs dans la fonction post
+                        onError(json.string("message"))
+                    } else {
+                        onOk()
                     }
                 } catch (e: KlaxonException) {
                     Log.e(_logTag, "Unable to parse JSON answer ($e) :")//TODO gérer les erreurs dans la fonction post
