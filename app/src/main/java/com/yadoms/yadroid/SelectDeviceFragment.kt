@@ -56,7 +56,8 @@ class SelectDeviceFragment : Fragment() {
                     object : SelectDeviceRecyclerViewAdapter.OnItemClickListener {
                         override fun onItemClick(position: Int) {
                             newWidgetActivity().selectedDeviceId = preselectedDevices[position].id
-                            Log.d(SelectDeviceFragment::class.simpleName, "Selected device = ${newWidgetActivity().selectedDeviceId}")
+                            newWidgetActivity().selectedDeviceName = preselectedDevices[position].friendlyName
+                            Log.d(SelectDeviceFragment::class.simpleName, "Selected device = ${newWidgetActivity().selectedDeviceName} (${newWidgetActivity().selectedDeviceId})")
                             newWidgetActivity().preselectedKeywords.clear()
                             preselectedKeywords.forEach {
                                 if (it.deviceId == newWidgetActivity().selectedDeviceId)
