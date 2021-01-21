@@ -1,41 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:gravity="center"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    android:clickable="true"
+    android:focusable="true"
+    android:background="?attr/selectableItemBackground">
 
     <ImageView
-        android:id="@+id/item_logo"
+        android:id="@+id/button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_switch"
-        android:contentDescription="@string/widget_logo"
-        app:tint="@color/yadomsBlue"
-        android:layout_margin="10dp"/>
+        android:contentDescription="@string/_switch"
+        tools:src="@drawable/ic_switch1"
+        android:layout_gravity="center_vertical"
+        android:layout_margin="10dp" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
+        android:layout_gravity="center_vertical"
         android:layout_marginStart="5dp">
 
         <TextView
-            android:id="@+id/item_type"
+            android:id="@+id/name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAppearance="?attr/textAppearanceListItem"
-            android:text="The widget name"
+            tools:text="Name"
             android:layout_marginBottom="5dp"/>
 
         <TextView
-            android:id="@+id/item_description"
+            android:id="@+id/value"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textAppearance="?attr/textAppearanceListItem"
-            android:textColor="@color/yadomsGrey"
-            android:text="The full widget description" />
+            android:textAppearance="?attr/textAppearanceListItemSecondary"
+            tools:text="Description"
+            android:textColor="@color/yadomsGrey" />
     </LinearLayout>
+
 </LinearLayout>

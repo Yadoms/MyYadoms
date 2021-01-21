@@ -6,13 +6,9 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
-import androidx.preference.PreferenceManager
-import com.beust.klaxon.JsonArray
-import com.beust.klaxon.JsonObject
-import com.beust.klaxon.Klaxon
 import com.yadoms.yadroid.databinding.ActivityNewWidgetBinding
+import com.yadoms.yadroid.preferences.Preferences
 import com.yadoms.yadroid.yadomsApi.DeviceApi
-import java.io.StringReader
 
 class NewWidgetActivity : AppCompatActivity() {
 
@@ -58,17 +54,7 @@ class NewWidgetActivity : AppCompatActivity() {
     }
 
     fun addNewWidget(selectedKeywordId: Int) {
-        val klaxon = Klaxon()
-        val preferences = PreferenceManager.getDefaultSharedPreferences(this)
-        val widgetsPreference = preferences.getString("widgets", "")
-        val widgetsJsonArray =
-            if (widgetsPreference?.isNotEmpty() == true) klaxon.parseJsonArray(StringReader(widgetsPreference)) else JsonArray<JsonObject>()
-
-        (widgetsJsonArray as JsonArray<JsonObject>).add(JsonObject(mapOf("name" to selectedWidgetType!!.name, "keywordId" to selectedKeywordId)))
-        val preferencesEditor = preferences.edit()
-        preferencesEditor.putString("widgets", widgetsJsonArray.toJsonString())
-        preferencesEditor.apply();
-        preferencesEditor.commit();
+        Preferences(this).addNewWidget(Preferences.Widget(selectedWidgetType!!.type, "TODO nommer le widget", selectedKeywordId))
     }
 
 }

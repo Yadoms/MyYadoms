@@ -9,10 +9,10 @@
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    width="48"
    height="48"
-   viewBox="0 0 12.7 12.7"
+   viewBox="0 0 48 48"
    version="1.1"
    id="svg8"
-   sodipodi:docname="switch.svg"
+   sodipodi:docname="switch_android.svg"
    inkscape:version="1.0.1 (3bc2e813f5, 2020-09-07)">
   <defs
      id="defs2" />
@@ -23,11 +23,11 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="8"
-     inkscape:cx="27.709731"
-     inkscape:cy="18.907448"
+     inkscape:zoom="16"
+     inkscape:cx="17.340007"
+     inkscape:cy="25.28034"
      inkscape:document-units="px"
-     inkscape:current-layer="layer1"
+     inkscape:current-layer="g933"
      inkscape:document-rotation="0"
      showgrid="true"
      units="px"
@@ -60,35 +60,14 @@
     </rdf:RDF>
   </metadata>
   <g
-     inkscape:label="Calque 1"
      inkscape:groupmode="layer"
-     id="layer1">
-    <g
-       id="g1002">
-      <ellipse
-         style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.52916667;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none"
-         id="path12"
-         cx="3.175"
-         cy="6.3499999"
-         rx="1.8520832"
-         ry="1.8520837" />
-      <path
-         style="opacity:1;fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.52916667;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:fill markers stroke"
-         id="path956"
-         sodipodi:type="arc"
-         sodipodi:cx="9.6572914"
-         sodipodi:cy="6.3499999"
-         sodipodi:rx="1.8520833"
-         sodipodi:ry="1.8520833"
-         sodipodi:start="4.712389"
-         sodipodi:end="1.5707963"
-         sodipodi:arc-type="slice"
-         d="M 9.6572914,4.4979166 A 1.8520833,1.8520833 0 0 1 11.509375,6.3499999 1.8520833,1.8520833 0 0 1 9.6572914,8.2020832 V 6.3499999 Z" />
-      <path
-         id="rect962"
-         style="opacity:1;fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.52916667;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:fill markers stroke"
-         d="M 3.175,4.4979167 H 9.5249999 V 8.2020833 H 3.175 c 2.6458333,0 2.38125,-3.7041666 0,-3.7041666 z"
-         sodipodi:nodetypes="ccccc" />
-    </g>
+     id="g933"
+     inkscape:label="Image7"
+     style="display:inline">
+    <path
+       id="rect929"
+       style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:2;paint-order:fill markers stroke"
+       d="m 12,17 c -3.8780005,0 -7,3.122 -7,7 0,3.878001 3.1219995,7 7,7 h 25 c 3.878001,0 7,-3.121999 7,-7 0,-3.878 -3.121999,-7 -7,-7 z m 23.919922,1 a 6,5.9999996 0 0 1 6.068359,5.619141 L 42,24 A 6,5.9999996 0 0 1 36.095703,30 6,5.9999996 0 0 1 30.003906,24.189453 6,5.9999996 0 0 1 35.714844,18.005859 6,5.9999996 0 0 1 35.919922,18 Z"
+       />
   </g>
 </svg>

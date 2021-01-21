@@ -6,9 +6,10 @@ import android.util.Base64
 import com.android.volley.AuthFailureError
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
+import com.yadoms.yadroid.preferences.Preferences
 
 
-class YadomsApi(private val appPreferences: SharedPreferences) {
+class YadomsApi(private val serverConnection: Preferences.ServerConnection) {
     private val baseUrl: String
     private val commonHeaders = buildCommonHeaders()
 
@@ -19,30 +20,22 @@ class YadomsApi(private val appPreferences: SharedPreferences) {
     }
 
     private fun buildAuthHeaders(): Map<String, String> {
-        if (!appPreferences.getBoolean("server_use_basic_authentication", false))
+        if (!serverConnection.useBasicAuthentication)
             return emptyMap()
 
-        val user = appPreferences.getString("server_basic_authentication_username", "")
-        val password = appPreferences.getString("server_basic_authentication_password", "")
-
         val headers: MutableMap<String, String> = HashMap()
-        val credentials = "$user:$password"
+        val credentials = "${serverConnection.basicAuthenticationUser}:${serverConnection.basicAuthenticationPassword}"
         headers["Authorization"] = ("Basic " + Base64.encodeToString(credentials.toByteArray(), Base64.NO_WRAP))
         return headers
     }
 
     init {
-        val url = appPreferences.getString("server_url", "")
-        val useHttps = appPreferences.getBoolean("server_use_https", false)
-        val protocol = if (useHttps) "https" else "http"
-        val port = if (useHttps) appPreferences.getString(
-            "server_https_port",
-            "443"
-        ) else appPreferences.getString("server_port", "8080")
-        baseUrl = "$protocol://$url:$port/rest"
+        val protocol = if (serverConnection.useHttps) "https" else "http"
+        val port = if (serverConnection.useHttps) serverConnection.httpsPort else serverConnection.port
+        baseUrl = "$protocol://${serverConnection.url}:$port/rest"
     }
 
-    private fun get(
+    fun get(
         context: Context?,
         url: String,
         params: String? = null,

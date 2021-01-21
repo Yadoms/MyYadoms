@@ -8,8 +8,11 @@
     tools:context=".ScrollingActivity"
     tools:showIn="@layout/activity_scrolling">
 
-
-        <include layout="@layout/widget" />
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/widgets_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:listitem="@layout/widget_switch_item" />
 
 
 </androidx.core.widget.NestedScrollView>
