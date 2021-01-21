@@ -126,7 +126,7 @@ class DeviceApi(private val yApi: YadomsApi) {
                 }
             },
             onError = {
-                Log.e(_logTag, "Error sending request ($it) :")//TODO gérer les erreurs dans la fonction post
+                Log.e(_logTag, "Error sending request ($it)")//TODO gérer les erreurs dans la fonction post
                 onError(it)
             }
         )
