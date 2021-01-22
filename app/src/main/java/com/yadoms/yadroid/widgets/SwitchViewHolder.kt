@@ -33,7 +33,7 @@ class SwitchViewHolder(val view: View) : WidgetViewHolder(view), View.OnClickLis
     override fun onBind(widget: Preferences.Widget) {
         this.widget = widget
 
-        nameView.text = "${widget.name} ${widget.keywordId}" //TODO revoir
+        nameView.text = widget.name
         valueView.text = view.resources.getString(R.string.last_update, "-")
 
         DeviceApi(YadomsApi(Preferences(view.context).serverConnection)).getKeyword(view.context, widget.keywordId, {
@@ -59,10 +59,10 @@ class SwitchViewHolder(val view: View) : WidgetViewHolder(view), View.OnClickLis
         state = !state
         setWidgetImage(state)
 
-        widget?.keywordId?.let {
+        widget?.let {
             DeviceApi(YadomsApi(Preferences(view.context).serverConnection)).command(
                 view.context,
-                it,
+                it.keywordId,
                 if (state) "1" else "0", {}, {})
         }
     }

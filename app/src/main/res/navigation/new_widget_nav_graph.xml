@@ -26,6 +26,15 @@
     <fragment
         android:id="@+id/keywordFragment"
         android:name="com.yadoms.yadroid.SelectKeywordFragment"
-        android:label="fragment_device"
-        tools:layout="@layout/fragment_select_keyword"/>
+        android:label="fragment_keyword"
+        tools:layout="@layout/fragment_select_keyword">
+        <action
+            android:id="@+id/action_keywordFragment_to_nameFragment"
+            app:destination="@id/nameFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/nameFragment"
+        android:name="com.yadoms.yadroid.SetNameFragment"
+        android:label="name_widget"
+        tools:layout="@layout/fragment_set_name"/>
 </navigation>

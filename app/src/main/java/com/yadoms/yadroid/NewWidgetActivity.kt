@@ -12,9 +12,12 @@ import com.yadoms.yadroid.yadomsApi.DeviceApi
 
 class NewWidgetActivity : AppCompatActivity() {
 
-    val preselectedKeywords: MutableList<DeviceApi.Keyword> = mutableListOf()
-    var selectedDeviceId: Int? = null
     var selectedWidgetType: WidgetTypes.WidgetTypeItem? = null
+    var selectedDeviceId: Int? = null
+    var selectedDeviceName: String? = null
+    val preselectedKeywords: MutableList<DeviceApi.Keyword> = mutableListOf()
+    var selectedKeywordId: Int? = null
+    var selectedKeywordName: String? = null
 
     private lateinit var binding: ActivityNewWidgetBinding
     private lateinit var navController: NavController
@@ -53,8 +56,8 @@ class NewWidgetActivity : AppCompatActivity() {
         findViewById<TextView>(R.id.new_widget_operation_description).text = getString(textId)
     }
 
-    fun addNewWidget(selectedKeywordId: Int) {
-        Preferences(this).addNewWidget(Preferences.Widget(selectedWidgetType!!.type, "TODO nommer le widget", selectedKeywordId))
+    fun addNewWidget(name: String) {
+        Preferences(this).addNewWidget(Preferences.Widget(selectedWidgetType!!.type, name, selectedKeywordId!!))
     }
 
 }
