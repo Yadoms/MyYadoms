@@ -10,6 +10,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.yadoms.yadroid.databinding.ActivityScrollingBinding
 import com.yadoms.yadroid.preferences.Preferences
 import com.yadoms.yadroid.preferences.SettingsActivity
+import java.lang.Thread.sleep
+
 
 class ScrollingActivity : AppCompatActivity() {
 
@@ -31,10 +33,19 @@ class ScrollingActivity : AppCompatActivity() {
             }
         }
 
-        val widgets = Preferences(this).widgets
+        //TODO remettre val widgets = Preferences(this).widgets
+        val widgets = listOf(Preferences.Widget(WidgetTypes.WidgetType.Switch, "sw", 12),
+            Preferences.Widget(WidgetTypes.WidgetType.Numeric, "nm", 45))
         
         binding.contentScrollingLayout.widgetsList.layoutManager = LinearLayoutManager(this)
         binding.contentScrollingLayout.widgetsList.adapter = WidgetsRecyclerViewAdapter(widgets)
+
+//        binding.contentScrollingLayout.swipeContainer.setOnRefreshListener {
+//            //TODO refresh widgets
+//            Log.d("test", "test")
+//            sleep(500)
+//            binding.contentScrollingLayout.swipeContainer.isRefreshing = false;
+//        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

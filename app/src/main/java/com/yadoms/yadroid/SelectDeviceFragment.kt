@@ -57,7 +57,10 @@ class SelectDeviceFragment : Fragment() {
                         override fun onItemClick(position: Int) {
                             newWidgetActivity().selectedDeviceId = preselectedDevices[position].id
                             newWidgetActivity().selectedDeviceName = preselectedDevices[position].friendlyName
-                            Log.d(SelectDeviceFragment::class.simpleName, "Selected device = ${newWidgetActivity().selectedDeviceName} (${newWidgetActivity().selectedDeviceId})")
+                            Log.d(
+                                SelectDeviceFragment::class.simpleName,
+                                "Selected device = ${newWidgetActivity().selectedDeviceName} (${newWidgetActivity().selectedDeviceId})"
+                            )
                             newWidgetActivity().preselectedKeywords.clear()
                             preselectedKeywords.forEach {
                                 if (it.deviceId == newWidgetActivity().selectedDeviceId)
@@ -68,12 +71,13 @@ class SelectDeviceFragment : Fragment() {
                         }
                     }
 
+                val kwFilter = newWidgetActivity().selectedWidgetType!!.keywordFilter
                 val yApi = YadomsApi(Preferences(activity as Context).serverConnection)
                 DeviceApi(yApi).getDeviceMatchKeywordCriteria(
                     activity,
-                    expectedKeywordType = newWidgetActivity().selectedWidgetType!!.keywordFilter.expectedKeywordType,
-                    expectedCapacity = newWidgetActivity().selectedWidgetType!!.keywordFilter.expectedCapacity,
-                    expectedKeywordAccess = newWidgetActivity().selectedWidgetType!!.keywordFilter.expectedKeywordAccess,
+                    expectedKeywordType = kwFilter.expectedKeywordType,
+                    expectedCapacity = kwFilter.expectedCapacity,
+                    expectedKeywordAccess = kwFilter.expectedKeywordAccess,
                     onOk = { devices: List<DeviceApi.Device>, keywords: List<DeviceApi.Keyword> ->
                         devices.forEach { preselectedDevices.add(it) }
                         keywords.forEach { preselectedKeywords.add(it) }
@@ -81,10 +85,27 @@ class SelectDeviceFragment : Fragment() {
                         adapter?.notifyDataSetChanged();
                     },
                     onError = {
-                        if (activity != null)
-                            Toast.makeText(
-                                activity, "Unable to reach the server", Toast.LENGTH_SHORT
-                            ).show()
+                        // Fallback for Yadoms < 2.4 which don't support matchkeywordcriteria request
+                        if (kwFilter.expectedKeywordType.size != 1) {
+                            if (activity != null)
+                                Toast.makeText(
+                                    activity, "Unable to reach the server", Toast.LENGTH_SHORT
+                                ).show()
+                        } else
+                            DeviceApi(yApi).getDeviceWithCapacityType(
+                                activity,
+                                kwFilter.expectedKeywordType[0],
+                                if (kwFilter.expectedKeywordAccess.size != 1) DeviceApi.KeywordAccess.NoAccess else kwFilter.expectedKeywordAccess[0],
+                                onOk = { devices ->
+                                    devices.forEach { device -> preselectedDevices.add(device) }
+                                    adapter?.notifyDataSetChanged();
+                                },
+                                onError = {
+                                    if (activity != null)
+                                        Toast.makeText(
+                                            activity, "Unable to reach the server", Toast.LENGTH_SHORT
+                                        ).show()
+                                })
                     })
 
                 adapter = SelectDeviceRecyclerViewAdapter(preselectedDevices, onItemClickListener)

@@ -9,6 +9,8 @@ import com.android.volley.toolbox.Volley
 import com.yadoms.yadroid.preferences.Preferences
 
 
+//TODO remplacer Volley par https://square.github.io/retrofit/
+
 class YadomsApi(private val serverConnection: Preferences.ServerConnection) {
     private val baseUrl: String
     private val commonHeaders = buildCommonHeaders()
@@ -38,15 +40,31 @@ class YadomsApi(private val serverConnection: Preferences.ServerConnection) {
     fun get(
         context: Context?,
         url: String,
-        params: String? = null,
+        params: MutableMap<String, String> = mutableMapOf(),
         onOk: (String) -> Unit,
         onError: (String?) -> Unit
     ) {
         val queue = Volley.newRequestQueue(context)
 
+        var urlWithParam = url
+
+        //TODO utiliser un vrai URI builder (pour gérer les espaces et autres caractères spéciaux)
+        // Volley doesn't support params for GET request (getParams won't be called)
+        // So provide param by constructing URL
+        if (params.isNotEmpty())
+        {
+            var delimiter = '?'
+            params.forEach {
+                urlWithParam += delimiter + it.key
+                if (it.value.isNotEmpty())
+                    urlWithParam += '=' + it.value
+                delimiter='&'
+            }
+        }
+
         val stringRequest = object : StringRequest(
             Method.GET,
-            baseUrl + url,
+            baseUrl + urlWithParam,
             {
                 onOk(it)
             },
