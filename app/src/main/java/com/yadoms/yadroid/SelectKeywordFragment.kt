@@ -7,7 +7,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.compose.runtime.key
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -60,10 +59,10 @@ class SelectKeywordFragment : Fragment() {
                             selectedDeviceId,
                             onOk = { keywords ->
                                 keywords.forEach { keyword ->
-                                    if (kwFilter.expectedKeywordAccess.isNotEmpty() && keyword.AccessMode !in kwFilter.expectedKeywordAccess) {
+                                    if (kwFilter.expectedKeywordAccess.isNotEmpty() && keyword.accessMode !in kwFilter.expectedKeywordAccess) {
                                         return@forEach
                                     }
-                                    if (kwFilter.expectedKeywordType.isNotEmpty() && keyword.Type !in kwFilter.expectedKeywordType) {
+                                    if (kwFilter.expectedKeywordType.isNotEmpty() && keyword.type !in kwFilter.expectedKeywordType) {
                                         return@forEach
                                     }
                                     newWidgetActivity().preselectedKeywords.add(keyword)

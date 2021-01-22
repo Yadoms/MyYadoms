@@ -39,7 +39,7 @@ class SwitchViewHolder(val view: View) : WidgetViewHolder(view), View.OnClickLis
         DeviceApi(YadomsApi(Preferences(view.context).serverConnection)).getKeyword(view.context, widget.keywordId, {
             valueView.text = view.resources.getString(
                 R.string.last_update,
-                DateHelper.dateTimeFromApi(it.lastAcquisitionDate).format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.LONG, FormatStyle.SHORT))
+                it.lastAcquisitionDate.format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.LONG, FormatStyle.SHORT))
             )
             setWidgetImage(it.lastAcquisitionValue == "1")
         }, {})

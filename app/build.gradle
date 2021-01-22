@@ -56,6 +56,10 @@ dependencies {
     implementation "androidx.navigation:navigation-compose:1.0.0-alpha05"
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
 
+    //TODO virer Klaxon
+
+    implementation("com.squareup.moshi:moshi-kotlin:1.11.0")
+
     implementation 'com.android.volley:volley:1.1.1'
 
     apply plugin: "androidx.navigation.safeargs.kotlin"

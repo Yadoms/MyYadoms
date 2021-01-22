@@ -8,6 +8,7 @@
     android:focusable="true"
     android:background="?attr/selectableItemBackground">
 
+<!--    Prévoir interface à 2 boutons (pour les velux par exemple) -->
     <ImageView
         android:id="@+id/button"
         android:layout_width="wrap_content"
