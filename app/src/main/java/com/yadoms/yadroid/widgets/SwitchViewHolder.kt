@@ -41,7 +41,8 @@ class SwitchViewHolder(val view: View) : WidgetViewHolder(view), View.OnClickLis
                 R.string.last_update,
                 it.lastAcquisitionDate.format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.LONG, FormatStyle.SHORT))
             )
-            setWidgetImage(it.lastAcquisitionValue == "1")
+            state = it.lastAcquisitionValue == "1"
+            setWidgetImage(state)
         }, {})
 
     }

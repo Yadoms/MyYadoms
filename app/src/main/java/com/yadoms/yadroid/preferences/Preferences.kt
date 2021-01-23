@@ -3,11 +3,9 @@ package com.yadoms.yadroid.preferences
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.preference.PreferenceManager
-import com.beust.klaxon.JsonArray
-import com.beust.klaxon.JsonObject
-import com.beust.klaxon.Klaxon
+import com.squareup.moshi.Moshi
+import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import com.yadoms.yadroid.WidgetTypes
-import java.io.StringReader
 
 class Preferences(private val context: Context) {
 
@@ -35,41 +33,34 @@ class Preferences(private val context: Context) {
             (sharedPreference.getString("server_https_port", "443") ?: "443").toInt()
         )
 
-    fun addNewWidget(widget: Widget) {
-        val klaxon = Klaxon()
-        val widgetsPreference = sharedPreference.getString("widgets", "")
-        val widgetsJsonArray =
-            if (widgetsPreference?.isNotEmpty() == true) klaxon.parseJsonArray(StringReader(widgetsPreference)) else JsonArray<JsonObject>()
-
-        (widgetsJsonArray as JsonArray<JsonObject>).add(
-            JsonObject(
-                mapOf(
-                    "widgetType" to widget.type.ordinal,
-                    "name" to widget.name,
-                    "keywordId" to widget.keywordId
-                )
-            )
-        )
-        val preferencesEditor = sharedPreference.edit()
-        preferencesEditor.putString("widgets", widgetsJsonArray.toJsonString())
-        preferencesEditor.apply();
-        preferencesEditor.commit();
-    }
-
     data class Widget(val type: WidgetTypes.WidgetType, val name: String, val keywordId: Int)
+    class WidgetsPreferences(val widgets: List<Widget>)
+
+    fun addNewWidget(widget: Widget) {
+        val currentWidgets = widgets.toMutableList()
+        currentWidgets.add(widget)
+
+        val widgetsPreferencesString = moshi.adapter(WidgetsPreferences::class.java).toJson(WidgetsPreferences(currentWidgets))
+
+        val preferencesEditor = sharedPreference.edit()
+        preferencesEditor.putString("widgets", widgetsPreferencesString)
+        preferencesEditor.apply()
+        preferencesEditor.commit()
+    }
 
     val widgets: List<Widget>
         get() {
-            val klaxon = Klaxon()
-            val widgetsPreference = sharedPreference.getString("widgets", "")
-            val widgetsJsonArray =
-                if (widgetsPreference?.isNotEmpty() == true) klaxon.parseJsonArray(StringReader(widgetsPreference)) else JsonArray<JsonObject>()
-            return widgetsJsonArray.map {
-                Widget(
-                    WidgetTypes.WidgetType.values()[(it as JsonObject)["widgetType"] as Int],
-                    it["name"] as String,
-                    it["keywordId"] as Int
-                )
-            }
+            val widgetsPreferencesString = sharedPreference.getString("widgets", "") ?: return listOf()
+            if (widgetsPreferencesString.isEmpty())
+                return listOf()
+
+            val widgetsPreferences = moshi.adapter(WidgetsPreferences::class.java).fromJson(widgetsPreferencesString) ?: return listOf()
+            return widgetsPreferences.widgets
         }
+
+    companion object {
+        val moshi: Moshi = Moshi.Builder()
+            .addLast(KotlinJsonAdapterFactory())
+            .build()
+    }
 }
