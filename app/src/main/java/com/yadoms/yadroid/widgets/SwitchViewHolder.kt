@@ -6,7 +6,6 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.yadoms.yadroid.R
 import com.yadoms.yadroid.preferences.Preferences
-import com.yadoms.yadroid.yadomsApi.DateHelper
 import com.yadoms.yadroid.yadomsApi.DeviceApi
 import com.yadoms.yadroid.yadomsApi.YadomsApi
 import java.time.format.DateTimeFormatter
@@ -34,7 +33,6 @@ class SwitchViewHolder(val view: View) : WidgetViewHolder(view), View.OnClickLis
         this.widget = widget
 
         nameView.text = widget.name
-        valueView.text = view.resources.getString(R.string.last_update, "-")
 
         DeviceApi(YadomsApi(Preferences(view.context).serverConnection)).getKeyword(view.context, widget.keywordId, {
             valueView.text = view.resources.getString(
@@ -43,11 +41,13 @@ class SwitchViewHolder(val view: View) : WidgetViewHolder(view), View.OnClickLis
             )
             state = it.lastAcquisitionValue == "1"
             setWidgetImage(state)
-        }, {})
+        }, {
+            valueView.text = view.resources.getString(R.string.last_update, "-")
+        })
 
     }
 
-    fun setWidgetImage(state: Boolean) {
+    private fun setWidgetImage(state: Boolean) {
         when (state) {
             true -> buttonView.setBackgroundResource(R.drawable.switch_animation_forward)
             false -> buttonView.setBackgroundResource(R.drawable.switch_animation_reverse)
