@@ -1,25 +1,22 @@
 package com.yadoms.yadroid
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.yadoms.yadroid.databinding.ActivityScrollingBinding
 import com.yadoms.yadroid.preferences.Preferences
 import com.yadoms.yadroid.preferences.SettingsActivity
-import com.yadoms.yadroid.yadomsApi.DeviceApi
-import com.yadoms.yadroid.yadomsApi.YadomsApi
-import java.lang.Thread.sleep
+import java.util.*
+import kotlin.concurrent.schedule
 
 
 class ScrollingActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityScrollingBinding
+    private var widgets = listOf<Preferences.Widget>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,10 +34,14 @@ class ScrollingActivity : AppCompatActivity() {
             }
         }
 
-        val widgets = Preferences(this).widgets
-        
+        widgets = Preferences(this).widgets
+
         binding.contentScrollingLayout.widgetsList.layoutManager = LinearLayoutManager(this)
         binding.contentScrollingLayout.widgetsList.adapter = WidgetsRecyclerViewAdapter(widgets)
+
+        Timer(false).schedule(30000, 30000) {
+            runOnUiThread { binding.contentScrollingLayout.widgetsList.adapter?.notifyDataSetChanged() }
+        }
 
 //        binding.contentScrollingLayout.swipeContainer.setOnRefreshListener {
 //            //TODO refresh widgets
@@ -48,6 +49,17 @@ class ScrollingActivity : AppCompatActivity() {
 //            sleep(500)
 //            binding.contentScrollingLayout.swipeContainer.isRefreshing = false;
 //        }
+    }
+
+    override fun onResume() {
+        val newWidgets = Preferences(this).widgets
+        if (widgets != newWidgets) {
+            widgets = newWidgets
+            binding.contentScrollingLayout.widgetsList.adapter = WidgetsRecyclerViewAdapter(widgets)
+        }
+
+        binding.contentScrollingLayout.widgetsList.adapter?.notifyDataSetChanged()
+        super.onResume()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
