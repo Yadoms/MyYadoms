@@ -39,6 +39,12 @@ class Preferences(private val context: Context) {
     fun addNewWidget(widget: Widget) {
         val currentWidgets = widgets.toMutableList()
         currentWidgets.add(widget)
+        saveWidgets(currentWidgets)
+    }
+
+    fun removeWidget(position: Int) {
+        val currentWidgets = widgets.toMutableList()
+        currentWidgets.removeAt(position)
 
         val widgetsPreferencesString = moshi.adapter(WidgetsPreferences::class.java).toJson(WidgetsPreferences(currentWidgets))
 
@@ -49,14 +55,25 @@ class Preferences(private val context: Context) {
     }
 
     val widgets: List<Widget>
-        get() {
-            val widgetsPreferencesString = sharedPreference.getString("widgets", "") ?: return listOf()
-            if (widgetsPreferencesString.isEmpty())
-                return listOf()
+        get() = loadWidgets()
 
-            val widgetsPreferences = moshi.adapter(WidgetsPreferences::class.java).fromJson(widgetsPreferencesString) ?: return listOf()
-            return widgetsPreferences.widgets
-        }
+    private fun loadWidgets() : List<Widget> {
+        val widgetsPreferencesString = sharedPreference.getString("widgets", "") ?: return listOf()
+        if (widgetsPreferencesString.isEmpty())
+            return listOf()
+
+        val widgetsPreferences = moshi.adapter(WidgetsPreferences::class.java).fromJson(widgetsPreferencesString) ?: return listOf()
+        return widgetsPreferences.widgets
+
+    }
+
+    private fun saveWidgets(currentWidgets: MutableList<Widget>) {
+        val widgetsPreferencesString = moshi.adapter(WidgetsPreferences::class.java).toJson(WidgetsPreferences(currentWidgets))
+        val preferencesEditor = sharedPreference.edit()
+        preferencesEditor.putString("widgets", widgetsPreferencesString)
+        preferencesEditor.apply()
+        preferencesEditor.commit()
+    }
 
     companion object {
         val moshi: Moshi = Moshi.Builder()

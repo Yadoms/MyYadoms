@@ -1,20 +1,15 @@
 package com.yadoms.yadroid
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.yadoms.yadroid.databinding.ActivityScrollingBinding
 import com.yadoms.yadroid.preferences.Preferences
 import com.yadoms.yadroid.preferences.SettingsActivity
-import com.yadoms.yadroid.yadomsApi.DeviceApi
-import com.yadoms.yadroid.yadomsApi.YadomsApi
-import java.lang.Thread.sleep
 
 
 class ScrollingActivity : AppCompatActivity() {
@@ -37,10 +32,12 @@ class ScrollingActivity : AppCompatActivity() {
             }
         }
 
-        val widgets = Preferences(this).widgets
-        
-        binding.contentScrollingLayout.widgetsList.layoutManager = LinearLayoutManager(this)
-        binding.contentScrollingLayout.widgetsList.adapter = WidgetsRecyclerViewAdapter(widgets)
+        val widgetsListView = binding.contentScrollingLayout.widgetsList
+        widgetsListView.layoutManager = LinearLayoutManager(this)
+        val adapter = WidgetsRecyclerViewAdapter(Preferences(this))
+        widgetsListView.adapter = adapter
+        val itemTouchHelper = ItemTouchHelper(WidgetSwipeAndDragHandler(adapter))
+        itemTouchHelper.attachToRecyclerView(widgetsListView)
 
 //        binding.contentScrollingLayout.swipeContainer.setOnRefreshListener {
 //            //TODO refresh widgets
