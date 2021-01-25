@@ -7,6 +7,7 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.yadoms.yadroid.databinding.ActivityScrollingBinding
 import com.yadoms.yadroid.preferences.Preferences
 import com.yadoms.yadroid.preferences.SettingsActivity
@@ -17,7 +18,12 @@ import kotlin.concurrent.schedule
 class ScrollingActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityScrollingBinding
-    private var widgets = listOf<Preferences.Widget>()
+
+    private val widgetsListView: RecyclerView
+        get() = binding.contentScrollingLayout.widgetsList
+
+    private val widgetsListViewAdapter: WidgetsRecyclerViewAdapter
+        get() = widgetsListView.adapter as WidgetsRecyclerViewAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,20 +36,19 @@ class ScrollingActivity : AppCompatActivity() {
         with(binding) {
             toolbarLayout.title = title
             addWidget.setOnClickListener {
-                val intent = Intent(this@ScrollingActivity, NewWidgetActivity::class.java)
-                startActivity(intent)
+                registerForActivityResult(NewWidgetActivityContract()) { newWidget ->
+                    newWidget?.let { widgetsListViewAdapter.addNewWidget(it) }
+                }.launch(null)
             }
         }
 
-        val widgetsListView = binding.contentScrollingLayout.widgetsList
         widgetsListView.layoutManager = LinearLayoutManager(this)
-        val adapter = WidgetsRecyclerViewAdapter(Preferences(this))
-        widgetsListView.adapter = adapter
-        val itemTouchHelper = ItemTouchHelper(WidgetSwipeAndDragHandler(adapter))
+        widgetsListView.adapter = WidgetsRecyclerViewAdapter(Preferences(this))
+        val itemTouchHelper = ItemTouchHelper(WidgetSwipeAndDragHandler(widgetsListViewAdapter))
         itemTouchHelper.attachToRecyclerView(widgetsListView)
 
         Timer(false).schedule(30000, 30000) {
-            runOnUiThread { binding.contentScrollingLayout.widgetsList.adapter?.notifyDataSetChanged() }
+            runOnUiThread { widgetsListViewAdapter.notifyDataSetChanged() }
         }
 
 //        binding.contentScrollingLayout.swipeContainer.setOnRefreshListener {
@@ -55,13 +60,7 @@ class ScrollingActivity : AppCompatActivity() {
     }
 
     override fun onResume() {
-        val newWidgets = Preferences(this).widgets
-        if (widgets != newWidgets) {
-            widgets = newWidgets
-            binding.contentScrollingLayout.widgetsList.adapter = WidgetsRecyclerViewAdapter(Preferences(this))
-        }
-
-        binding.contentScrollingLayout.widgetsList.adapter?.notifyDataSetChanged()
+        widgetsListViewAdapter.notifyDataSetChanged()
         super.onResume()
     }
 

@@ -11,6 +11,6 @@ class WidgetSwipeAndDragHandler(val adapter: WidgetsRecyclerViewAdapter) :
     }
 
     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-        adapter.deleteItem(viewHolder.adapterPosition)
+        adapter.deleteWidget(viewHolder.adapterPosition)
     }
 }

@@ -36,24 +36,6 @@ class Preferences(private val context: Context) {
     data class Widget(val type: WidgetTypes.WidgetType, val name: String, val keywordId: Int)
     class WidgetsPreferences(val widgets: List<Widget>)
 
-    fun addNewWidget(widget: Widget) {
-        val currentWidgets = widgets.toMutableList()
-        currentWidgets.add(widget)
-        saveWidgets(currentWidgets)
-    }
-
-    fun removeWidget(position: Int) {
-        val currentWidgets = widgets.toMutableList()
-        currentWidgets.removeAt(position)
-
-        val widgetsPreferencesString = moshi.adapter(WidgetsPreferences::class.java).toJson(WidgetsPreferences(currentWidgets))
-
-        val preferencesEditor = sharedPreference.edit()
-        preferencesEditor.putString("widgets", widgetsPreferencesString)
-        preferencesEditor.apply()
-        preferencesEditor.commit()
-    }
-
     val widgets: List<Widget>
         get() = loadWidgets()
 
@@ -67,7 +49,7 @@ class Preferences(private val context: Context) {
 
     }
 
-    private fun saveWidgets(currentWidgets: MutableList<Widget>) {
+    fun saveWidgets(currentWidgets: MutableList<Widget>) {
         val widgetsPreferencesString = moshi.adapter(WidgetsPreferences::class.java).toJson(WidgetsPreferences(currentWidgets))
         val preferencesEditor = sharedPreference.edit()
         preferencesEditor.putString("widgets", widgetsPreferencesString)

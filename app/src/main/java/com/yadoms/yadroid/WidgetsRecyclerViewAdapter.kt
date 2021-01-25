@@ -9,9 +9,10 @@ import com.yadoms.yadroid.widgets.WidgetViewHolder
 //TODO bannir les !!
 
 class WidgetsRecyclerViewAdapter(val preferences: Preferences) : RecyclerView.Adapter<WidgetViewHolder>() {
+    private var widgets = preferences.widgets as MutableList
 
     override fun getItemViewType(position: Int): Int {
-        return preferences.widgets[position].type.ordinal
+        return widgets[position].type.ordinal
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WidgetViewHolder {
@@ -24,12 +25,20 @@ class WidgetsRecyclerViewAdapter(val preferences: Preferences) : RecyclerView.Ad
     }
 
     override fun onBindViewHolder(holder: WidgetViewHolder, position: Int) {
-        holder.onBind(preferences.widgets[position])
+        holder.onBind(widgets[position])
     }
 
-    override fun getItemCount(): Int = preferences.widgets.size
+    override fun getItemCount(): Int = widgets.size
 
-    fun deleteItem(position: Int) {
-        preferences.removeWidget(position)
+    fun addNewWidget(widget: Preferences.Widget) {
+        widgets.add(widget)
+        preferences.saveWidgets(widgets)
+        notifyItemInserted(widgets.size - 1)
+    }
+
+    fun deleteWidget(position: Int) {
+        widgets.removeAt(position)
+        preferences.saveWidgets(widgets)
+        notifyItemRemoved(position)
     }
 }

@@ -1,5 +1,7 @@
 package com.yadoms.yadroid
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import android.widget.TextView
@@ -56,8 +58,15 @@ class NewWidgetActivity : AppCompatActivity() {
         findViewById<TextView>(R.id.new_widget_operation_description).text = getString(textId)
     }
 
-    fun addNewWidget(name: String) {
-        Preferences(this).addNewWidget(Preferences.Widget(selectedWidgetType!!.type, name, selectedKeywordId!!))
+    fun finish(name: String) {
+        val returnIntent = Intent()
+        returnIntent.putExtra(
+            NewWidgetActivityContract.ID, Preferences.moshi.adapter(Preferences.Widget::class.java).toJson(
+                Preferences.Widget(selectedWidgetType!!.type, name, selectedKeywordId!!)
+            )
+        )
+        setResult(Activity.RESULT_OK, returnIntent)
+        finish()
     }
-
 }
+

@@ -28,8 +28,7 @@ class SetNameFragment : Fragment() {
         binding.finish.setOnClickListener {
             val name = binding.itemName.text.toString().ifEmpty { binding.itemName.hint } as String
             Log.d(SelectDeviceFragment::class.simpleName, "Set widget name = $name)")
-            newWidgetActivity().addNewWidget(name)
-            newWidgetActivity().finish()
+            newWidgetActivity().finish(name)
         }
 
         return view
