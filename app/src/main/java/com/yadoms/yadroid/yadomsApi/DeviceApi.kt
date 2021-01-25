@@ -89,7 +89,7 @@ class DeviceApi(private val yApi: YadomsApi) {
         val deviceId: Int,
         val friendlyName: String,
         val lastAcquisitionValue: String,
-        val lastAcquisitionDate: LocalDateTime,
+        val lastAcquisitionDate: LocalDateTime?,
         val accessMode: KeywordAccess,
         val type: KeywordTypes
     )
@@ -289,12 +289,19 @@ class DeviceApi(private val yApi: YadomsApi) {
 
     internal class LocalDateTimeAdapter {
         private val pattern = "yyyyMMdd'T'HHmmss[.SSSSSS]"
+        private val notADateTimeSpecialValue = "not-a-date-time"
 
         @ToJson
-        fun toJson(dt: LocalDateTime) = dt.format(DateTimeFormatter.ofPattern(pattern))
+        fun toJson(dt: LocalDateTime?) = when (dt) {
+            null -> notADateTimeSpecialValue
+            else -> dt.format(DateTimeFormatter.ofPattern(pattern))
+        }
 
         @FromJson
-        fun fromJson(dt: String) = LocalDateTime.parse(dt, DateTimeFormatter.ofPattern(pattern))
+        fun fromJson(dt: String): LocalDateTime? = when (dt) {
+            notADateTimeSpecialValue -> null
+            else -> LocalDateTime.parse(dt, DateTimeFormatter.ofPattern(pattern))
+        }
     }
 
     companion object {
