@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.yadoms.yadroid.databinding.ActivityScrollingBinding
 import com.yadoms.yadroid.preferences.Preferences
@@ -34,10 +35,12 @@ class ScrollingActivity : AppCompatActivity() {
             }
         }
 
-        widgets = Preferences(this).widgets
-
-        binding.contentScrollingLayout.widgetsList.layoutManager = LinearLayoutManager(this)
-        binding.contentScrollingLayout.widgetsList.adapter = WidgetsRecyclerViewAdapter(widgets)
+        val widgetsListView = binding.contentScrollingLayout.widgetsList
+        widgetsListView.layoutManager = LinearLayoutManager(this)
+        val adapter = WidgetsRecyclerViewAdapter(Preferences(this))
+        widgetsListView.adapter = adapter
+        val itemTouchHelper = ItemTouchHelper(WidgetSwipeAndDragHandler(adapter))
+        itemTouchHelper.attachToRecyclerView(widgetsListView)
 
         Timer(false).schedule(30000, 30000) {
             runOnUiThread { binding.contentScrollingLayout.widgetsList.adapter?.notifyDataSetChanged() }
@@ -55,7 +58,7 @@ class ScrollingActivity : AppCompatActivity() {
         val newWidgets = Preferences(this).widgets
         if (widgets != newWidgets) {
             widgets = newWidgets
-            binding.contentScrollingLayout.widgetsList.adapter = WidgetsRecyclerViewAdapter(widgets)
+            binding.contentScrollingLayout.widgetsList.adapter = WidgetsRecyclerViewAdapter(Preferences(this))
         }
 
         binding.contentScrollingLayout.widgetsList.adapter?.notifyDataSetChanged()

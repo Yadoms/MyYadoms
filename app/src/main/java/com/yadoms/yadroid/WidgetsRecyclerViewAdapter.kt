@@ -4,17 +4,14 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.yadoms.yadroid.preferences.Preferences
-import com.yadoms.yadroid.widgets.NumericViewHolder
-import com.yadoms.yadroid.widgets.SwitchViewHolder
 import com.yadoms.yadroid.widgets.WidgetViewHolder
 
+//TODO bannir les !!
 
-class WidgetsRecyclerViewAdapter(
-    private val widgets: List<Preferences.Widget>
-) : RecyclerView.Adapter<WidgetViewHolder>() {
+class WidgetsRecyclerViewAdapter(val preferences: Preferences) : RecyclerView.Adapter<WidgetViewHolder>() {
 
     override fun getItemViewType(position: Int): Int {
-        return widgets[position].type.ordinal
+        return preferences.widgets[position].type.ordinal
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WidgetViewHolder {
@@ -27,8 +24,12 @@ class WidgetsRecyclerViewAdapter(
     }
 
     override fun onBindViewHolder(holder: WidgetViewHolder, position: Int) {
-        holder.onBind(widgets[position])
+        holder.onBind(preferences.widgets[position])
     }
 
-    override fun getItemCount(): Int = widgets.size
+    override fun getItemCount(): Int = preferences.widgets.size
+
+    fun deleteItem(position: Int) {
+        preferences.removeWidget(position)
+    }
 }
