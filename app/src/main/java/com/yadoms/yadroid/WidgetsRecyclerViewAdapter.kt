@@ -46,13 +46,21 @@ class WidgetsRecyclerViewAdapter(val preferences: Preferences) : RecyclerView.Ad
     }
 
     fun deleteWidget(position: Int) {
-        recentlyDeletedWidget = widgets.get(position);
+        recentlyDeletedWidget = widgets[position];
         recentlyDeletedWidgetPosition = position;
 
         widgets.removeAt(position)
         preferences.saveWidgets(widgets)
         notifyItemRemoved(position)
         showUndoSnackbar();
+    }
+
+    fun moveWidget(fromPosition: Int, toPosition: Int) {
+        val movedWidget = widgets[fromPosition]
+        widgets.removeAt(fromPosition)
+        widgets.add(if (toPosition > fromPosition + 1) toPosition - 1 else toPosition, movedWidget)
+        preferences.saveWidgets(widgets)
+        notifyItemMoved(fromPosition, toPosition);
     }
 
     private fun showUndoSnackbar() {
