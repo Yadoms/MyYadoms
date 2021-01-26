@@ -1,6 +1,5 @@
 package com.yadoms.yadroid
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -13,7 +12,7 @@ import com.yadoms.yadroid.widgets.WidgetViewHolder
 //TODO mettre firebase
 
 class WidgetsRecyclerViewAdapter(val preferences: Preferences) : RecyclerView.Adapter<WidgetViewHolder>() {
-    private var widgets = preferences.widgets as MutableList
+    private var widgets = preferences.widgets
 
     private lateinit var view: ViewGroup
 

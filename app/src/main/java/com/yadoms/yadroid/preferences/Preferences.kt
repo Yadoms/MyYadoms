@@ -36,16 +36,16 @@ class Preferences(private val context: Context) {
     data class Widget(val type: WidgetTypes.WidgetType, val name: String, val keywordId: Int)
     class WidgetsPreferences(val widgets: List<Widget>)
 
-    val widgets: List<Widget>
+    val widgets: MutableList<Widget>
         get() = loadWidgets()
 
-    private fun loadWidgets() : List<Widget> {
-        val widgetsPreferencesString = sharedPreference.getString("widgets", "") ?: return listOf()
+    private fun loadWidgets() : MutableList<Widget> {
+        val widgetsPreferencesString = sharedPreference.getString("widgets", "") ?: return mutableListOf()
         if (widgetsPreferencesString.isEmpty())
-            return listOf()
+            return mutableListOf()
 
-        val widgetsPreferences = moshi.adapter(WidgetsPreferences::class.java).fromJson(widgetsPreferencesString) ?: return listOf()
-        return widgetsPreferences.widgets
+        val widgetsPreferences = moshi.adapter(WidgetsPreferences::class.java).fromJson(widgetsPreferencesString) ?: return mutableListOf()
+        return widgetsPreferences.widgets as MutableList
 
     }
 
