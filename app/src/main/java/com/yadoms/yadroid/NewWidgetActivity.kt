@@ -10,6 +10,7 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.yadoms.yadroid.databinding.ActivityNewWidgetBinding
 import com.yadoms.yadroid.preferences.Preferences
+import com.yadoms.yadroid.widgets.WidgetTypes
 import com.yadoms.yadroid.yadomsApi.DeviceApi
 
 class NewWidgetActivity : AppCompatActivity() {

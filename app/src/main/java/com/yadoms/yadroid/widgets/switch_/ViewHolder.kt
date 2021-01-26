@@ -1,4 +1,4 @@
-package com.yadoms.yadroid.widgets
+package com.yadoms.yadroid.widgets.switch_
 
 import android.graphics.drawable.AnimationDrawable
 import android.view.View
@@ -6,19 +6,17 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.yadoms.yadroid.R
 import com.yadoms.yadroid.preferences.Preferences
+import com.yadoms.yadroid.widgets.WidgetViewHolder
 import com.yadoms.yadroid.yadomsApi.DeviceApi
 import com.yadoms.yadroid.yadomsApi.YadomsApi
-import java.time.format.DateTimeFormatter
-import java.time.format.FormatStyle
 
-class SwitchViewHolder(val view: View) : WidgetViewHolder(view), View.OnClickListener {
+class ViewHolder(view: View) : WidgetViewHolder(view), View.OnClickListener {
     private var switchAnimation: AnimationDrawable
     private val buttonView = view.findViewById<ImageView>(R.id.button).apply {
         setBackgroundResource(R.drawable.switch_animation_forward)
         switchAnimation = background as AnimationDrawable
     }
     private val nameView: TextView = view.findViewById(R.id.name)
-    private val valueView: TextView = view.findViewById(R.id.value)
     private var state = false
     private var widget: Preferences.Widget? = null
 
@@ -26,27 +24,17 @@ class SwitchViewHolder(val view: View) : WidgetViewHolder(view), View.OnClickLis
         itemView.setOnClickListener(this)
     }
 
-    override val name: String
-        get() = "Switch"
-
     override fun onBind(widget: Preferences.Widget) {
         this.widget = widget
 
         nameView.text = widget.name
 
         DeviceApi(YadomsApi(Preferences(view.context).serverConnection)).getKeyword(view.context, widget.keywordId, {
-            valueView.text = view.resources.getString(
-                R.string.last_update,
-                when (it.lastAcquisitionDate) {
-                    null -> "{-}"
-                    else -> it.lastAcquisitionDate.format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.LONG, FormatStyle.SHORT))
-                }
-            )
+            setLastUpdate(it.lastAcquisitionDate)
             setState(it.lastAcquisitionValue == "1")
         }, {
-            valueView.text = view.resources.getString(R.string.last_update, "-")
+            setLastUpdate(null)
         })
-
     }
 
     private fun setState(newState: Boolean) {

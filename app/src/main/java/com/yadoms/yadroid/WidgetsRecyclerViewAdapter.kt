@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import com.yadoms.yadroid.preferences.Preferences
+import com.yadoms.yadroid.widgets.WidgetTypes
 import com.yadoms.yadroid.widgets.WidgetViewHolder
 
 

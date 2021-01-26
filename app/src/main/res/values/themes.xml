@@ -3,7 +3,7 @@
     <style name="Theme.Yadroid" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/yadomsBlue</item>
-        <item name="colorPrimaryVariant">@color/yadomsBlueDark</item>
+        <item name="colorPrimaryVariant">@color/yadomsBlue</item>
         <item name="colorOnPrimary">@color/white</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/teal_200</item>

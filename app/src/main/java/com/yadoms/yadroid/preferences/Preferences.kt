@@ -5,7 +5,7 @@ import android.content.SharedPreferences
 import androidx.preference.PreferenceManager
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
-import com.yadoms.yadroid.WidgetTypes
+import com.yadoms.yadroid.widgets.WidgetTypes
 
 class Preferences(private val context: Context) {
 

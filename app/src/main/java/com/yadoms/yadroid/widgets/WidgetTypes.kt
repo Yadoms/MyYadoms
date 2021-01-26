@@ -1,16 +1,15 @@
-package com.yadoms.yadroid
+package com.yadoms.yadroid.widgets
 
 import android.view.View
-import com.yadoms.yadroid.widgets.NumericViewHolder
-import com.yadoms.yadroid.widgets.SwitchViewHolder
-import com.yadoms.yadroid.widgets.WidgetViewHolder
 import com.yadoms.yadroid.yadomsApi.DeviceApi
-import java.util.*
 
 
 object WidgetTypes {
 
-    val WidgetTypes: MutableList<WidgetTypeItem> = ArrayList()
+    val WidgetTypes = mutableListOf(
+        com.yadoms.yadroid.widgets.switch_.type,
+        com.yadoms.yadroid.widgets.numeric.type
+    )
 
     data class KeywordFilter(
         var expectedKeywordType: Array<DeviceApi.KeywordTypes> = arrayOf(),
@@ -37,33 +36,6 @@ object WidgetTypes {
             return result
         }
     }
-
-    init {
-        addItem(
-            WidgetTypeItem(
-                type = WidgetType.Switch,
-                name = "Switch",
-                description = "A widget to drive ON/OFF devices",
-                logo = R.drawable.ic_switch1,
-                keywordFilter = KeywordFilter(expectedKeywordType = arrayOf(DeviceApi.KeywordTypes.Bool)),
-                layout = R.layout.widget_switch_item,
-                createViewHolder = { SwitchViewHolder(it) }
-            )
-        )
-        addItem(
-            WidgetTypeItem(
-                type = WidgetType.Numeric,
-                name = "Numeric display",
-                description = "A widget to display numeric data",
-                logo = R.drawable.ic_numeric,
-                keywordFilter = KeywordFilter(expectedKeywordType = arrayOf(DeviceApi.KeywordTypes.Numeric)),
-                layout = R.layout.widget_numeric_item,
-                createViewHolder = { NumericViewHolder(it) }
-            )
-        )
-    }
-
-    private fun addItem(item: WidgetTypeItem) = WidgetTypes.add(item)
 
     fun item(byType: WidgetType): WidgetTypeItem? {
         return WidgetTypes.find { it.type == byType }
