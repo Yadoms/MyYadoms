@@ -8,11 +8,11 @@
     android:focusable="true"
     android:background="?attr/selectableItemBackground">
 
-<!--    Prévoir interface à 2 boutons (pour les velux par exemple) -->
+<!-- TODO  Prévoir interface à 2 boutons (pour les velux par exemple) -->
     <ImageView
         android:id="@+id/button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="72dp"
+        android:layout_height="72dp"
         android:contentDescription="@string/_switch"
         tools:src="@drawable/ic_switch1"
         android:layout_gravity="center_vertical"
