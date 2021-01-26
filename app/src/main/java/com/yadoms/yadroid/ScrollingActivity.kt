@@ -44,7 +44,7 @@ class ScrollingActivity : AppCompatActivity() {
 
         widgetsListView.layoutManager = LinearLayoutManager(this)
         widgetsListView.adapter = WidgetsRecyclerViewAdapter(Preferences(this))
-        val itemTouchHelper = ItemTouchHelper(WidgetSwipeAndDragHandler(widgetsListViewAdapter))
+        val itemTouchHelper = ItemTouchHelper(WidgetSwipeAndDragHandler(this, widgetsListViewAdapter))
         itemTouchHelper.attachToRecyclerView(widgetsListView)
 
         Timer(false).schedule(30000, 30000) {
