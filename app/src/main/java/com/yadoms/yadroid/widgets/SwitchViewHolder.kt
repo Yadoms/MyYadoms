@@ -42,15 +42,18 @@ class SwitchViewHolder(val view: View) : WidgetViewHolder(view), View.OnClickLis
                     else -> it.lastAcquisitionDate.format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.LONG, FormatStyle.SHORT))
                 }
             )
-            state = it.lastAcquisitionValue == "1"
-            setWidgetImage(state)
+            setState(it.lastAcquisitionValue == "1")
         }, {
             valueView.text = view.resources.getString(R.string.last_update, "-")
         })
 
     }
 
-    private fun setWidgetImage(state: Boolean) {
+    private fun setState(newState: Boolean) {
+        if (newState == state)
+            return
+        state = newState
+
         when (state) {
             true -> buttonView.setBackgroundResource(R.drawable.switch_animation_forward)
             false -> buttonView.setBackgroundResource(R.drawable.switch_animation_reverse)
@@ -60,8 +63,7 @@ class SwitchViewHolder(val view: View) : WidgetViewHolder(view), View.OnClickLis
     }
 
     override fun onClick(p0: View?) {
-        state = !state
-        setWidgetImage(state)
+        setState(!state)
 
         widget?.let {
             DeviceApi(YadomsApi(Preferences(view.context).serverConnection)).command(
