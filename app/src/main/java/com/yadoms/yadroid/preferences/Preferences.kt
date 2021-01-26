@@ -34,7 +34,7 @@ class Preferences(private val context: Context) {
         )
 
     data class Widget(val type: WidgetTypes.WidgetType, val name: String, val keywordId: Int)
-    class WidgetsPreferences(val widgets: List<Widget>)
+    class WidgetsPreferences(val widgets: MutableList<Widget>)
 
     val widgets: MutableList<Widget>
         get() = loadWidgets()
@@ -45,7 +45,7 @@ class Preferences(private val context: Context) {
             return mutableListOf()
 
         val widgetsPreferences = moshi.adapter(WidgetsPreferences::class.java).fromJson(widgetsPreferencesString) ?: return mutableListOf()
-        return widgetsPreferences.widgets as MutableList
+        return widgetsPreferences.widgets
 
     }
 
