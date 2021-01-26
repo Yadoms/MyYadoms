@@ -57,10 +57,10 @@ class WidgetsRecyclerViewAdapter(val preferences: Preferences) : RecyclerView.Ad
 
     private fun showUndoSnackbar() {
         val snackbar: Snackbar = Snackbar.make(
-            view, view.context.getString(com.yadoms.yadroid.R.string.widget_deleted),
+            view, view.context.getString(R.string.widget_deleted),
             Snackbar.LENGTH_LONG
         )
-        snackbar.setAction(view.context.getString(com.yadoms.yadroid.R.string.undo)) { undoDelete() }
+        snackbar.setAction(view.context.getString(R.string.undo)) { undoDelete() }
         snackbar.show()
     }
 
