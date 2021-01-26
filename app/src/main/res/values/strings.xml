@@ -24,4 +24,6 @@
     <!-- Switch -->
     <string name="_switch">Switch</string>
     <string name="last_update">Last update : %s</string>
+    <string name="widget_deleted">Widget deleted</string>
+    <string name="undo">Undo</string>
 </resources>
