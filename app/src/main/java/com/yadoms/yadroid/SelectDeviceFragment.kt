@@ -8,7 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
@@ -19,18 +18,8 @@ import java.util.*
 
 class SelectDeviceFragment : Fragment() {
 
-    private var columnCount = 1
-
     fun newWidgetActivity(): NewWidgetActivity {
         return activity as NewWidgetActivity
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        arguments?.let {
-            columnCount = it.getInt(ARG_COLUMN_COUNT)
-        }
     }
 
     override fun onCreateView(
@@ -42,10 +31,7 @@ class SelectDeviceFragment : Fragment() {
         // Set the adapter
         if (view is RecyclerView) {
             with(view) {
-                layoutManager = when {
-                    columnCount <= 1 -> LinearLayoutManager(context)
-                    else -> GridLayoutManager(context, columnCount)
-                }
+                layoutManager = LinearLayoutManager(context)
 
                 newWidgetActivity().setOperationDescription(R.string.select_device)
 
@@ -82,7 +68,7 @@ class SelectDeviceFragment : Fragment() {
                         devices.forEach { preselectedDevices.add(it) }
                         keywords.forEach { preselectedKeywords.add(it) }
 
-                        adapter?.notifyDataSetChanged();
+                        adapter?.notifyDataSetChanged()
                     },
                     onError = {
                         // Fallback for Yadoms < 2.4 which don't support matchkeywordcriteria request
@@ -99,7 +85,7 @@ class SelectDeviceFragment : Fragment() {
                                 if (kwFilter.expectedKeywordAccess.size != 1) DeviceApi.KeywordAccess.NoAccess else kwFilter.expectedKeywordAccess[0],
                                 onOk = { devices ->
                                     devices.forEach { device -> preselectedDevices.add(device) }
-                                    adapter?.notifyDataSetChanged();
+                                    adapter?.notifyDataSetChanged()
                                 },
                                 onError = {
                                     if (activity != null)
@@ -115,20 +101,5 @@ class SelectDeviceFragment : Fragment() {
         }
 
         return view
-    }
-
-    companion object {
-
-        // TODO: Customize parameter argument names
-        const val ARG_COLUMN_COUNT = "column-count"
-
-        // TODO: Customize parameter initialization
-        @JvmStatic
-        fun newInstance(columnCount: Int) =
-            SelectDeviceFragment().apply {
-                arguments = Bundle().apply {
-                    putInt(ARG_COLUMN_COUNT, columnCount)
-                }
-            }
     }
 }

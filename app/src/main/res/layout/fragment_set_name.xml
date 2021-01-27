@@ -12,6 +12,7 @@
         android:layout_margin="@dimen/text_margin"
         android:textAppearance="?attr/textAppearanceListItem"
         android:inputType="text"
+        android:labelFor="@id/item_name"
         tools:hint="Default device name"
         android:autofillHints="" />
 
@@ -21,5 +22,5 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="50dp"
         android:layout_gravity="end"
-        android:text="Finish" />
+        android:text="@string/finish" />
 </LinearLayout>

@@ -1,6 +1,5 @@
 package com.yadoms.yadroid.widgets.numeric
 
-import android.graphics.drawable.AnimationDrawable
 import android.view.View
 import android.widget.TextView
 import com.yadoms.yadroid.R

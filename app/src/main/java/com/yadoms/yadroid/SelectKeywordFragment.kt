@@ -67,7 +67,7 @@ class SelectKeywordFragment : Fragment() {
                                     }
                                     newWidgetActivity().preselectedKeywords.add(keyword)
                                 }
-                                adapter?.notifyDataSetChanged();
+                                adapter?.notifyDataSetChanged()
                             },
                             onError = {
                                 if (activity != null)

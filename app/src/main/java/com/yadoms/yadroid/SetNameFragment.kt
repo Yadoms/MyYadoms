@@ -12,7 +12,7 @@ class SetNameFragment : Fragment() {
 
     private lateinit var binding: FragmentSetNameBinding
 
-    fun newWidgetActivity(): NewWidgetActivity {
+    private fun newWidgetActivity(): NewWidgetActivity {
         return activity as NewWidgetActivity
     }
 

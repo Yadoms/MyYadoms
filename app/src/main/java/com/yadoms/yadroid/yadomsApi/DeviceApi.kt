@@ -13,69 +13,69 @@ import java.time.format.DateTimeFormatter
 class DeviceApi(private val yApi: YadomsApi) {
     private val _logTag = javaClass.canonicalName
 
-    enum class KeywordTypes(val yadomsApiKey: String) {
-        NoData("nodata"),
-        StringType("string"),
-        Numeric("numeric"),
-        Bool("bool"),
-        Json("json"),
-        Enum("enum"),
-        DateTime("datetime")
+    enum class KeywordTypes {
+        NoData,
+        StringType,
+        Numeric,
+        Bool,
+        Json,
+        Enum,
+        DateTime
     }
 
-    enum class StandardCapacities(val yadomsApiKey: String) {
-        Alarm("alarm"),
-        ApparentPower("apparentpower"),
-        ArmingAlarm("armingAlarm"),
-        BatteryLevel("batteryLevel"),
-        CameraMove("cameraMove"),
-        ColorRGB("colorrgb"),
-        ColorRGBW("colorrgbw"),
-        Counter("count"),
-        Current("current"),
-        Curtain("curtain"),
-        DateTime("datetime"),
-        Debit("debit"),
-        Dimmable("dimmable"),
-        Direction("direction"),
-        Distance("distance"),
-        Duration("duration"),
-        ElectricLoad("electricLoad"),
-        Energy("energy"),
-        Event("event"),
-        Frequency("frequency"),
-        Humidity("humidity"),
-        Illumination("illumination"),
-        IlluminationWm2("illuminationWm2"),
-        Load("load"),
-        Message("message"),
-        PluginState("pluginState"),
-        Power("power"),
-        PowerFactor("powerFactor"),
-        Pressure("pressure"),
-        Rain("rain"),
-        RainRate("rainrate"),
-        Rssi("rssi"),
-        SignalLevel("signalLevel"),
-        SignalPower("signalPower"),
-        Speed("speed"),
-        Switch("switch"),
-        Tamper("tamper"),
-        Temperature("temperature"),
-        Text("text"),
-        UpDownStop("upDownStop"),
-        UserCode("userCode"),
-        Uv("uv"),
-        Voltage("voltage"),
-        Volume("volume"),
-        WeatherCondition("weathercondition"),
-        Weight("weight")
+    enum class StandardCapacities {
+        Alarm,
+        ApparentPower,
+        ArmingAlarm,
+        BatteryLevel,
+        CameraMove,
+        ColorRGB,
+        ColorRGBW,
+        Counter,
+        Current,
+        Curtain,
+        DateTime,
+        Debit,
+        Dimmable,
+        Direction,
+        Distance,
+        Duration,
+        ElectricLoad,
+        Energy,
+        Event,
+        Frequency,
+        Humidity,
+        Illumination,
+        IlluminationWm2,
+        Load,
+        Message,
+        PluginState,
+        Power,
+        PowerFactor,
+        Pressure,
+        Rain,
+        RainRate,
+        Rssi,
+        SignalLevel,
+        SignalPower,
+        Speed,
+        Switch,
+        Tamper,
+        Temperature,
+        Text,
+        UpDownStop,
+        UserCode,
+        Uv,
+        Voltage,
+        Volume,
+        WeatherCondition,
+        Weight
     }
 
-    enum class KeywordAccess(val yadomsApiKey: String) {
-        NoAccess("noaccess"),
-        Get("get"),
-        GetSet("getset")
+    enum class KeywordAccess {
+        NoAccess,
+        Get,
+        GetSet
     }
 
     data class Device(
@@ -292,7 +292,7 @@ class DeviceApi(private val yApi: YadomsApi) {
         private val notADateTimeSpecialValue = "not-a-date-time"
 
         @ToJson
-        fun toJson(dt: LocalDateTime?) = when (dt) {
+        fun toJson(dt: LocalDateTime?): String? = when (dt) {
             null -> notADateTimeSpecialValue
             else -> dt.format(DateTimeFormatter.ofPattern(pattern))
         }

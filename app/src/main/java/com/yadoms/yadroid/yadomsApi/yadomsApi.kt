@@ -1,7 +1,6 @@
 package com.yadoms.yadroid.yadomsApi
 
 import android.content.Context
-import android.content.SharedPreferences
 import android.util.Base64
 import com.android.volley.AuthFailureError
 import com.android.volley.toolbox.StringRequest
