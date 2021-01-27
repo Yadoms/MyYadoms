@@ -16,9 +16,9 @@ import com.yadoms.yadroid.widgets.WidgetTypes
  */
 class SelectWidgetTypeFragment : Fragment() {
 
-    fun newWidgetActivity(): NewWidgetActivity {
-        return activity as NewWidgetActivity
-    }
+    val newWidgetActivity: NewWidgetActivity
+        get() = activity as NewWidgetActivity
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -37,7 +37,7 @@ class SelectWidgetTypeFragment : Fragment() {
                     object : SelectWidgetTypeRecyclerViewAdapter.OnItemClickListener {
                         override fun onItemClick(position: Int) {
                             Log.d(SelectWidgetTypeFragment::class.simpleName, "Selected widget type = $position")
-                            newWidgetActivity().selectedWidgetType = WidgetTypes.WidgetTypes[position]
+                            newWidgetActivity.selectedWidgetType = WidgetTypes.WidgetTypes[position]
                             findNavController().navigate(SelectWidgetTypeFragmentDirections.actionWidgetTypeFragmentToDeviceFragment())
                         }
                     }

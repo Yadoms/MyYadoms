@@ -17,9 +17,8 @@ import com.yadoms.yadroid.yadomsApi.YadomsApi
 
 class SelectKeywordFragment : Fragment() {
 
-    fun newWidgetActivity(): NewWidgetActivity {
-        return activity as NewWidgetActivity
-    }
+    val newWidgetActivity: NewWidgetActivity
+        get() = activity as NewWidgetActivity
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -37,23 +36,26 @@ class SelectKeywordFragment : Fragment() {
                 val onItemClickListener =
                     object : SelectKeywordRecyclerViewAdapter.OnItemClickListener {
                         override fun onItemClick(position: Int) {
-                            newWidgetActivity().selectedKeywordId = newWidgetActivity().preselectedKeywords[position].id
-                            newWidgetActivity().selectedKeywordName = newWidgetActivity().preselectedKeywords[position].friendlyName
+                            newWidgetActivity.selectedKeywordId = newWidgetActivity.preselectedKeywords[position].id
+                            newWidgetActivity.selectedKeywordName = newWidgetActivity.preselectedKeywords[position].friendlyName
 
                             Log.d(
                                 SelectDeviceFragment::class.simpleName,
-                                "Selected keyword = ${newWidgetActivity().selectedKeywordName} (${newWidgetActivity().selectedKeywordId})"
+                                "Selected keyword = ${newWidgetActivity.selectedKeywordName} (${newWidgetActivity.selectedKeywordId})"
                             )
 
                             findNavController().navigate(SelectKeywordFragmentDirections.actionKeywordFragmentToNameFragment())
                         }
                     }
 
-                if (newWidgetActivity().preselectedKeywords.isEmpty()) {
+                if (newWidgetActivity.preselectedKeywords.isEmpty()) {
                     // Only for Yadoms < 2.4 compatibility
-                    val kwFilter = newWidgetActivity().selectedWidgetType!!.keywordFilter
+
+                    newWidgetActivity.startWait()
+
+                    val kwFilter = newWidgetActivity.selectedWidgetType!!.keywordFilter
                     val yApi = YadomsApi(Preferences(activity as Context).serverConnection)
-                    newWidgetActivity().selectedDeviceId?.let { selectedDeviceId ->
+                    newWidgetActivity.selectedDeviceId?.let { selectedDeviceId ->
                         DeviceApi(yApi).getDeviceKeywords(
                             activity,
                             selectedDeviceId,
@@ -65,9 +67,10 @@ class SelectKeywordFragment : Fragment() {
                                     if (kwFilter.expectedKeywordType.isNotEmpty() && keyword.type !in kwFilter.expectedKeywordType) {
                                         return@forEach
                                     }
-                                    newWidgetActivity().preselectedKeywords.add(keyword)
+                                    newWidgetActivity.preselectedKeywords.add(keyword)
                                 }
                                 adapter?.notifyDataSetChanged()
+                                newWidgetActivity.stopWait()
                             },
                             onError = {
                                 if (activity != null)
@@ -75,12 +78,13 @@ class SelectKeywordFragment : Fragment() {
                                         view, context.getString(R.string.unable_to_reach_the_server),
                                         Snackbar.LENGTH_LONG
                                     ).show()
+                                newWidgetActivity.stopWait()
                             })
                     }
                 }
 
 
-                adapter = SelectKeywordRecyclerViewAdapter(newWidgetActivity().preselectedKeywords, onItemClickListener)
+                adapter = SelectKeywordRecyclerViewAdapter(newWidgetActivity.preselectedKeywords, onItemClickListener)
             }
         }
 

@@ -24,6 +24,7 @@
     <string name="unable_to_reach_the_server">Unable to reach the server</string>
     <string name="finish">Finish</string>
     <string name="add_new_widget">Add new widget</string>
+    <string name="default_widget_name">%s of %s</string>
 
     <!-- Switch -->
     <string name="switch_name">Switch</string>

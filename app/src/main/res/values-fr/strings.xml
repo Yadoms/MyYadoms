@@ -31,4 +31,5 @@
     <!-- Numeric -->
     <string name="numeric_name">Afficheur numérique</string>
     <string name="numeric_description">Ce widget permet d\'afficher des données numériques (température, humidité…)</string>
+    <string name="default_widget_name">%s de %s</string>
 </resources>

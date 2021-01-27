@@ -4,6 +4,8 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
+import android.view.View
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
@@ -68,6 +70,16 @@ class NewWidgetActivity : AppCompatActivity() {
         )
         setResult(Activity.RESULT_OK, returnIntent)
         finish()
+    }
+
+    fun startWait() {
+        binding.pleaseWaitIndicator.visibility = View.VISIBLE
+        binding.navHostFragment.visibility = View.GONE
+    }
+
+    fun stopWait() {
+        binding.pleaseWaitIndicator.visibility = View.GONE
+        binding.navHostFragment.visibility = View.VISIBLE
     }
 }
 

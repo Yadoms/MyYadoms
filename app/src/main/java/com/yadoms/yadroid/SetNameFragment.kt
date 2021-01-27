@@ -12,9 +12,8 @@ class SetNameFragment : Fragment() {
 
     private lateinit var binding: FragmentSetNameBinding
 
-    private fun newWidgetActivity(): NewWidgetActivity {
-        return activity as NewWidgetActivity
-    }
+    val newWidgetActivity: NewWidgetActivity
+        get() = activity as NewWidgetActivity
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -23,12 +22,12 @@ class SetNameFragment : Fragment() {
         binding = FragmentSetNameBinding.inflate(inflater, container, false)
         val view = binding.root
 
-        binding.itemName.hint = "${newWidgetActivity().selectedKeywordName} of ${newWidgetActivity().selectedDeviceName}"
+        binding.itemName.hint = getString(R.string.default_widget_name, newWidgetActivity.selectedKeywordName, newWidgetActivity.selectedDeviceName)
 
         binding.finish.setOnClickListener {
             val name = binding.itemName.text.toString().ifEmpty { binding.itemName.hint } as String
             Log.d(SelectDeviceFragment::class.simpleName, "Set widget name = $name)")
-            newWidgetActivity().finish(name)
+            newWidgetActivity.finish(name)
         }
 
         return view

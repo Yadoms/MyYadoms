@@ -18,9 +18,8 @@ import java.util.*
 
 class SelectDeviceFragment : Fragment() {
 
-    fun newWidgetActivity(): NewWidgetActivity {
-        return activity as NewWidgetActivity
-    }
+    val newWidgetActivity: NewWidgetActivity
+        get() = activity as NewWidgetActivity
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -33,7 +32,7 @@ class SelectDeviceFragment : Fragment() {
             with(view) {
                 layoutManager = LinearLayoutManager(context)
 
-                newWidgetActivity().setOperationDescription(R.string.select_device)
+                newWidgetActivity.setOperationDescription(R.string.select_device)
 
                 val preselectedDevices: MutableList<DeviceApi.Device> = ArrayList()
                 val preselectedKeywords: MutableList<DeviceApi.Keyword> = ArrayList()
@@ -41,23 +40,25 @@ class SelectDeviceFragment : Fragment() {
                 val onItemClickListener =
                     object : SelectDeviceRecyclerViewAdapter.OnItemClickListener {
                         override fun onItemClick(position: Int) {
-                            newWidgetActivity().selectedDeviceId = preselectedDevices[position].id
-                            newWidgetActivity().selectedDeviceName = preselectedDevices[position].friendlyName
+                            newWidgetActivity.selectedDeviceId = preselectedDevices[position].id
+                            newWidgetActivity.selectedDeviceName = preselectedDevices[position].friendlyName
                             Log.d(
                                 SelectDeviceFragment::class.simpleName,
-                                "Selected device = ${newWidgetActivity().selectedDeviceName} (${newWidgetActivity().selectedDeviceId})"
+                                "Selected device = ${newWidgetActivity.selectedDeviceName} (${newWidgetActivity.selectedDeviceId})"
                             )
-                            newWidgetActivity().preselectedKeywords.clear()
+                            newWidgetActivity.preselectedKeywords.clear()
                             preselectedKeywords.forEach {
-                                if (it.deviceId == newWidgetActivity().selectedDeviceId)
-                                    newWidgetActivity().preselectedKeywords.add(it)
+                                if (it.deviceId == newWidgetActivity.selectedDeviceId)
+                                    newWidgetActivity.preselectedKeywords.add(it)
                             }
 
                             findNavController().navigate(SelectDeviceFragmentDirections.actionDeviceFragmentToKeywordFragment())
                         }
                     }
 
-                val kwFilter = newWidgetActivity().selectedWidgetType!!.keywordFilter
+                newWidgetActivity.startWait()
+
+                val kwFilter = newWidgetActivity.selectedWidgetType!!.keywordFilter
                 val yApi = YadomsApi(Preferences(activity as Context).serverConnection)
                 DeviceApi(yApi).getDeviceMatchKeywordCriteria(
                     activity,
@@ -69,6 +70,7 @@ class SelectDeviceFragment : Fragment() {
                         keywords.forEach { preselectedKeywords.add(it) }
 
                         adapter?.notifyDataSetChanged()
+                        newWidgetActivity.stopWait()
                     },
                     onError = {
                         // Fallback for Yadoms < 2.4 which don't support matchkeywordcriteria request
@@ -78,6 +80,7 @@ class SelectDeviceFragment : Fragment() {
                                     view, context.getString(R.string.unable_to_reach_the_server),
                                     Snackbar.LENGTH_LONG
                                 ).show()
+                            newWidgetActivity.stopWait()
                         } else
                             DeviceApi(yApi).getDeviceWithCapacityType(
                                 activity,
@@ -86,6 +89,7 @@ class SelectDeviceFragment : Fragment() {
                                 onOk = { devices ->
                                     devices.forEach { device -> preselectedDevices.add(device) }
                                     adapter?.notifyDataSetChanged()
+                                    newWidgetActivity.stopWait()
                                 },
                                 onError = {
                                     if (activity != null)
@@ -93,6 +97,7 @@ class SelectDeviceFragment : Fragment() {
                                             view, context.getString(R.string.unable_to_reach_the_server),
                                             Snackbar.LENGTH_LONG
                                         ).show()
+                                    newWidgetActivity.stopWait()
                                 })
                     })
 
