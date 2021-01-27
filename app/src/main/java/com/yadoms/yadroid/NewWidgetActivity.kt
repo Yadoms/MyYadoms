@@ -37,7 +37,7 @@ class NewWidgetActivity : AppCompatActivity() {
         setContentView(view)
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.title = "Add new widget"
+        supportActionBar?.title = getString(R.string.add_new_widget)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

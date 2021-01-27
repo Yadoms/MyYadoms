@@ -6,8 +6,8 @@ import com.yadoms.yadroid.yadomsApi.DeviceApi
 
 val type = WidgetTypes.WidgetTypeItem(
     type = WidgetTypes.WidgetType.Numeric,
-    name = "Numeric display",
-    description = "A widget to display numeric data",
+    nameRessourceId = R.string.numeric_name,
+    descriptionRessourceId = R.string.numeric_description,
     logo = R.drawable.ic_numeric,
     keywordFilter = WidgetTypes.KeywordFilter(expectedKeywordType = arrayOf(DeviceApi.KeywordTypes.Numeric)),
     layout = R.layout.widget_numeric_item,

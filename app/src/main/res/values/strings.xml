@@ -1,11 +1,9 @@
 <resources>
-    <string name="app_name">Yadroid</string>
+    <string name="app_name" translatable="false">Yadroid</string>
     <string name="action_settings">Settings</string>
-    <string name="title_activity_settings">SettingsActivity</string>
 
     <!-- Preference Titles -->
     <string name="preferences_server_connection">Server connexion</string>
-    <string name="sync_header">Sync</string>
 
     <!-- Server connexion Preferences -->
     <string name="preference_server_url">Server URL</string>
@@ -15,17 +13,23 @@
     <string name="preference_server_basic_authentication_password">Password</string>
     <string name="preference_server_use_https">Use HTTPS</string>
     <string name="preference_server_https_port">Server HTTPS port</string>
-    <string name="widget_logo">Widget Logo</string>
-    <string name="select_widget_type">Select a widget Type</string>
+    <string name="accessibility_widget_logo">Widget Logo</string>
+    <string name="select_widget_type_to_add">Select the widget to add</string>
     <string name="select_device">Select the device to link to widget</string>
     <string name="select_keyword">Select the keyword to display on the widget</string>
     <string name="add_a_widget">Add a widget</string>
-
-    <!-- Switch -->
-    <string name="_switch">Switch</string>
     <string name="last_update">Last update : %s</string>
     <string name="widget_deleted">Widget deleted</string>
     <string name="undo">Undo</string>
     <string name="unable_to_reach_the_server">Unable to reach the server</string>
     <string name="finish">Finish</string>
+    <string name="add_new_widget">Add new widget</string>
+
+    <!-- Switch -->
+    <string name="switch_name">Switch</string>
+    <string name="switch_description">A widget to drive ON/OFF devices</string>
+
+    <!-- Numeric -->
+    <string name="numeric_name">Numeric display</string>
+    <string name="numeric_description">A widget to display numeric data</string>
 </resources>

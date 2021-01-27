@@ -1,0 +1,34 @@
+<resources>
+    <string name="action_settings">Paramètres</string>
+
+    <!-- Preference Titles -->
+    <string name="preferences_server_connection">Connection au serveur</string>
+
+    <!-- Server connexion Preferences -->
+    <string name="preference_server_url">Adresse du serveur</string>
+    <string name="preference_server_port">Port</string>
+    <string name="preference_server_use_basic_authentication">Utiliser l\'authentification basique</string>
+    <string name="preference_server_basic_authentication_username">Num d\'utilisateur</string>
+    <string name="preference_server_basic_authentication_password">Mot de passe</string>
+    <string name="preference_server_use_https">Utiliser HTTPS</string>
+    <string name="preference_server_https_port">Port HTTPS du serveur</string>
+    <string name="accessibility_widget_logo">Log du widget</string>
+    <string name="select_widget_type_to_add">Sélectionner le widget à ajouter</string>
+    <string name="select_device">Sélectionner l\'équipement source</string>
+    <string name="select_keyword">Sélectionner la donnée à afficher par le widget</string>
+    <string name="add_a_widget">Ajouter un widget</string>
+    <string name="last_update">Mise à jour : %s</string>
+    <string name="widget_deleted">Widget supprimé</string>
+    <string name="undo">Annuler</string>
+    <string name="unable_to_reach_the_server">Impossible d\'atteindre le serveur</string>
+    <string name="finish">Terminer</string>
+    <string name="add_new_widget">Ajouter un widget</string>
+
+    <!-- Switch -->
+    <string name="switch_name">Interrupteur</string>
+    <string name="switch_description">Ce widget permet de piloter des équipements ON/OFF</string>
+
+    <!-- Numeric -->
+    <string name="numeric_name">Afficheur numérique</string>
+    <string name="numeric_description">Ce widget permet d\'afficher des données numériques (température, humidité…)</string>
+</resources>

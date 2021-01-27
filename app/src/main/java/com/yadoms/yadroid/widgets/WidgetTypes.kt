@@ -47,13 +47,11 @@ object WidgetTypes {
     enum class WidgetType { Switch, Numeric }
     data class WidgetTypeItem(
         val type: WidgetType,
-        val name: String,
-        val description: String,
+        val nameRessourceId: Int,
+        val descriptionRessourceId: Int,
         val logo: Int,
         val keywordFilter: KeywordFilter,
         val layout: Int,
         val createViewHolder: (View) -> WidgetViewHolder
-    ) {
-        override fun toString(): String = name
-    }
+    )
 }

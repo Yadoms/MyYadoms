@@ -13,7 +13,7 @@
         android:id="@+id/button"
         android:layout_width="72dp"
         android:layout_height="72dp"
-        android:contentDescription="@string/_switch"
+        android:contentDescription="@string/switch_name"
         tools:src="@drawable/ic_switch1"
         android:layout_gravity="center_vertical"
         android:layout_margin="10dp" />

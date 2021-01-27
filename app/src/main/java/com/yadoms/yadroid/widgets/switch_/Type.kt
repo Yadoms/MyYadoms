@@ -6,8 +6,8 @@ import com.yadoms.yadroid.yadomsApi.DeviceApi
 
 val type = WidgetTypes.WidgetTypeItem(
         type = WidgetTypes.WidgetType.Switch,
-        name = "Switch",
-        description = "A widget to drive ON/OFF devices",
+        nameRessourceId = R.string.switch_name,
+        descriptionRessourceId = R.string.switch_description,
         logo = R.drawable.ic_switch1,
         keywordFilter = WidgetTypes.KeywordFilter(expectedKeywordType = arrayOf(DeviceApi.KeywordTypes.Bool)),
         layout = R.layout.widget_switch_item,

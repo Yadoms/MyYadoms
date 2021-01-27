@@ -1,13 +1,13 @@
 package com.yadoms.yadroid
 
-import androidx.recyclerview.widget.RecyclerView
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.NO_POSITION
-
 import com.yadoms.yadroid.widgets.WidgetTypes.WidgetTypeItem
 
 /**
@@ -19,8 +19,11 @@ class SelectWidgetTypeRecyclerViewAdapter(
     private val listener: OnItemClickListener
 ) : RecyclerView.Adapter<SelectWidgetTypeRecyclerViewAdapter.ViewHolder>() {
 
+    private lateinit var context: Context
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(parent.context)
+        context = parent.context
+        val view = LayoutInflater.from(context)
             .inflate(R.layout.select_widget_fragment_item, parent, false)
 
         return ViewHolder(view)
@@ -29,8 +32,8 @@ class SelectWidgetTypeRecyclerViewAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = values[position]
         holder.logoView.setImageResource(item.logo)
-        holder.nameView.text = item.name
-        holder.descriptionView.text = item.description
+        holder.nameView.text = context.getString(item.nameRessourceId)
+        holder.descriptionView.text = context.getString(item.descriptionRessourceId)
     }
 
     override fun getItemCount(): Int = values.size
