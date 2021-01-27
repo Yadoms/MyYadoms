@@ -26,4 +26,5 @@
     <string name="last_update">Last update : %s</string>
     <string name="widget_deleted">Widget deleted</string>
     <string name="undo">Undo</string>
+    <string name="unable_to_reach_the_server">Unable to reach the server</string>
 </resources>

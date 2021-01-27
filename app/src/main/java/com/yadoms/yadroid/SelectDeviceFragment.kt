@@ -6,12 +6,12 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.snackbar.Snackbar
 import com.yadoms.yadroid.preferences.Preferences
 import com.yadoms.yadroid.yadomsApi.DeviceApi
 import com.yadoms.yadroid.yadomsApi.YadomsApi
@@ -88,8 +88,9 @@ class SelectDeviceFragment : Fragment() {
                         // Fallback for Yadoms < 2.4 which don't support matchkeywordcriteria request
                         if (kwFilter.expectedKeywordType.size != 1) {
                             if (activity != null)
-                                Toast.makeText(
-                                    activity, "Unable to reach the server", Toast.LENGTH_SHORT
+                                Snackbar.make(
+                                    view, context.getString(R.string.unable_to_reach_the_server),
+                                    Snackbar.LENGTH_LONG
                                 ).show()
                         } else
                             DeviceApi(yApi).getDeviceWithCapacityType(
@@ -102,8 +103,9 @@ class SelectDeviceFragment : Fragment() {
                                 },
                                 onError = {
                                     if (activity != null)
-                                        Toast.makeText(
-                                            activity, "Unable to reach the server", Toast.LENGTH_SHORT
+                                        Snackbar.make(
+                                            view, context.getString(R.string.unable_to_reach_the_server),
+                                            Snackbar.LENGTH_LONG
                                         ).show()
                                 })
                     })
