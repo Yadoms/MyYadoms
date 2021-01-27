@@ -4,6 +4,8 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -43,9 +45,17 @@ class ScrollingActivity : AppCompatActivity() {
         }
 
         widgetsListView.layoutManager = LinearLayoutManager(this)
-        widgetsListView.adapter = WidgetsRecyclerViewAdapter(Preferences(this))
+        widgetsListView.adapter = WidgetsRecyclerViewAdapter(Preferences(this), object : WidgetsRecyclerViewAdapter.EmptyListener {
+            override fun onEmptyChange(empty: Boolean) {
+                binding.contentScrollingLayout.widgetsList.visibility = if (empty) GONE else VISIBLE
+                binding.contentScrollingLayout.noContent.visibility = if (empty) VISIBLE else GONE
+            }
+        })
         val itemTouchHelper = ItemTouchHelper(WidgetSwipeAndDragHandler(this, widgetsListViewAdapter))
         itemTouchHelper.attachToRecyclerView(widgetsListView)
+
+        binding.contentScrollingLayout.widgetsList.visibility = if (Preferences(this).widgets.isEmpty()) GONE else VISIBLE
+        binding.contentScrollingLayout.noContent.visibility = if (Preferences(this).widgets.isEmpty()) VISIBLE else GONE
 
         Timer(false).schedule(30000, 30000) {
             runOnUiThread { widgetsListViewAdapter.notifyDataSetChanged() }

@@ -12,7 +12,7 @@ import com.yadoms.yadroid.widgets.WidgetViewHolder
 //TODO bannir les !! (partout)
 //TODO mettre firebase
 
-class WidgetsRecyclerViewAdapter(val preferences: Preferences) : RecyclerView.Adapter<WidgetViewHolder>() {
+class WidgetsRecyclerViewAdapter(val preferences: Preferences, private val emptyListener: EmptyListener) : RecyclerView.Adapter<WidgetViewHolder>() {
     private var widgets = preferences.widgets
 
     private lateinit var view: ViewGroup
@@ -44,6 +44,9 @@ class WidgetsRecyclerViewAdapter(val preferences: Preferences) : RecyclerView.Ad
         widgets.add(widget)
         preferences.saveWidgets(widgets)
         notifyItemInserted(widgets.size - 1)
+
+        if (widgets.size == 1)
+            emptyListener.onEmptyChange(false)
     }
 
     fun deleteWidget(position: Int) {
@@ -54,6 +57,9 @@ class WidgetsRecyclerViewAdapter(val preferences: Preferences) : RecyclerView.Ad
         preferences.saveWidgets(widgets)
         notifyItemRemoved(position)
         showUndoSnackbar()
+
+        if (widgets.isEmpty())
+            emptyListener.onEmptyChange(true)
     }
 
     fun moveWidget(fromPosition: Int, toPosition: Int) {
@@ -80,5 +86,12 @@ class WidgetsRecyclerViewAdapter(val preferences: Preferences) : RecyclerView.Ad
         )
         preferences.saveWidgets(widgets)
         notifyItemInserted(recentlyDeletedWidgetPosition)
+
+        if (widgets.size == 1)
+            emptyListener.onEmptyChange(false)
+    }
+
+    interface EmptyListener {
+        fun onEmptyChange(empty: Boolean)
     }
 }

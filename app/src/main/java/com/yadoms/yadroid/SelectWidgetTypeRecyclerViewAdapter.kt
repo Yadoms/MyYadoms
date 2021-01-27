@@ -12,7 +12,6 @@ import com.yadoms.yadroid.widgets.WidgetTypes.WidgetTypeItem
 
 /**
  * [RecyclerView.Adapter] that can display a [WidgetTypeItem].
- * TODO: Replace the implementation with code for your data type.
  */
 class SelectWidgetTypeRecyclerViewAdapter(
     private val values: List<WidgetTypeItem>,

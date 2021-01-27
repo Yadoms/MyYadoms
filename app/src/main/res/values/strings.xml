@@ -33,4 +33,5 @@
     <!-- Numeric -->
     <string name="numeric_name">Numeric display</string>
     <string name="numeric_description">A widget to display numeric data</string>
+    <string name="no_widget_available">No widget available, clic on \'+\' to add one</string>
 </resources>

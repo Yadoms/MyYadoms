@@ -7,5 +7,5 @@
     <color name="white">#FFFFFFFF</color>
     <color name="yadomsBlue">#428BCA</color>
     <color name="yadomsGrey">#777777</color>
-    <color name="deleteItem">#A10000</color>
+    <color name="deleteItem">#FF3535</color>
 </resources>
