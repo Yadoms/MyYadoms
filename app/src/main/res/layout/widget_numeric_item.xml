@@ -16,6 +16,7 @@
         android:layout_margin="10dp"
         android:autoSizeTextType="uniform"
         android:maxLines="1"
+        android:textColor="@color/yadomsBlue"
         tools:text="15.85" />
 
     <LinearLayout
