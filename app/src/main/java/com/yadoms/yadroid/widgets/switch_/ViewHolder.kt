@@ -29,12 +29,14 @@ class ViewHolder(view: View) : WidgetViewHolder(view), View.OnClickListener {
 
         nameView.text = widget.name
 
-        DeviceApi(YadomsApi(Preferences(view.context).serverConnection)).getKeyword(view.context, widget.keywordId, {
-            setLastUpdate(it.lastAcquisitionDate)
-            setState(it.lastAcquisitionValue == "1")
-        }, {
-            setLastUpdate(null)
-        })
+        DeviceApi(YadomsApi(Preferences(view.context).serverConnection)).getKeyword(view.context, widget.keywordId,
+            onOk = {
+                setLastUpdate(it.lastAcquisitionDate)
+                setState(it.lastAcquisitionValue == "1")
+            },
+            onError = {
+                setLastUpdate(null)
+            })
     }
 
     private fun setState(newState: Boolean) {

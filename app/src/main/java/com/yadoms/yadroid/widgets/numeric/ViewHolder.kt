@@ -7,8 +7,6 @@ import com.yadoms.yadroid.preferences.Preferences
 import com.yadoms.yadroid.widgets.WidgetViewHolder
 import com.yadoms.yadroid.yadomsApi.DeviceApi
 import com.yadoms.yadroid.yadomsApi.YadomsApi
-import java.time.format.DateTimeFormatter
-import java.time.format.FormatStyle
 
 class ViewHolder(view: View) : WidgetViewHolder(view) {
     private val valueView: TextView = view.findViewById(R.id.value)
@@ -18,10 +16,18 @@ class ViewHolder(view: View) : WidgetViewHolder(view) {
         setName(widget.name)
         DeviceApi(YadomsApi(Preferences(view.context).serverConnection)).getKeyword(view.context, widget.keywordId, {
             setLastUpdate(it.lastAcquisitionDate)
-            setValue(formatValue(it))
+            setValue(formatValue(it) + formatUnit(it))
         }, {
             setLastUpdate(null)
         })
+    }
+
+    private fun formatUnit(keyword: DeviceApi.Keyword): String {
+        if (keyword.lastAcquisitionValue.isEmpty())
+            return ""
+        if (keyword.capacityName == DeviceApi.StandardCapacities.duration)
+            return ""
+        return " " + keyword.units.label
     }
 
     private fun formatValue(keyword: DeviceApi.Keyword): String {
@@ -29,8 +35,13 @@ class ViewHolder(view: View) : WidgetViewHolder(view) {
             return "-"
 
         return when (keyword.capacityName) {
-            DeviceApi.StandardCapacities.temperature -> "%.1f".format(keyword.lastAcquisitionValue.toFloat()) + keyword.units
-            else -> keyword.lastAcquisitionValue + keyword.units
+            DeviceApi.StandardCapacities.humidity,
+            DeviceApi.StandardCapacities.batteryLevel,
+            DeviceApi.StandardCapacities.dimmable,
+            DeviceApi.StandardCapacities.signalPower,
+            DeviceApi.StandardCapacities.illumination -> "%.0f".format(keyword.lastAcquisitionValue.toFloat())
+            DeviceApi.StandardCapacities.duration -> keyword.lastAcquisitionValue
+            else -> "%.1f".format(keyword.lastAcquisitionValue.toFloat())
         }
     }
 
@@ -38,7 +49,6 @@ class ViewHolder(view: View) : WidgetViewHolder(view) {
         if (newValue == value)
             return
         value = newValue
-
         valueView.text = newValue
     }
 }

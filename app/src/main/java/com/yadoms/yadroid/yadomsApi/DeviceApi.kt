@@ -43,6 +43,7 @@ class DeviceApi(private val yApi: YadomsApi) {
         electricLoad,
         energy,
         event,
+        Forecast,
         frequency,
         humidity,
         illumination,
@@ -54,7 +55,7 @@ class DeviceApi(private val yApi: YadomsApi) {
         powerFactor,
         pressure,
         rain,
-        rainRate,
+        rainrate,
         rssi,
         signalLevel,
         signalPower,
@@ -70,6 +71,35 @@ class DeviceApi(private val yApi: YadomsApi) {
         volume,
         weatherCondition,
         weight
+    }
+
+    enum class Units(val yadomsApiKey: String, val label: String) {
+        NoUnit("data.units.noUnit", ""),
+        Ampere("data.units.ampere", "A"),
+        AmperePerHOur("data.units.ampereHour", "Ah"),
+        CubicMetre("data.units.cubicMetre", "m³"),
+        CubicMeterPerSecond("data.units.cubicMeterPerSecond", "m³/s"),
+        Decibel("data.units.decibel", "dB"),
+        DecibelPerMilliWatt("data.units.decibelPerMilliWatt", "dBm"),
+        Degrees("data.units.degrees", "°"),
+        DegreesCelcius("data.units.degreesCelcius", "°C"),
+        DegreesFarenheit("data.units.degreesFarenheit", "°F"),
+        HectoPascal("data.units.hectoPascal", "hPa"),
+        Hertz("data.units.hertz", "Hz"),
+        Kg("data.units.kg", "Kg"),
+        Lux("data.units.lux", "lux"),
+        Meter("data.units.meter", "m"),
+        MetersPerSecond("data.units.metersPerSecond", "m/s"),
+        Millimeter("data.units.millimeter", "mm"),
+        MillimeterPerSecond("data.units.millimeterPerSecond", "mm/s"),
+        Percent("data.units.percent", "%"),
+        Second("data.units.second", "s"),
+        Uv("data.units.uv", "UV"),
+        Volt("data.units.volt", "V"),
+        VoltAmpere("data.units.voltAmpere", "VA"),
+        Watt("data.units.watt", "W"),
+        WattPerHour("data.units.wattPerHour", "Wh"),
+        WattPerSquareMeter("data.units.wattPerSquareMeter", "W/m²");
     }
 
     enum class KeywordAccess {
@@ -93,7 +123,7 @@ class DeviceApi(private val yApi: YadomsApi) {
         val lastAcquisitionDate: LocalDateTime?,
         val accessMode: KeywordAccess,
         val type: KeywordTypes,
-        val units: String
+        val units: Units
     )
 
     class GetDeviceMatchKeywordCriteriaRequestAdapter(
@@ -306,10 +336,22 @@ class DeviceApi(private val yApi: YadomsApi) {
         }
     }
 
+    internal class UnitsAdapter {
+        @ToJson
+        fun toJson(unit: Units?): String? = unit?.yadomsApiKey
+
+        @FromJson
+        fun fromJson(unit: String): Units? {
+            val map = Units.values().associateBy(Units::yadomsApiKey)
+            return map[unit]
+        }
+    }
+
     companion object {
         val moshi: Moshi = Moshi.Builder()
             .addLast(KotlinJsonAdapterFactory())
             .add(LocalDateTimeAdapter())
+            .add(UnitsAdapter())
             .build()
     }
 }

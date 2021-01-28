@@ -19,7 +19,7 @@
         android:textColor="@color/yadomsBlue"
         android:text="-"
         android:textAlignment="center"
-        tools:text="15.85"
+        tools:text="15.8°"
         tools:ignore="HardcodedText" />
 
     <LinearLayout
