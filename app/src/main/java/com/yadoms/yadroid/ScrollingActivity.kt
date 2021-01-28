@@ -57,16 +57,17 @@ class ScrollingActivity : AppCompatActivity() {
         binding.contentScrollingLayout.widgetsList.visibility = if (Preferences(this).widgets.isEmpty()) GONE else VISIBLE
         binding.contentScrollingLayout.noContent.visibility = if (Preferences(this).widgets.isEmpty()) VISIBLE else GONE
 
+        with(binding.contentScrollingLayout.swipeLayout) {
+            setColorSchemeColors(getColor(R.color.yadomsBlue))
+            setOnRefreshListener {
+                widgetsListViewAdapter.notifyDataSetChanged()
+                isRefreshing = false
+            }
+        }
+
         Timer(false).schedule(30000, 30000) {
             runOnUiThread { widgetsListViewAdapter.notifyDataSetChanged() }
         }
-
-//        binding.contentScrollingLayout.swipeContainer.setOnRefreshListener {
-//            //TODO refresh widgets
-//            Log.d("test", "test")
-//            sleep(500)
-//            binding.contentScrollingLayout.swipeContainer.isRefreshing = false;
-//        }
     }
 
     override fun onResume() {
