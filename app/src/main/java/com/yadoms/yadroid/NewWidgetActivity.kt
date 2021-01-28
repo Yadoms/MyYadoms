@@ -5,7 +5,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
-import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
@@ -65,7 +64,7 @@ class NewWidgetActivity : AppCompatActivity() {
         val returnIntent = Intent()
         returnIntent.putExtra(
             NewWidgetActivityContract.ID, Preferences.moshi.adapter(Preferences.Widget::class.java).toJson(
-                Preferences.Widget(selectedWidgetType!!.type, name, selectedKeywordId!!)
+                selectedWidgetType?.let { w -> selectedKeywordId?.let { k -> Preferences.Widget(w.type, name, k) } }
             )
         )
         setResult(Activity.RESULT_OK, returnIntent)

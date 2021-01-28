@@ -9,7 +9,6 @@ import com.yadoms.yadroid.widgets.WidgetTypes
 import com.yadoms.yadroid.widgets.WidgetViewHolder
 
 
-//TODO bannir les !! (partout)
 //TODO mettre firebase
 
 class WidgetsRecyclerViewAdapter(val preferences: Preferences, private val emptyListener: EmptyListener) : RecyclerView.Adapter<WidgetViewHolder>() {
