@@ -7,27 +7,38 @@ import com.yadoms.yadroid.preferences.Preferences
 import com.yadoms.yadroid.widgets.WidgetViewHolder
 import com.yadoms.yadroid.yadomsApi.DeviceApi
 import com.yadoms.yadroid.yadomsApi.YadomsApi
+import java.time.format.DateTimeFormatter
+import java.time.format.FormatStyle
 
 class ViewHolder(view: View) : WidgetViewHolder(view) {
     private val valueView: TextView = view.findViewById(R.id.value)
-    private var state = "-"
+    private var value = "-"
 
     override fun onBind(widget: Preferences.Widget) {
         setName(widget.name)
         DeviceApi(YadomsApi(Preferences(view.context).serverConnection)).getKeyword(view.context, widget.keywordId, {
             setLastUpdate(it.lastAcquisitionDate)
-
-            setState(it.lastAcquisitionValue)
+            setValue(formatValue(it))
         }, {
             setLastUpdate(null)
         })
     }
 
-    private fun setState(newState: String) {
-        if (newState == state)
-            return
-        state = newState
+    private fun formatValue(keyword: DeviceApi.Keyword): String {
+        if (keyword.lastAcquisitionValue.isEmpty())
+            return "-"
 
-        valueView.text = newState
+        return when (keyword.capacityName) {
+            DeviceApi.StandardCapacities.temperature -> "%.1f".format(keyword.lastAcquisitionValue.toFloat()) + keyword.units
+            else -> keyword.lastAcquisitionValue + keyword.units
+        }
+    }
+
+    private fun setValue(newValue: String) {
+        if (newValue == value)
+            return
+        value = newValue
+
+        valueView.text = newValue
     }
 }
