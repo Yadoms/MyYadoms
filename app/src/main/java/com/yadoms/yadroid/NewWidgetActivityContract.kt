@@ -23,7 +23,7 @@ class NewWidgetActivityContract : ActivityResultContract<Unit, Preferences.Widge
 
     companion object {
         const val ID = "addedWidget"
-        val moshi: Moshi = Moshi.Builder()
+        private val moshi: Moshi = Moshi.Builder()
             .addLast(KotlinJsonAdapterFactory())
             .build()
     }

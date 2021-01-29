@@ -33,4 +33,6 @@
     <string name="numeric_description">Ce widget permet d\'afficher des données numériques (température, humidité…)</string>
     <string name="default_widget_name">%s de %s</string>
     <string name="no_widget_available">Aucun widget à afficher\nCliquer sur \'+\' pour en ajouter un</string>
+    <string name="no_server_configuration">Pas de connexion au serveur Yadoms</string>
+    <string name="settings">Paramètres</string>
 </resources>

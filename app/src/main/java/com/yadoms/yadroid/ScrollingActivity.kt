@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.snackbar.Snackbar
 import com.yadoms.yadroid.databinding.ActivityScrollingBinding
 import com.yadoms.yadroid.preferences.Preferences
 import com.yadoms.yadroid.preferences.SettingsActivity
@@ -51,11 +52,11 @@ class ScrollingActivity : AppCompatActivity() {
                 binding.contentScrollingLayout.noContent.visibility = if (empty) VISIBLE else GONE
             }
         })
-        val itemTouchHelper = ItemTouchHelper(WidgetSwipeAndDragHandler(this, widgetsListViewAdapter))
-        itemTouchHelper.attachToRecyclerView(widgetsListView)
-
         binding.contentScrollingLayout.widgetsList.visibility = if (Preferences(this).widgets.isEmpty()) GONE else VISIBLE
         binding.contentScrollingLayout.noContent.visibility = if (Preferences(this).widgets.isEmpty()) VISIBLE else GONE
+
+        val itemTouchHelper = ItemTouchHelper(WidgetSwipeAndDragHandler(this, widgetsListViewAdapter))
+        itemTouchHelper.attachToRecyclerView(widgetsListView)
 
         with(binding.contentScrollingLayout.swipeLayout) {
             setColorSchemeColors(getColor(R.color.yadomsBlue))
@@ -63,6 +64,16 @@ class ScrollingActivity : AppCompatActivity() {
                 widgetsListViewAdapter.notifyDataSetChanged()
                 isRefreshing = false
             }
+        }
+
+        if (Preferences(this).serverConnection.url.isEmpty()) {
+            Snackbar.make(
+                view, getString(R.string.no_server_configuration),
+                Snackbar.LENGTH_INDEFINITE
+            ).setAction(R.string.settings) {
+                val intent = Intent(this@ScrollingActivity, SettingsActivity::class.java)
+                startActivity(intent)
+            }.show()
         }
 
         Timer(false).schedule(30000, 30000) {

@@ -34,4 +34,6 @@
     <string name="numeric_name">Numeric display</string>
     <string name="numeric_description">A widget to display numeric data</string>
     <string name="no_widget_available">No widget available, clic on \'+\' to add one</string>
+    <string name="no_server_configuration">No Yadoms server available, please configure one</string>
+    <string name="settings">Settings</string>
 </resources>

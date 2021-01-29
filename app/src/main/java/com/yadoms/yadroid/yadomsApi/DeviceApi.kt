@@ -348,7 +348,7 @@ class DeviceApi(private val yApi: YadomsApi) {
     }
 
     companion object {
-        val moshi: Moshi = Moshi.Builder()
+        private val moshi: Moshi = Moshi.Builder()
             .addLast(KotlinJsonAdapterFactory())
             .add(LocalDateTimeAdapter())
             .add(UnitsAdapter())
