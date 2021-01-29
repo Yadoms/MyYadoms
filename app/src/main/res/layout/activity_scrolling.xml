@@ -47,4 +47,13 @@
         app:layout_anchorGravity="bottom|end"
         app:srcCompat="@android:drawable/ic_input_add" />
 
+    <TextView
+        android:id="@+id/versionView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginBottom="10dp"
+        android:layout_marginEnd="10dp"
+        tools:text="123"/>
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

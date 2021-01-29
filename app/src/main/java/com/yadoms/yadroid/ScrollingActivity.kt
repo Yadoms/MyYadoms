@@ -45,6 +45,8 @@ class ScrollingActivity : AppCompatActivity() {
             }
         }
 
+        binding.versionView.text = getString(R.string.app_version, BuildConfig.VERSION_NAME, if (BuildConfig.DEBUG) "d" else "")
+
         widgetsListView.layoutManager = LinearLayoutManager(this)
         widgetsListView.adapter = WidgetsRecyclerViewAdapter(Preferences(this), object : WidgetsRecyclerViewAdapter.EmptyListener {
             override fun onEmptyChange(empty: Boolean) {
@@ -99,6 +101,7 @@ class ScrollingActivity : AppCompatActivity() {
 
         return when (item.itemId) {
             R.id.action_settings -> {
+                throw RuntimeException("test crashlytics")
                 val intent = Intent(this@ScrollingActivity, SettingsActivity::class.java)
                 startActivity(intent)
                 true

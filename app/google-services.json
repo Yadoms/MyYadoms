@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "803391479377",
+    "project_id": "yadroid-46c03",
+    "storage_bucket": "yadroid-46c03.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:803391479377:android:831148b2ad956dff586270",
+        "android_client_info": {
+          "package_name": "com.yadoms.yadroid"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "803391479377-ckqoeki3u76ncl8aorh7dbt3dpgmgth1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.yadoms.yadroid",
+            "certificate_hash": "5eccec3984121485e88a864533ea0ec7e5709f54"
+          }
+        },
+        {
+          "client_id": "803391479377-smku87h1jdbq5c3e95s1e9jhqr3732c9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCNw4dQ3FoyOx858hZoppZQxcE4BBfQZcI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "803391479377-smku87h1jdbq5c3e95s1e9jhqr3732c9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
