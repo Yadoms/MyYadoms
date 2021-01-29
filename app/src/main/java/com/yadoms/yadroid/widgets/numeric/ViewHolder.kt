@@ -13,13 +13,17 @@ class ViewHolder(view: View) : WidgetViewHolder(view) {
     private var value = "-"
 
     override fun onBind(widget: Preferences.Widget) {
+
         setName(widget.name)
-        DeviceApi(YadomsApi(Preferences(view.context).serverConnection)).getKeyword(view.context, widget.keywordId, {
-            setLastUpdate(it.lastAcquisitionDate)
-            setValue(formatValue(it) + formatUnit(it))
-        }, {
-            setLastUpdate(null)
-        })
+
+        DeviceApi(YadomsApi(Preferences(view.context).serverConnection)).getKeyword(view.context, widget.keywordId,
+            onOk = {
+                setLastUpdate(it.lastAcquisitionDate)
+                setValue(formatValue(it) + formatUnit(it))
+            },
+            onError = {
+                setLastUpdate(null)
+            })
     }
 
     private fun formatUnit(keyword: DeviceApi.Keyword): String {

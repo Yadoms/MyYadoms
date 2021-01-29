@@ -9,8 +9,6 @@ import com.yadoms.yadroid.widgets.WidgetTypes
 import com.yadoms.yadroid.widgets.WidgetViewHolder
 
 
-//TODO mettre firebase
-
 class WidgetsRecyclerViewAdapter(val preferences: Preferences, private val emptyListener: EmptyListener) : RecyclerView.Adapter<WidgetViewHolder>() {
     private var widgets = preferences.widgets
 
