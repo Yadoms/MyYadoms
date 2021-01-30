@@ -101,7 +101,6 @@ class ScrollingActivity : AppCompatActivity() {
 
         return when (item.itemId) {
             R.id.action_settings -> {
-                throw RuntimeException("test crashlytics")
                 val intent = Intent(this@ScrollingActivity, SettingsActivity::class.java)
                 startActivity(intent)
                 true
