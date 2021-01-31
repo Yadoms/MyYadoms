@@ -3,9 +3,15 @@ package com.yadoms.yadroid.yadomsApi
 import android.content.Context
 import android.util.Base64
 import com.android.volley.AuthFailureError
+import com.android.volley.NetworkResponse
+import com.android.volley.ParseError
+import com.android.volley.Response
+import com.android.volley.toolbox.HttpHeaderParser
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.yadoms.yadroid.preferences.Preferences
+import org.json.JSONException
+import java.io.UnsupportedEncodingException
 
 
 //TODO remplacer Volley par https://square.github.io/retrofit/
@@ -50,14 +56,13 @@ class YadomsApi(private val serverConnection: Preferences.ServerConnection) {
         //TODO utiliser un vrai URI builder (pour gérer les espaces et autres caractères spéciaux)
         // Volley doesn't support params for GET request (getParams won't be called)
         // So provide param by constructing URL
-        if (params.isNotEmpty())
-        {
+        if (params.isNotEmpty()) {
             var delimiter = '?'
             params.forEach {
                 urlWithParam += delimiter + it.key
                 if (it.value.isNotEmpty())
                     urlWithParam += '=' + it.value
-                delimiter='&'
+                delimiter = '&'
             }
         }
 
@@ -72,6 +77,21 @@ class YadomsApi(private val serverConnection: Preferences.ServerConnection) {
             }) {
             override fun getHeaders(): Map<String, String> {
                 return commonHeaders + super.getHeaders()
+            }
+
+            override fun parseNetworkResponse(response: NetworkResponse?): Response<String> {
+                return try {
+                    // Some old Yadoms versions doesn't set "utf-8" charset in header, even if UTF-8 data is sent
+                    // So force UTF-8 charset
+                    Response.success(
+                        response?.data?.toString(Charsets.UTF_8),
+                        HttpHeaderParser.parseCacheHeaders(response)
+                    )
+                } catch (e: UnsupportedEncodingException) {
+                    Response.error(ParseError(e))
+                } catch (je: JSONException) {
+                    Response.error(ParseError(je))
+                }
             }
         }
 
