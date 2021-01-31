@@ -24,7 +24,7 @@ class Preferences(private val context: Context) {
 
     val serverConnection: ServerConnection
         get() = ServerConnection(
-            sharedPreference.getString("server_url", "") ?: "",
+            (sharedPreference.getString("server_url", "") ?: "").trimEnd(),
             (sharedPreference.getString("server_port", "8080") ?: "8080").toInt(),
             sharedPreference.getBoolean("server_use_basic_authentication", false),
             sharedPreference.getString("server_basic_authentication_username", "") ?: "",
