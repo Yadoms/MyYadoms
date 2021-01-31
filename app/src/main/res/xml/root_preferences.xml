@@ -4,14 +4,13 @@
     <PreferenceCategory app:title="@string/preferences_server_connection">
 
         <EditTextPreference
-            android:singleLine="true"
+            android:inputType="text"
             app:key="server_url"
             app:title="@string/preference_server_url"
             app:useSimpleSummaryProvider="true" />
 
         <EditTextPreference
-            android:inputType="number"
-            android:singleLine="true"
+            android:inputType="text|number"
             app:defaultValue="8080"
             app:key="server_port"
             app:title="@string/preference_server_port"
@@ -25,18 +24,12 @@
         <EditTextPreference
             android:inputType="text"
             android:key="server_basic_authentication_username"
-            android:maxLines="1"
-            android:selectAllOnFocus="true"
-            android:singleLine="true"
             android:title="@string/preference_server_basic_authentication_username"
             app:useSimpleSummaryProvider="true" />
 
         <EditTextPreference
             android:inputType="textPassword"
             android:key="server_basic_authentication_password"
-            android:maxLines="1"
-            android:selectAllOnFocus="true"
-            android:singleLine="true"
             android:title="@string/preference_server_basic_authentication_password" />
 
         <SwitchPreference
@@ -45,8 +38,7 @@
             app:title="@string/preference_server_use_https" />
 
         <EditTextPreference
-            android:inputType="number"
-            android:singleLine="true"
+            android:inputType="text|number"
             app:defaultValue="443"
             app:key="server_https_port"
             app:title="@string/preference_server_https_port"
