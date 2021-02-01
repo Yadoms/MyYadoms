@@ -1,5 +1,6 @@
 package com.yadoms.yadroid.widgets.numeric
 
+import android.util.Log
 import android.view.View
 import android.widget.TextView
 import com.yadoms.yadroid.R
@@ -13,15 +14,18 @@ class ViewHolder(view: View) : WidgetViewHolder(view) {
     private var value = "-"
 
     override fun onBind(widget: Preferences.Widget) {
+        Log.d("Numeric", "onBind : ${widget.name} ${adapterPosition}...")
 
         setName(widget.name)
 
         DeviceApi(YadomsApi(Preferences(view.context).serverConnection)).getKeyword(view.context, widget.keywordId,
             onOk = {
+                Log.d("Numeric", "onBind/onOk : ${widget.name} ${adapterPosition}, ${formatValue(it) + formatUnit(it)}")
                 setLastUpdate(it.lastAcquisitionDate)
                 setValue(formatValue(it) + formatUnit(it))
             },
             onError = {
+                Log.d("Numeric", "onBind/onError : ${widget.name} ${adapterPosition}, $it")
                 setLastUpdate(null)
             })
     }
