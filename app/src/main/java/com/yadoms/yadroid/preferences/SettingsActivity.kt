@@ -1,14 +1,12 @@
 package com.yadoms.yadroid.preferences
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.preference.Preference
-import com.takisoft.preferencex.PreferenceFragmentCompat
 import androidx.preference.PreferenceManager
+import com.takisoft.preferencex.PreferenceFragmentCompat
 import com.yadoms.yadroid.R
-import com.yadoms.yadroid.ScrollingActivity
 
 class SettingsActivity : AppCompatActivity() {
 
@@ -31,8 +29,7 @@ class SettingsActivity : AppCompatActivity() {
 
         return when (item.itemId) {
             android.R.id.home -> {
-                val intent = Intent(this@SettingsActivity, ScrollingActivity::class.java)
-                startActivity(intent)
+                finish()
                 true
             }
             else -> super.onOptionsItemSelected(item)
