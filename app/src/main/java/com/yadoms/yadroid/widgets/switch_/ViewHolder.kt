@@ -4,7 +4,6 @@ import android.graphics.drawable.AnimationDrawable
 import android.util.Log
 import android.view.View
 import android.widget.ImageView
-import android.widget.TextView
 import com.yadoms.yadroid.R
 import com.yadoms.yadroid.preferences.Preferences
 import com.yadoms.yadroid.widgets.WidgetViewHolder
@@ -18,7 +17,7 @@ class ViewHolder(view: View) : WidgetViewHolder(view) {
         switchAnimation = background as AnimationDrawable
     }
     private var state = false
-    private var widget: Preferences.Widget? = null
+    private var widget: Preferences.WidgetData? = null
 
     init {
         itemView.setOnClickListener {
@@ -33,7 +32,7 @@ class ViewHolder(view: View) : WidgetViewHolder(view) {
         }
     }
 
-    override fun onBind(widget: Preferences.Widget) {
+    override fun onBind(widget: Preferences.WidgetData) {
         this.widget = widget
         Log.d("Switch", "onBind : ${widget.name} ${adapterPosition}...")
 

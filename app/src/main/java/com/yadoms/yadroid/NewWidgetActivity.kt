@@ -63,8 +63,8 @@ class NewWidgetActivity : AppCompatActivity() {
     fun finish(name: String) {
         val returnIntent = Intent()
         returnIntent.putExtra(
-            NewWidgetActivityContract.ID, Preferences.moshi.adapter(Preferences.Widget::class.java).toJson(
-                selectedWidgetType?.let { w -> selectedKeywordId?.let { k -> Preferences.Widget(w.type, name, k) } }
+            NewWidgetActivityContract.ID, Preferences.moshi.adapter(Preferences.WidgetData::class.java).toJson(
+                selectedWidgetType?.let { w -> selectedKeywordId?.let { k -> Preferences.WidgetData(w.type, name, k) } }
             )
         )
         setResult(Activity.RESULT_OK, returnIntent)

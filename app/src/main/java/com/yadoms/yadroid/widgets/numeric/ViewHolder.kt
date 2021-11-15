@@ -13,7 +13,7 @@ class ViewHolder(view: View) : WidgetViewHolder(view) {
     private val valueView: TextView = view.findViewById(R.id.value)
     private var value = "-"
 
-    override fun onBind(widget: Preferences.Widget) {
+    override fun onBind(widget: Preferences.WidgetData) {
         Log.d("Numeric", "onBind : ${widget.name} ${adapterPosition}...")
 
         setName(widget.name)

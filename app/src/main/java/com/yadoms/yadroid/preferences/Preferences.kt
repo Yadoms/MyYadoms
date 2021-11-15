@@ -1,4 +1,4 @@
-package com.yadoms.yadroid.preferences
+RecyclerView.Adapterpackage com.yadoms.yadroid.preferences
 
 import android.content.Context
 import android.content.SharedPreferences
@@ -33,23 +33,35 @@ class Preferences(private val context: Context) {
             (sharedPreference.getString("server_https_port", "443") ?: "443").toInt()
         )
 
-    data class Widget(val type: WidgetTypes.WidgetType, val name: String, val keywordId: Int)
-    class WidgetsPreferences(val widgets: MutableList<Widget>)
+    class WidgetData(val type: WidgetTypes.WidgetType, val name: String, val keywordId: Int)
 
-    val widgets: MutableList<Widget>
+    //TODO déplacer
+    abstract class WidgetModel(val data: WidgetData) {
+        abstract fun requestState()
+    }
+
+    class WidgetsPreferences(val widgets: MutableList<WidgetData>)
+
+    val widgets: MutableList<WidgetModel>
         get() = loadWidgets()
 
-    private fun loadWidgets() : MutableList<Widget> {
+    private fun loadWidgets(): MutableList<WidgetModel> {
         val widgetsPreferencesString = sharedPreference.getString("widgets", "") ?: return mutableListOf()
         if (widgetsPreferencesString.isEmpty())
             return mutableListOf()
 
         val widgetsPreferences = moshi.adapter(WidgetsPreferences::class.java).fromJson(widgetsPreferencesString) ?: return mutableListOf()
-        return widgetsPreferences.widgets
+        val widgetModels: MutableList<WidgetModel> = mutableListOf()
+        widgetsPreferences.widgets.map {
+            val item = WidgetTypes.item(it.type)
+            item?.createModel(WidgetData(it.type, it.name, it.keywordId))
+            widgetModels.add(WidgetTypes.item(it.type).createModel())
+        }
+        return widgetModels
 
     }
 
-    fun saveWidgets(currentWidgets: MutableList<Widget>) {
+    fun saveWidgets(currentWidgets: MutableList<WidgetData>) {
         val widgetsPreferencesString = moshi.adapter(WidgetsPreferences::class.java).toJson(WidgetsPreferences(currentWidgets))
         val preferencesEditor = sharedPreference.edit()
         preferencesEditor.putString("widgets", widgetsPreferencesString)

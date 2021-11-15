@@ -13,7 +13,7 @@ abstract class WidgetViewHolder(val view: View) : RecyclerView.ViewHolder(view) 
     private val nameView: TextView = view.findViewById(R.id.name)
     private val lastUpdateView: TextView = view.findViewById(R.id.last_update)
 
-    abstract fun onBind(widget: Preferences.Widget)
+    abstract fun onBind(widget: Preferences.WidgetData)
 
     fun setName(name: String) {
         nameView.text = name

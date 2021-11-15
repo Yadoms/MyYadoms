@@ -1,43 +1,44 @@
 package com.yadoms.yadroid
 
+import Preferences
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
-import com.yadoms.yadroid.preferences.Preferences
 import com.yadoms.yadroid.widgets.WidgetTypes
 import com.yadoms.yadroid.widgets.WidgetViewHolder
 
 
-class WidgetsRecyclerViewAdapter(val preferences: Preferences, private val emptyListener: EmptyListener) : RecyclerView.Adapter<WidgetViewHolder>() {
-    private var widgets = preferences.widgets
+class WidgetsRecyclerViewAdapter(val context: Context?) : RecyclerView.Adapter<WidgetViewHolder>() {
+    var items: List<Preferences.Widget> = listOf()
+        set(value) {
+            val oldList = field
+            field = value
+            refreshList(value, oldList)
+        }
 
-    private lateinit var view: ViewGroup
-
-    private lateinit var recentlyDeletedWidget: Preferences.Widget
+    private lateinit var recentlyDeletedWidget: Preferences.WidgetData
     private var recentlyDeletedWidgetPosition = 0
 
     override fun getItemViewType(position: Int): Int {
-        return widgets[position].type.ordinal
+        return items[position].type.ordinal
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WidgetViewHolder {
-        view = parent
         val widgetTypeItem = WidgetTypes.item(WidgetTypes.WidgetType.values()[viewType])!!
-
-        val view = LayoutInflater.from(parent.context)
-            .inflate(widgetTypeItem.layout, parent, false)
-
-        return widgetTypeItem.createViewHolder(view)
+        return widgetTypeItem.createViewHolder(LayoutInflater.from(context).inflate(widgetTypeItem.layout, parent, false))
     }
 
     override fun onBindViewHolder(holder: WidgetViewHolder, position: Int) {
+        ###
+        widgets[position].requestState()
         holder.onBind(widgets[position])
     }
 
     override fun getItemCount(): Int = widgets.size
 
-    fun addNewWidget(widget: Preferences.Widget) {
+    fun addNewWidget(widget: Preferences.WidgetData) {
         widgets.add(widget)
         preferences.saveWidgets(widgets)
         notifyItemInserted(widgets.size - 1)
@@ -86,9 +87,5 @@ class WidgetsRecyclerViewAdapter(val preferences: Preferences, private val empty
 
         if (widgets.size == 1)
             emptyListener.onEmptyChange(false)
-    }
-
-    interface EmptyListener {
-        fun onEmptyChange(empty: Boolean)
     }
 }
