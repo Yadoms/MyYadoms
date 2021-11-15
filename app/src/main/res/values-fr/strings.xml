@@ -12,6 +12,7 @@
     <string name="preference_server_basic_authentication_password">Mot de passe</string>
     <string name="preference_server_use_https">Utiliser HTTPS</string>
     <string name="preference_server_https_port">Port HTTPS du serveur</string>
+    <string name="preference_ignore_https_certificate_error">Ignorer les erreurs de certificats</string>
     <string name="accessibility_widget_logo">Log du widget</string>
     <string name="select_widget_type_to_add">Sélectionner le widget à ajouter</string>
     <string name="select_device">Sélectionner l\'équipement source</string>

@@ -43,7 +43,8 @@ class SettingsActivity : AppCompatActivity() {
             enablePreferencesFrom(
                 "server_use_https",
                 arrayOf(
-                    "server_https_port"
+                    "server_https_port",
+                    "ignore_https_certificate_error"
                 )
             )
 
