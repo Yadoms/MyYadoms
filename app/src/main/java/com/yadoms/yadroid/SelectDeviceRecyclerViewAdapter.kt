@@ -35,7 +35,7 @@ class SelectDeviceRecyclerViewAdapter(
         }
 
         override fun onClick(p0: View?) {
-            val position = adapterPosition
+            val position = bindingAdapterPosition
             if (position != NO_POSITION)
                 listener.onItemClick(position)
         }

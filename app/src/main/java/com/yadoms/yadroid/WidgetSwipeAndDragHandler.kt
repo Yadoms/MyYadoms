@@ -17,14 +17,14 @@ class WidgetSwipeAndDragHandler(context: Context, val adapter: WidgetsRecyclerVi
     private var background: ColorDrawable = ColorDrawable(context.getColor(R.color.deleteItem))
 
     override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
-        val fromPosition = viewHolder.adapterPosition
-        val toPosition = target.adapterPosition
+        val fromPosition = viewHolder.bindingAdapterPosition
+        val toPosition = target.bindingAdapterPosition
         adapter.moveWidget(fromPosition, toPosition)
         return true
     }
 
     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-        adapter.deleteWidget(viewHolder.adapterPosition)
+        adapter.deleteWidget(viewHolder.bindingAdapterPosition)
         showUndoSnackbar(viewHolder.itemView)
     }
 
