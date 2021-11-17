@@ -1,28 +1,39 @@
 package com.yadoms.yadroid
 
-import Preferences
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.snackbar.Snackbar
+import com.yadoms.yadroid.preferences.Preferences
 import com.yadoms.yadroid.widgets.WidgetTypes
 import com.yadoms.yadroid.widgets.WidgetViewHolder
 
 
-class WidgetsRecyclerViewAdapter(val context: Context?) : RecyclerView.Adapter<WidgetViewHolder>() {
-    var items: List<Preferences.Widget> = listOf()
-        set(value) {
-            val oldList = field
-            field = value
-            refreshList(value, oldList)
-        }
+class WidgetsRecyclerViewAdapter(val context: Context, private val emptyListener: EmptyListener) : RecyclerView.Adapter<WidgetViewHolder>() {
+    private var widgetsModels = createModels()
 
-    private lateinit var recentlyDeletedWidget: Preferences.WidgetData
+    private fun createModels(): MutableList<Preferences.WidgetModel> {
+        val widgetModels: MutableList<Preferences.WidgetModel> = mutableListOf()
+        Preferences(context).widgets.map { widgetData ->
+            val item = WidgetTypes.item(widgetData.type)
+            item?.let { widgetModels.add(it.createModel(widgetData)) }
+        }
+        return widgetModels
+    }
+
+    private fun saveWidgets() {
+        val widgetsData: MutableList<Preferences.WidgetData> = mutableListOf()
+        widgetsModels.map { widgetModel ->
+            widgetsData.add(widgetModel.data)
+        }
+        Preferences(context).saveWidgets(widgetsData)
+    }
+
+    private lateinit var recentlyDeletedWidget: Preferences.WidgetModel
     private var recentlyDeletedWidgetPosition = 0
 
     override fun getItemViewType(position: Int): Int {
-        return items[position].type.ordinal
+        return widgetsModels[position].data.type.ordinal
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WidgetViewHolder {
@@ -31,61 +42,53 @@ class WidgetsRecyclerViewAdapter(val context: Context?) : RecyclerView.Adapter<W
     }
 
     override fun onBindViewHolder(holder: WidgetViewHolder, position: Int) {
-        ###
-        widgets[position].requestState()
-        holder.onBind(widgets[position])
+        widgetsModels[position].requestState()
+        holder.onBind(widgetsModels[position])
     }
 
-    override fun getItemCount(): Int = widgets.size
+    override fun getItemCount(): Int = widgetsModels.size
 
-    fun addNewWidget(widget: Preferences.WidgetData) {
-        widgets.add(widget)
-        preferences.saveWidgets(widgets)
-        notifyItemInserted(widgets.size - 1)
+    fun addNewWidget(widgetData: Preferences.WidgetData) {
+        val item = WidgetTypes.item(widgetData.type)
+        item?.let { widgetsModels.add(it.createModel(widgetData)) }
 
-        if (widgets.size == 1)
+        saveWidgets()
+
+        notifyItemInserted(widgetsModels.size - 1)
+
+        if (widgetsModels.size == 1)
             emptyListener.onEmptyChange(false)
     }
 
     fun deleteWidget(position: Int) {
-        recentlyDeletedWidget = widgets[position]
+        recentlyDeletedWidget = widgetsModels[position]
         recentlyDeletedWidgetPosition = position
 
-        widgets.removeAt(position)
-        preferences.saveWidgets(widgets)
+        widgetsModels.removeAt(position)
+        saveWidgets()
         notifyItemRemoved(position)
-        showUndoSnackbar()
 
-        if (widgets.isEmpty())
+        if (widgetsModels.isEmpty())
             emptyListener.onEmptyChange(true)
     }
 
     fun moveWidget(fromPosition: Int, toPosition: Int) {
-        val movedWidget = widgets[fromPosition]
-        widgets.removeAt(fromPosition)
-        widgets.add(if (toPosition > fromPosition + 1) toPosition - 1 else toPosition, movedWidget)
-        preferences.saveWidgets(widgets)
+        val movedWidget = widgetsModels[fromPosition]
+        widgetsModels.removeAt(fromPosition)
+        widgetsModels.add(if (toPosition > fromPosition + 1) toPosition - 1 else toPosition, movedWidget)
+        saveWidgets()
         notifyItemMoved(fromPosition, toPosition)
     }
 
-    private fun showUndoSnackbar() {
-        val snackbar: Snackbar = Snackbar.make(
-            view, view.context.getString(R.string.widget_deleted),
-            Snackbar.LENGTH_LONG
-        )
-        snackbar.setAction(view.context.getString(R.string.undo)) { undoDelete() }
-        snackbar.show()
-    }
-
-    private fun undoDelete() {
-        widgets.add(
+    fun undoDelete() {
+        widgetsModels.add(
             recentlyDeletedWidgetPosition,
             recentlyDeletedWidget
         )
-        preferences.saveWidgets(widgets)
+        saveWidgets()
         notifyItemInserted(recentlyDeletedWidgetPosition)
 
-        if (widgets.size == 1)
+        if (widgetsModels.size == 1)
             emptyListener.onEmptyChange(false)
     }
 }

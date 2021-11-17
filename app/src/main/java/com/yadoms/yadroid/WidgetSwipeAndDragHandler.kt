@@ -8,6 +8,7 @@ import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.snackbar.Snackbar
 
 
 class WidgetSwipeAndDragHandler(context: Context, val adapter: WidgetsRecyclerViewAdapter) :
@@ -24,6 +25,16 @@ class WidgetSwipeAndDragHandler(context: Context, val adapter: WidgetsRecyclerVi
 
     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
         adapter.deleteWidget(viewHolder.adapterPosition)
+        showUndoSnackbar(viewHolder.itemView)
+    }
+
+    private fun showUndoSnackbar(itemView: View) {
+        val snackbar: Snackbar = Snackbar.make(
+            itemView, itemView.context.getString(R.string.widget_deleted),
+            Snackbar.LENGTH_LONG
+        )
+        snackbar.setAction(itemView.context.getString(R.string.undo)) { adapter.undoDelete() }
+        snackbar.show()
     }
 
     override fun onChildDraw(

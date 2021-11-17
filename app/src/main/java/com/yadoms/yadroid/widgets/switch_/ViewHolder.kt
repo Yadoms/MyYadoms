@@ -17,7 +17,7 @@ class ViewHolder(view: View) : WidgetViewHolder(view) {
         switchAnimation = background as AnimationDrawable
     }
     private var state = false
-    private var widget: Preferences.WidgetData? = null
+    private var widget: Preferences.WidgetModel? = null
 
     init {
         itemView.setOnClickListener {
@@ -26,26 +26,26 @@ class ViewHolder(view: View) : WidgetViewHolder(view) {
             widget?.let {
                 DeviceApi(YadomsApi(Preferences(view.context).serverConnection)).command(
                     view.context,
-                    it.keywordId,
+                    it.data.keywordId,
                     if (state) "1" else "0", {}, {})
             }
         }
     }
 
-    override fun onBind(widget: Preferences.WidgetData) {
+    override fun onBind(widget: Preferences.WidgetModel) {
         this.widget = widget
-        Log.d("Switch", "onBind : ${widget.name} ${adapterPosition}...")
+        Log.d("Switch", "onBind : ${widget.data.name}(id ${widget.data.keywordId})...")
 
-        setName(widget.name)
+        setName(widget.data.name)
 
-        DeviceApi(YadomsApi(Preferences(view.context).serverConnection)).getKeyword(view.context, widget.keywordId,
+        DeviceApi(YadomsApi(Preferences(view.context).serverConnection)).getKeyword(view.context, widget.data.keywordId,
             onOk = {
-                Log.d("Switch", "onBind/onOk : ${widget.name}  ${adapterPosition}, ${it.lastAcquisitionValue}")
+                Log.d("Switch", "onBind/onOk : ${widget.data.name}(id ${widget.data.keywordId}), ${it.lastAcquisitionValue}")
                 setLastUpdate(it.lastAcquisitionDate)
                 setState(it.lastAcquisitionValue == "1")
             },
             onError = {
-                Log.d("Numeric", "onBind/onError : ${widget.name}  ${adapterPosition}, $it")
+                Log.d("Switch", "onBind/onError : ${widget.data.name}(id ${widget.data.keywordId}), $it")
                 setLastUpdate(null)
             })
     }

@@ -14,5 +14,6 @@ val type = WidgetTypes.WidgetTypeItem(
         expectedKeywordAccess = arrayOf(DeviceApi.KeywordAccess.GetSet)
     ),
     layout = R.layout.widget_switch_item,
-    createViewHolder = { ViewHolder(it) }
+    createViewHolder = { ViewHolder(it) },
+    createModel = { Model(it) }
 )

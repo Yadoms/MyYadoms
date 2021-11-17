@@ -6,7 +6,7 @@
     <!-- Preference Titles -->
     <string name="preferences_server_connection">Server connexion</string>
 
-    <!-- Server connexion Preferences -->
+    <!-- Server connexion com.yadoms.yadroid.preferences.Preferences -->
     <string name="preference_server_url">Server URL</string>
     <string name="preference_server_port">Server port</string>
     <string name="preference_server_use_basic_authentication">Use basic authentication</string>

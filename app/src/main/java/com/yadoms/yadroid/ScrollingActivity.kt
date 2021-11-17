@@ -1,5 +1,6 @@
 package com.yadoms.yadroid
 
+import com.yadoms.yadroid.preferences.Preferences
 import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
@@ -12,7 +13,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import com.yadoms.yadroid.databinding.ActivityScrollingBinding
-import com.yadoms.yadroid.preferences.Preferences
 import com.yadoms.yadroid.preferences.SettingsActivity
 import java.util.*
 import kotlin.concurrent.schedule
@@ -49,7 +49,7 @@ class ScrollingActivity : AppCompatActivity() {
         binding.versionView.text = getString(R.string.app_version, BuildConfig.VERSION_NAME, if (BuildConfig.DEBUG) "d" else "")
 
         widgetsListView.layoutManager = LinearLayoutManager(this)
-        widgetsListView.adapter = WidgetsRecyclerViewAdapter(Preferences(this), object : WidgetsRecyclerViewAdapter.EmptyListener {
+        widgetsListView.adapter = WidgetsRecyclerViewAdapter(this, object : EmptyListener {
             override fun onEmptyChange(empty: Boolean) {
                 binding.contentScrollingLayout.widgetsList.visibility = if (empty) GONE else VISIBLE
                 binding.contentScrollingLayout.noContent.visibility = if (empty) VISIBLE else GONE

@@ -1,4 +1,4 @@
-RecyclerView.Adapterpackage com.yadoms.yadroid.preferences
+package com.yadoms.yadroid.preferences
 
 import android.content.Context
 import android.content.SharedPreferences
@@ -44,23 +44,16 @@ class Preferences(private val context: Context) {
 
     class WidgetsPreferences(val widgets: MutableList<WidgetData>)
 
-    val widgets: MutableList<WidgetModel>
+    val widgets: MutableList<WidgetData>
         get() = loadWidgets()
 
-    private fun loadWidgets(): MutableList<WidgetModel> {
+    private fun loadWidgets(): MutableList<WidgetData> {
         val widgetsPreferencesString = sharedPreference.getString("widgets", "") ?: return mutableListOf()
         if (widgetsPreferencesString.isEmpty())
             return mutableListOf()
 
         val widgetsPreferences = moshi.adapter(WidgetsPreferences::class.java).fromJson(widgetsPreferencesString) ?: return mutableListOf()
-        val widgetModels: MutableList<WidgetModel> = mutableListOf()
-        widgetsPreferences.widgets.map {
-            val item = WidgetTypes.item(it.type)
-            item?.createModel(WidgetData(it.type, it.name, it.keywordId))
-            widgetModels.add(WidgetTypes.item(it.type).createModel())
-        }
-        return widgetModels
-
+        return widgetsPreferences.widgets
     }
 
     fun saveWidgets(currentWidgets: MutableList<WidgetData>) {

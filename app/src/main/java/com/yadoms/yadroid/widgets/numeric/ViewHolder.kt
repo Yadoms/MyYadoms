@@ -13,19 +13,19 @@ class ViewHolder(view: View) : WidgetViewHolder(view) {
     private val valueView: TextView = view.findViewById(R.id.value)
     private var value = "-"
 
-    override fun onBind(widget: Preferences.WidgetData) {
-        Log.d("Numeric", "onBind : ${widget.name} ${adapterPosition}...")
+    override fun onBind(widget: Preferences.WidgetModel) {
+        Log.d("Numeric", "onBind : ${widget.data.name}(id ${widget.data.keywordId})...")
 
-        setName(widget.name)
+        setName(widget.data.name)
 
-        DeviceApi(YadomsApi(Preferences(view.context).serverConnection)).getKeyword(view.context, widget.keywordId,
+        DeviceApi(YadomsApi(Preferences(view.context).serverConnection)).getKeyword(view.context, widget.data.keywordId,
             onOk = {
-                Log.d("Numeric", "onBind/onOk : ${widget.name} ${adapterPosition}, ${formatValue(it) + formatUnit(it)}")
+                Log.d("Numeric", "onBind/onOk : ${widget.data.name}(id ${widget.data.keywordId}), ${formatValue(it) + formatUnit(it)}")
                 setLastUpdate(it.lastAcquisitionDate)
                 setValue(formatValue(it) + formatUnit(it))
             },
             onError = {
-                Log.d("Numeric", "onBind/onError : ${widget.name} ${adapterPosition}, $it")
+                Log.d("Numeric", "onBind/onError : ${widget.data.name}(id ${widget.data.keywordId}), $it")
                 setLastUpdate(null)
             })
     }

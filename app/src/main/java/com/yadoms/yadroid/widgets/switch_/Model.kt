@@ -1,4 +1,4 @@
-package com.yadoms.yadroid.widgets.numeric
+package com.yadoms.yadroid.widgets.switch_
 
 import com.yadoms.yadroid.preferences.Preferences
 
