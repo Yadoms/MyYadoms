@@ -3,7 +3,6 @@ package com.yadoms.yadroid.widgets.switch_
 import android.graphics.drawable.AnimationDrawable
 import android.view.View
 import android.widget.ImageView
-import android.widget.TextView
 import com.yadoms.yadroid.R
 import com.yadoms.yadroid.preferences.Preferences
 import com.yadoms.yadroid.widgets.WidgetViewHolder
@@ -24,10 +23,10 @@ class ViewHolder(view: View) : WidgetViewHolder(view) {
             setState(!state)
 
             widget?.let {
-                DeviceApi(YadomsApi(Preferences(view.context).serverConnection)).command(
-                    view.context,
+                DeviceApi(YadomsApi(view.context)).command(
                     it.keywordId,
-                    if (state) "1" else "0", {}, {})
+                    if (state) "1" else "0",
+                    {}) {}
             }
         }
     }
@@ -37,7 +36,7 @@ class ViewHolder(view: View) : WidgetViewHolder(view) {
 
         setName(widget.name)
 
-        DeviceApi(YadomsApi(Preferences(view.context).serverConnection)).getKeyword(view.context, widget.keywordId,
+        DeviceApi(YadomsApi(view.context)).getKeyword(view.context, widget.keywordId,
             onOk = {
                 setLastUpdate(it.lastAcquisitionDate)
                 setState(it.lastAcquisitionValue == "1")

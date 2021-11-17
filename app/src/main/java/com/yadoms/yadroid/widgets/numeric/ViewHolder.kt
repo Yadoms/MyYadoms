@@ -16,7 +16,7 @@ class ViewHolder(view: View) : WidgetViewHolder(view) {
 
         setName(widget.name)
 
-        DeviceApi(YadomsApi(Preferences(view.context).serverConnection)).getKeyword(view.context, widget.keywordId,
+        DeviceApi(YadomsApi(view.context)).getKeyword(view.context, widget.keywordId,
             onOk = {
                 setLastUpdate(it.lastAcquisitionDate)
                 setValue(formatValue(it) + formatUnit(it))

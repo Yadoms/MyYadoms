@@ -3,7 +3,10 @@ package com.yadoms.yadroid.yadomsApi
 import android.annotation.SuppressLint
 import android.content.Context
 import android.util.Base64
-import com.android.volley.*
+import com.android.volley.AuthFailureError
+import com.android.volley.NetworkResponse
+import com.android.volley.ParseError
+import com.android.volley.Response
 import com.android.volley.toolbox.HttpHeaderParser
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
@@ -14,14 +17,19 @@ import java.security.KeyManagementException
 import java.security.NoSuchAlgorithmException
 import java.security.SecureRandom
 import java.security.cert.X509Certificate
-import javax.net.ssl.*
+import javax.net.ssl.HttpsURLConnection
+import javax.net.ssl.SSLContext
+import javax.net.ssl.TrustManager
+import javax.net.ssl.X509TrustManager
 
 
 //TODO remplacer Volley par https://square.github.io/retrofit/
 
-class YadomsApi(private val serverConnection: Preferences.ServerConnection) {
+class YadomsApi(val context: Context) {
     private val baseUrl: String
     private val commonHeaders = buildCommonHeaders()
+    private val queue = Volley.newRequestQueue(context)
+    private val serverConnection = Preferences(context).serverConnection
 
     private fun buildCommonHeaders(): MutableMap<String, String> {
         val headers = buildAuthHeaders().toMutableMap()
@@ -30,7 +38,7 @@ class YadomsApi(private val serverConnection: Preferences.ServerConnection) {
     }
 
     private fun buildAuthHeaders(): Map<String, String> {
-        if (!serverConnection.useBasicAuthentication)
+        if (!Preferences(context).serverConnection.useBasicAuthentication)
             return emptyMap()
 
         val headers: MutableMap<String, String> = HashMap()
@@ -91,20 +99,17 @@ class YadomsApi(private val serverConnection: Preferences.ServerConnection) {
         }
     }
 
-    private fun addToQueue(stringRequest: StringRequest, queue: RequestQueue) {
+    private fun addToQueue(stringRequest: StringRequest) {
         checkAndHandleSSLHandshake()
         queue.add(stringRequest)
     }
 
     fun get(
-        context: Context?,
         url: String,
         params: MutableMap<String, String> = mutableMapOf(),
         onOk: (String) -> Unit,
         onError: (String?) -> Unit
     ) {
-        val queue = Volley.newRequestQueue(context)
-
         var urlWithParam = url
 
         //TODO utiliser un vrai URI builder (pour gérer les espaces et autres caractères spéciaux)
@@ -149,19 +154,16 @@ class YadomsApi(private val serverConnection: Preferences.ServerConnection) {
             }
         }
 
-        addToQueue(stringRequest, queue)
+        addToQueue(stringRequest)
     }
 
     fun post(
-        context: Context?,
         url: String,
         params: String? = null,
         body: String,
         onOk: (String) -> Unit,
         onError: (String?) -> Unit
     ) {
-        val queue = Volley.newRequestQueue(context)
-
         val stringRequest = object : StringRequest(
             Method.POST,
             baseUrl + url,
@@ -185,6 +187,6 @@ class YadomsApi(private val serverConnection: Preferences.ServerConnection) {
             }
         }
 
-        addToQueue(stringRequest, queue)
+        addToQueue(stringRequest)
     }
 }
