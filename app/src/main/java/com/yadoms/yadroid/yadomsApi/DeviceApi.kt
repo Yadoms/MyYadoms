@@ -137,7 +137,6 @@ class DeviceApi(private val yApi: YadomsApi) {
     }
 
     fun getDeviceMatchKeywordCriteria(
-        context: Context?,
         expectedKeywordType: Array<KeywordTypes> = arrayOf(),
         expectedCapacity: Array<StandardCapacities> = arrayOf(),
         expectedKeywordAccess: Array<KeywordAccess> = arrayOf(),
@@ -148,7 +147,6 @@ class DeviceApi(private val yApi: YadomsApi) {
             .toJson(GetDeviceMatchKeywordCriteriaRequestAdapter(expectedKeywordType, expectedCapacity, expectedKeywordAccess))
 
         yApi.post(
-            context,
             url = "/device/matchkeywordcriteria",
             body = body.toString(),
             onOk = {
@@ -167,12 +165,11 @@ class DeviceApi(private val yApi: YadomsApi) {
                     Log.e(_logTag, it)
                     onError(null)
                 }
-            },
-            onError = {
-                Log.e(_logTag, "Error sending request ($it)")//TODO gérer les erreurs dans la fonction post
-                onError(it)
             }
-        )
+        ) {
+            Log.e(_logTag, "Error sending request ($it)")//TODO gérer les erreurs dans la fonction post
+            onError(it)
+        }
     }
 
     class GetDeviceWithCapacityTypeResultAdapter(val result: Boolean, val message: String, val data: Data) {
@@ -187,7 +184,6 @@ class DeviceApi(private val yApi: YadomsApi) {
         onError: (String?) -> Unit,
     ) {
         yApi.get(
-            context,
             url = "/device/matchcapacitytype/$expectedKeywordAccess/$expectedKeywordType",
             onOk = {
                 try {
@@ -205,12 +201,11 @@ class DeviceApi(private val yApi: YadomsApi) {
                     Log.e(_logTag, it)
                     onError(null)
                 }
-            },
-            onError = {
-                Log.e(_logTag, "Error sending request ($it)")//TODO gérer les erreurs dans la fonction post
-                onError(it)
             }
-        )
+        ) {
+            Log.e(_logTag, "Error sending request ($it)")//TODO gérer les erreurs dans la fonction post
+            onError(it)
+        }
     }
 
     class GetDeviceKeywordsResultAdapter(val result: Boolean, val message: String, val data: Data) {
@@ -218,13 +213,11 @@ class DeviceApi(private val yApi: YadomsApi) {
     }
 
     fun getDeviceKeywords(
-        context: Context?,
         deviceId: Int,
         onOk: (List<Keyword>) -> Unit,
         onError: (String?) -> Unit,
     ) {
         yApi.get(
-            context,
             url = "/device/$deviceId/keyword",
             onOk = {
                 try {
@@ -241,12 +234,11 @@ class DeviceApi(private val yApi: YadomsApi) {
                     Log.e(_logTag, it)
                     onError(null)
                 }
-            },
-            onError = {
-                Log.e(_logTag, "Error sending request ($it)")//TODO gérer les erreurs dans la fonction post
-                onError(it)
             }
-        )
+        ) {
+            Log.e(_logTag, "Error sending request ($it)")//TODO gérer les erreurs dans la fonction post
+            onError(it)
+        }
     }
 
     class GetKeywordResultAdapter(val result: Boolean, val message: String, val data: Keyword)
@@ -258,7 +250,6 @@ class DeviceApi(private val yApi: YadomsApi) {
         onError: (String?) -> Unit,
     ) {
         yApi.get(
-            context,
             url = "/device/keyword/$keywordId",
             onOk = {
                 try {
@@ -275,25 +266,22 @@ class DeviceApi(private val yApi: YadomsApi) {
                     Log.e(_logTag, it)
                     onError(null)
                 }
-            },
-            onError = {
-                Log.e(_logTag, "Error sending request ($it) :")//TODO gérer les erreurs dans la fonction get
-                onError(it)
             }
-        )
+        ) {
+            Log.e(_logTag, "Error sending request ($it) :")//TODO gérer les erreurs dans la fonction get
+            onError(it)
+        }
     }
 
     class CommandResultAdapter(val result: Boolean, val message: String)
 
     fun command(
-        context: Context?,
         keywordId: Int,
         command: String,
         onOk: () -> Unit,
         onError: (String?) -> Unit
     ) {
         yApi.post(
-            context,
             url = "/device/keyword/${keywordId}/command",
             body = command,
             onOk = {
@@ -311,12 +299,11 @@ class DeviceApi(private val yApi: YadomsApi) {
                     Log.e(_logTag, it)
                     onError(null)
                 }
-            },
-            onError = {
-                Log.e(_logTag, "Error sending request ($it) :")//TODO gérer les erreurs dans la fonction post
-                onError(it)
             }
-        )
+        ) {
+            Log.e(_logTag, "Error sending request ($it) :")//TODO gérer les erreurs dans la fonction post
+            onError(it)
+        }
     }
 
     internal class LocalDateTimeAdapter {

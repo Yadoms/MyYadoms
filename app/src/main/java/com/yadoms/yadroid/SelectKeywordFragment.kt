@@ -1,6 +1,5 @@
 package com.yadoms.yadroid
 
-import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -11,7 +10,6 @@ import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
-import com.yadoms.yadroid.preferences.Preferences
 import com.yadoms.yadroid.yadomsApi.DeviceApi
 import com.yadoms.yadroid.yadomsApi.YadomsApi
 
@@ -54,10 +52,9 @@ class SelectKeywordFragment : Fragment() {
                     newWidgetActivity.startWait()
 
                     val kwFilter = newWidgetActivity.selectedWidgetType!!.keywordFilter
-                    val yApi = YadomsApi(Preferences(activity as Context).serverConnection)
+                    val yApi = YadomsApi(context)
                     newWidgetActivity.selectedDeviceId?.let { selectedDeviceId ->
                         DeviceApi(yApi).getDeviceKeywords(
-                            activity,
                             selectedDeviceId,
                             onOk = { keywords ->
                                 keywords.forEach { keyword ->
@@ -71,15 +68,15 @@ class SelectKeywordFragment : Fragment() {
                                 }
                                 adapter?.notifyDataSetChanged()
                                 newWidgetActivity.stopWait()
-                            },
-                            onError = {
-                                if (activity != null)
-                                    Snackbar.make(
-                                        view, context.getString(R.string.unable_to_reach_the_server),
-                                        Snackbar.LENGTH_LONG
-                                    ).show()
-                                newWidgetActivity.stopWait()
-                            })
+                            }
+                        ) {
+                            if (activity != null)
+                                Snackbar.make(
+                                    view, context.getString(R.string.unable_to_reach_the_server),
+                                    Snackbar.LENGTH_LONG
+                                ).show()
+                            newWidgetActivity.stopWait()
+                        }
                     }
                 }
 
