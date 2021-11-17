@@ -3,6 +3,7 @@ package com.yadoms.yadroid.widgets
 import android.view.View
 import com.yadoms.yadroid.preferences.Preferences
 import com.yadoms.yadroid.yadomsApi.DeviceApi
+import com.yadoms.yadroid.yadomsApi.YadomsApi
 
 
 object WidgetTypes {

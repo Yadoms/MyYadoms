@@ -38,16 +38,16 @@ class ViewHolder(view: View) : WidgetViewHolder(view) {
 
         setName(widget.data.name)
 
-        DeviceApi(YadomsApi(view.context)).getKeyword(view.context, widget.keywordId,
+        DeviceApi(YadomsApi(view.context)).getKeyword(widget.data.keywordId,
             onOk = {
                 Log.d("Switch", "onBind/onOk : ${widget.data.name}(id ${widget.data.keywordId}), ${it.lastAcquisitionValue}")
                 setLastUpdate(it.lastAcquisitionDate)
                 setState(it.lastAcquisitionValue == "1")
-            },
-            onError = {
-                Log.d("Switch", "onBind/onError : ${widget.data.name}(id ${widget.data.keywordId}), $it")
-                setLastUpdate(null)
-            })
+            }
+        ) {
+            Log.d("Switch", "onBind/onError : ${widget.data.name}(id ${widget.data.keywordId}), $it")
+            setLastUpdate(null)
+        }
     }
 
     private fun setState(newState: Boolean) {

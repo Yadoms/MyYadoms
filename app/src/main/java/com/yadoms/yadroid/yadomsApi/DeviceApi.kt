@@ -29,28 +29,26 @@ class DeviceApi(private val yApi: YadomsApi) {
         armingAlarm,
         batteryLevel,
         cameraMove,
-        colorRGB,
-        colorRGBW,
-        counter,
+        colorrgb,
+        colorrgbw,
+        count,
         current,
         curtain,
         dateTime,
         debit,
         dimmable,
         direction,
-        distance,
+        length,
         duration,
         electricLoad,
         energy,
         event,
-        Forecast,
         frequency,
         humidity,
         illumination,
         illuminationWm2,
         load,
         message,
-        pluginState,
         power,
         powerFactor,
         pressure,
@@ -70,7 +68,11 @@ class DeviceApi(private val yApi: YadomsApi) {
         voltage,
         volume,
         weatherCondition,
-        weight
+        weight,
+        pluginState,
+        pluginStateMessage,
+        deviceState,
+        deviceStateMessage,
     }
 
     enum class Units(val yadomsApiKey: String, val label: String) {
@@ -136,6 +138,15 @@ class DeviceApi(private val yApi: YadomsApi) {
         class Data(val devices: List<Device>, val keywords: List<Keyword>)
     }
 
+    private inline fun <reified T> fromJson(json: String): T? {
+        return try {
+            moshi.adapter(T::class.java).fromJson(json)
+        } catch (e: java.io.EOFException) {
+            Log.w(_logTag, "Sometimes last char is not received (on emulator), so add '}' and retry parse received data...");
+            moshi.adapter(T::class.java).fromJson("$json}")
+        }
+    }
+
     fun getDeviceMatchKeywordCriteria(
         expectedKeywordType: Array<KeywordTypes> = arrayOf(),
         expectedCapacity: Array<StandardCapacities> = arrayOf(),
@@ -151,8 +162,7 @@ class DeviceApi(private val yApi: YadomsApi) {
             body = body.toString(),
             onOk = {
                 try {
-                    val result: GetDeviceMatchKeywordCriteriaResultAdapter? =
-                        moshi.adapter(GetDeviceMatchKeywordCriteriaResultAdapter::class.java).fromJson(it)
+                    val result = fromJson<GetDeviceMatchKeywordCriteriaResultAdapter>(it)
 
                     if (result?.result != true) {
                         Log.e(_logTag, "Server returns error (${result?.message}) :")//TODO gérer les erreurs dans la fonction post
@@ -187,8 +197,7 @@ class DeviceApi(private val yApi: YadomsApi) {
             url = "/device/matchcapacitytype/$expectedKeywordAccess/$expectedKeywordType",
             onOk = {
                 try {
-                    val result: GetDeviceWithCapacityTypeResultAdapter? =
-                        moshi.adapter(GetDeviceWithCapacityTypeResultAdapter::class.java).fromJson(it)
+                    val result = fromJson<GetDeviceWithCapacityTypeResultAdapter>(it)
 
                     if (result?.result != true) {
                         Log.e(_logTag, "Server returns error (${result?.message}) :")//TODO gérer les erreurs dans la fonction post
@@ -221,7 +230,7 @@ class DeviceApi(private val yApi: YadomsApi) {
             url = "/device/$deviceId/keyword",
             onOk = {
                 try {
-                    val result: GetDeviceKeywordsResultAdapter? = moshi.adapter(GetDeviceKeywordsResultAdapter::class.java).fromJson(it)
+                    val result = fromJson<GetDeviceKeywordsResultAdapter>(it)
 
                     if (result?.result != true) {
                         Log.e(_logTag, "Server returns error (${result?.message}) :")//TODO gérer les erreurs dans la fonction post
@@ -244,7 +253,6 @@ class DeviceApi(private val yApi: YadomsApi) {
     class GetKeywordResultAdapter(val result: Boolean, val message: String, val data: Keyword)
 
     fun getKeyword(
-        context: Context?,
         keywordId: Int,
         onOk: (Keyword) -> Unit,
         onError: (String?) -> Unit,
@@ -253,7 +261,7 @@ class DeviceApi(private val yApi: YadomsApi) {
             url = "/device/keyword/$keywordId",
             onOk = {
                 try {
-                    val result: GetKeywordResultAdapter? = moshi.adapter(GetKeywordResultAdapter::class.java).fromJson(it)
+                    val result = fromJson<GetKeywordResultAdapter>(it)
 
                     if (result?.result != true) {
                         Log.e(_logTag, "Server returns error (${result?.message}) :")//TODO gérer les erreurs dans la fonction post
@@ -286,7 +294,7 @@ class DeviceApi(private val yApi: YadomsApi) {
             body = command,
             onOk = {
                 try {
-                    val result: CommandResultAdapter? = moshi.adapter(CommandResultAdapter::class.java).fromJson(it)
+                    val result = fromJson<CommandResultAdapter>(it)
 
                     if (result?.result != true) {
                         Log.e(_logTag, "Server returns error (${result?.message}) :")//TODO gérer les erreurs dans la fonction post

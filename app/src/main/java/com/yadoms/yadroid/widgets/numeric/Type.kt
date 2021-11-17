@@ -12,5 +12,5 @@ val type = WidgetTypes.WidgetTypeItem(
     keywordFilter = WidgetTypes.KeywordFilter(expectedKeywordType = arrayOf(DeviceApi.KeywordTypes.Numeric)),
     layout = R.layout.widget_numeric_item,
     createViewHolder = { ViewHolder(it) },
-    createModel = { Model(it) }
+    createModel = { widgetPreferences -> Model(widgetPreferences) }
 )

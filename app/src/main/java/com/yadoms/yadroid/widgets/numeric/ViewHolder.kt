@@ -18,16 +18,16 @@ class ViewHolder(view: View) : WidgetViewHolder(view) {
 
         setName(widget.data.name)
 
-        DeviceApi(YadomsApi(view.context)).getKeyword(view.context, widget.keywordId,
+        DeviceApi(YadomsApi(view.context)).getKeyword(widget.data.keywordId,
             onOk = {
                 Log.d("Numeric", "onBind/onOk : ${widget.data.name}(id ${widget.data.keywordId}), ${formatValue(it) + formatUnit(it)}")
                 setLastUpdate(it.lastAcquisitionDate)
                 setValue(formatValue(it) + formatUnit(it))
-            },
-            onError = {
-                Log.d("Numeric", "onBind/onError : ${widget.data.name}(id ${widget.data.keywordId}), $it")
-                setLastUpdate(null)
-            })
+            }
+        ) {
+            Log.d("Numeric", "onBind/onError : ${widget.data.name}(id ${widget.data.keywordId}), $it")
+            setLastUpdate(null)
+        }
     }
 
     private fun formatUnit(keyword: DeviceApi.Keyword): String {
