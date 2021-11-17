@@ -38,10 +38,11 @@ class ScrollingActivity : AppCompatActivity() {
         setSupportActionBar(binding.toolbar)
         with(binding) {
             toolbarLayout.title = title
+            val newWidgetActivityContractLauncher = registerForActivityResult(NewWidgetActivityContract()) { newWidget ->
+                newWidget?.let { widgetsListViewAdapter.addNewWidget(it) }
+            }
             addWidget.setOnClickListener {
-                registerForActivityResult(NewWidgetActivityContract()) { newWidget ->
-                    newWidget?.let { widgetsListViewAdapter.addNewWidget(it) }
-                }.launch(null)
+                newWidgetActivityContractLauncher.launch(null)
             }
         }
 

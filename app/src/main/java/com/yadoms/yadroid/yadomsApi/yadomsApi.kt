@@ -1,17 +1,20 @@
 package com.yadoms.yadroid.yadomsApi
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.util.Base64
-import com.android.volley.AuthFailureError
-import com.android.volley.NetworkResponse
-import com.android.volley.ParseError
-import com.android.volley.Response
+import com.android.volley.*
 import com.android.volley.toolbox.HttpHeaderParser
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.yadoms.yadroid.preferences.Preferences
 import org.json.JSONException
 import java.io.UnsupportedEncodingException
+import java.security.KeyManagementException
+import java.security.NoSuchAlgorithmException
+import java.security.SecureRandom
+import java.security.cert.X509Certificate
+import javax.net.ssl.*
 
 
 //TODO remplacer Volley par https://square.github.io/retrofit/
@@ -40,6 +43,57 @@ class YadomsApi(private val serverConnection: Preferences.ServerConnection) {
         val protocol = if (serverConnection.useHttps) "https" else "http"
         val port = if (serverConnection.useHttps) serverConnection.httpsPort else serverConnection.port
         baseUrl = "$protocol://${serverConnection.url}:$port/rest"
+    }
+
+    // define the default variables for proper certificate validation
+    private val defaultSSLSocketFactory = HttpsURLConnection.getDefaultSSLSocketFactory()
+    private val defaultSSLHostnameVerifier = HttpsURLConnection.getDefaultHostnameVerifier()
+
+    private fun setDefaultSettingsForHttpsConnection() {
+        HttpsURLConnection.setDefaultSSLSocketFactory(defaultSSLSocketFactory)
+        HttpsURLConnection.setDefaultHostnameVerifier(defaultSSLHostnameVerifier)
+    }
+
+    private fun bypassSSLValidation() {
+        try {
+            val trustAllCerts = arrayOf<TrustManager>(@SuppressLint("CustomX509TrustManager")
+            object : X509TrustManager {
+                override fun getAcceptedIssuers(): Array<X509Certificate?> {
+                    return arrayOfNulls(0)
+                }
+
+                @SuppressLint("TrustAllX509TrustManager")
+                override fun checkClientTrusted(certs: Array<X509Certificate?>?, authType: String?) {
+                }
+
+                @SuppressLint("TrustAllX509TrustManager")
+                override fun checkServerTrusted(certs: Array<X509Certificate?>?, authType: String?) {
+                }
+            })
+            val sc = SSLContext.getInstance("SSL")
+            sc.init(null, trustAllCerts, SecureRandom())
+            HttpsURLConnection.setDefaultSSLSocketFactory(sc.socketFactory)
+            HttpsURLConnection.setDefaultHostnameVerifier { _, _ -> true }
+        } catch (ex: NoSuchAlgorithmException) {
+            ex.printStackTrace()
+        } catch (ex: KeyManagementException) {
+            ex.printStackTrace()
+        } catch (ex: java.lang.Exception) {
+            ex.printStackTrace()
+        }
+    }
+
+    private fun checkAndHandleSSLHandshake() {
+        if (serverConnection.useHttps && serverConnection.ignoreHttpsCertificateError) {
+            bypassSSLValidation()
+        } else {
+            setDefaultSettingsForHttpsConnection()
+        }
+    }
+
+    private fun addToQueue(stringRequest: StringRequest, queue: RequestQueue) {
+        checkAndHandleSSLHandshake()
+        queue.add(stringRequest)
     }
 
     fun get(
@@ -95,7 +149,7 @@ class YadomsApi(private val serverConnection: Preferences.ServerConnection) {
             }
         }
 
-        queue.add(stringRequest)
+        addToQueue(stringRequest, queue)
     }
 
     fun post(
@@ -131,6 +185,6 @@ class YadomsApi(private val serverConnection: Preferences.ServerConnection) {
             }
         }
 
-        queue.add(stringRequest)
+        addToQueue(stringRequest, queue)
     }
 }

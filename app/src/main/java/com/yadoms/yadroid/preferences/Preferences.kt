@@ -19,7 +19,8 @@ class Preferences(private val context: Context) {
         val basicAuthenticationUser: String,
         val basicAuthenticationPassword: String,
         val useHttps: Boolean,
-        val httpsPort: Int
+        val httpsPort: Int,
+        val ignoreHttpsCertificateError: Boolean
     )
 
     val serverConnection: ServerConnection
@@ -30,7 +31,8 @@ class Preferences(private val context: Context) {
             sharedPreference.getString("server_basic_authentication_username", "") ?: "",
             sharedPreference.getString("server_basic_authentication_password", "") ?: "",
             sharedPreference.getBoolean("server_use_https", false),
-            (sharedPreference.getString("server_https_port", "443") ?: "443").toInt()
+            (sharedPreference.getString("server_https_port", "443") ?: "443").toInt(),
+            sharedPreference.getBoolean("ignore_https_certificate_error", false)
         )
 
     class WidgetData(val type: WidgetTypes.WidgetType, val name: String, val keywordId: Int)
