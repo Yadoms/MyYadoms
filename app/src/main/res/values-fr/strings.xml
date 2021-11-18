@@ -4,7 +4,7 @@
     <!-- Preference Titles -->
     <string name="preferences_server_connection">Connection au serveur</string>
 
-    <!-- Server connexion com.yadoms.yadroid.preferences.Preferences -->
+    <!-- Server connexion com.yadoms.myyadomss.preferences.Preferences -->
     <string name="preference_server_url">Adresse du serveur</string>
     <string name="preference_server_port">Port</string>
     <string name="preference_server_use_basic_authentication">Utiliser l\'authentification basique</string>

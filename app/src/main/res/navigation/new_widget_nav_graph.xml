@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/widgetTypeFragment"
-        android:name="com.yadoms.yadroid.SelectWidgetTypeFragment"
+        android:name="com.yadoms.myyadoms.SelectWidgetTypeFragment"
         android:label="fragment_item_list"
         tools:layout="@layout/fragment_select_widget">
         <action
@@ -16,7 +16,7 @@
     </fragment>
     <fragment
         android:id="@+id/deviceFragment"
-        android:name="com.yadoms.yadroid.SelectDeviceFragment"
+        android:name="com.yadoms.myyadoms.SelectDeviceFragment"
         android:label="fragment_device"
         tools:layout="@layout/fragment_select_device">
         <action
@@ -25,7 +25,7 @@
     </fragment>
     <fragment
         android:id="@+id/keywordFragment"
-        android:name="com.yadoms.yadroid.SelectKeywordFragment"
+        android:name="com.yadoms.myyadoms.SelectKeywordFragment"
         android:label="fragment_keyword"
         tools:layout="@layout/fragment_select_keyword">
         <action
@@ -34,7 +34,7 @@
     </fragment>
     <fragment
         android:id="@+id/nameFragment"
-        android:name="com.yadoms.yadroid.SetNameFragment"
+        android:name="com.yadoms.myyadoms.SetNameFragment"
         android:label="name_widget"
         tools:layout="@layout/fragment_set_name"/>
 </navigation>

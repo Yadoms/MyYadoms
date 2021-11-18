@@ -1,12 +1,12 @@
 <resources>
-    <string name="app_name" translatable="false">Yadroid</string>
+    <string name="app_name" translatable="false">MyYadoms</string>
     <string name="app_version" translatable="false">v%s%s</string>
     <string name="action_settings">Settings</string>
 
     <!-- Preference Titles -->
     <string name="preferences_server_connection">Server connexion</string>
 
-    <!-- Server connexion com.yadoms.yadroid.preferences.Preferences -->
+    <!-- Server connexion com.yadoms.myyadomss.preferences.Preferences -->
     <string name="preference_server_url">Server URL</string>
     <string name="preference_server_port">Server port</string>
     <string name="preference_server_use_basic_authentication">Use basic authentication</string>

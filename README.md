@@ -1,2 +1,2 @@
-# yadroid
+# MyYadoms
 Yadoms Android client
