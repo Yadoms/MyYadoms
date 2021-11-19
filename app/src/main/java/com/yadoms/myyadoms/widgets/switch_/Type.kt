@@ -2,7 +2,8 @@ package com.yadoms.myyadoms.widgets.switch_
 
 import com.yadoms.myyadoms.R
 import com.yadoms.myyadoms.widgets.WidgetTypes
-import com.yadoms.yadroid.widgets.numeric.Model
+import com.yadoms.myyadoms.widgets.numeric.Model
+import com.yadoms.myyadoms.yadomsApi.DeviceApi
 
 val type = WidgetTypes.WidgetTypeItem(
     type = WidgetTypes.WidgetType.Switch,

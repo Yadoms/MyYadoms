@@ -7,8 +7,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.yadoms.myyadoms.preferences.Preferences
 import com.yadoms.myyadoms.widgets.WidgetTypes
 import com.yadoms.myyadoms.widgets.WidgetViewHolder
-import com.yadoms.yadroid.yadomsApi.DeviceApi
-import com.yadoms.yadroid.yadomsApi.YadomsApi
+import com.yadoms.myyadoms.yadomsApi.DeviceApi
+import com.yadoms.myyadoms.yadomsApi.YadomsApi
 
 
 class WidgetsRecyclerViewAdapter(val context: Context, private val emptyListener: EmptyListener) : RecyclerView.Adapter<WidgetViewHolder>() {

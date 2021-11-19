@@ -26,31 +26,31 @@ import javax.net.ssl.X509TrustManager
 //TODO remplacer Volley par https://square.github.io/retrofit/
 
 class YadomsApi(val context: Context) {
-    private val baseUrl: String
-    private val commonHeaders = buildCommonHeaders()
     private val queue = Volley.newRequestQueue(context)
-    private val serverConnection = Preferences(context).serverConnection
 
-    private fun buildCommonHeaders(): MutableMap<String, String> {
-        val headers = buildAuthHeaders().toMutableMap()
+    private fun buildBaseUrl(serverConnection: Preferences.ServerConnection): String {
+        val protocol = if (serverConnection.useHttps) "https" else "http"
+        val port =
+            if (serverConnection.useHttps) serverConnection.httpsPort else serverConnection.port
+        return "$protocol://${serverConnection.url}:$port/rest"
+    }
+
+    private fun buildCommonHeaders(serverConnection: Preferences.ServerConnection): MutableMap<String, String> {
+        val headers = buildAuthHeaders(serverConnection).toMutableMap()
         headers["Content-Type"] = "application/json;charset=UTF-8"
         return headers
     }
 
-    private fun buildAuthHeaders(): Map<String, String> {
-        if (!Preferences(context).serverConnection.useBasicAuthentication)
+    private fun buildAuthHeaders(serverConnection: Preferences.ServerConnection): Map<String, String> {
+        if (!serverConnection.useBasicAuthentication)
             return emptyMap()
 
         val headers: MutableMap<String, String> = HashMap()
-        val credentials = "${serverConnection.basicAuthenticationUser}:${serverConnection.basicAuthenticationPassword}"
-        headers["Authorization"] = ("Basic " + Base64.encodeToString(credentials.toByteArray(), Base64.NO_WRAP))
+        val credentials =
+            "${serverConnection.basicAuthenticationUser}:${serverConnection.basicAuthenticationPassword}"
+        headers["Authorization"] =
+            ("Basic " + Base64.encodeToString(credentials.toByteArray(), Base64.NO_WRAP))
         return headers
-    }
-
-    init {
-        val protocol = if (serverConnection.useHttps) "https" else "http"
-        val port = if (serverConnection.useHttps) serverConnection.httpsPort else serverConnection.port
-        baseUrl = "$protocol://${serverConnection.url}:$port/rest"
     }
 
     // define the default variables for proper certificate validation
@@ -71,11 +71,17 @@ class YadomsApi(val context: Context) {
                 }
 
                 @SuppressLint("TrustAllX509TrustManager")
-                override fun checkClientTrusted(certs: Array<X509Certificate?>?, authType: String?) {
+                override fun checkClientTrusted(
+                    certs: Array<X509Certificate?>?,
+                    authType: String?
+                ) {
                 }
 
                 @SuppressLint("TrustAllX509TrustManager")
-                override fun checkServerTrusted(certs: Array<X509Certificate?>?, authType: String?) {
+                override fun checkServerTrusted(
+                    certs: Array<X509Certificate?>?,
+                    authType: String?
+                ) {
                 }
             })
             val sc = SSLContext.getInstance("SSL")
@@ -91,7 +97,7 @@ class YadomsApi(val context: Context) {
         }
     }
 
-    private fun checkAndHandleSSLHandshake() {
+    private fun checkAndHandleSSLHandshake(serverConnection: Preferences.ServerConnection) {
         if (serverConnection.useHttps && serverConnection.ignoreHttpsCertificateError) {
             bypassSSLValidation()
         } else {
@@ -99,8 +105,8 @@ class YadomsApi(val context: Context) {
         }
     }
 
-    private fun addToQueue(stringRequest: StringRequest) {
-        checkAndHandleSSLHandshake()
+    private fun addToQueue(stringRequest: StringRequest, serverConnection: Preferences.ServerConnection) {
+        checkAndHandleSSLHandshake(serverConnection)
         queue.add(stringRequest)
     }
 
@@ -125,9 +131,10 @@ class YadomsApi(val context: Context) {
             }
         }
 
+        val serverConnection = Preferences(context).serverConnection
         val stringRequest = object : StringRequest(
             Method.GET,
-            baseUrl + urlWithParam,
+            buildBaseUrl(serverConnection) + urlWithParam,
             {
                 onOk(it)
             },
@@ -135,7 +142,7 @@ class YadomsApi(val context: Context) {
                 onError(it.message)
             }) {
             override fun getHeaders(): Map<String, String> {
-                return commonHeaders + super.getHeaders()
+                return buildCommonHeaders(serverConnection) + super.getHeaders()
             }
 
             override fun parseNetworkResponse(response: NetworkResponse?): Response<String> {
@@ -154,7 +161,7 @@ class YadomsApi(val context: Context) {
             }
         }
 
-        addToQueue(stringRequest)
+        addToQueue(stringRequest, serverConnection)
     }
 
     fun post(
@@ -164,9 +171,10 @@ class YadomsApi(val context: Context) {
         onOk: (String) -> Unit,
         onError: (String?) -> Unit
     ) {
+        val serverConnection = Preferences(context).serverConnection
         val stringRequest = object : StringRequest(
             Method.POST,
-            baseUrl + url,
+            buildBaseUrl(serverConnection) + url,
             {
                 onOk(it)
             },
@@ -174,7 +182,7 @@ class YadomsApi(val context: Context) {
                 onError(it.message)
             }) {
             override fun getHeaders(): Map<String, String> {
-                return commonHeaders + super.getHeaders()
+                return buildCommonHeaders(serverConnection) + super.getHeaders()
             }
 
             override fun getBodyContentType(): String {
@@ -187,6 +195,6 @@ class YadomsApi(val context: Context) {
             }
         }
 
-        addToQueue(stringRequest)
+        addToQueue(stringRequest, serverConnection)
     }
 }

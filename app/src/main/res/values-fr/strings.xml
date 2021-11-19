@@ -8,7 +8,7 @@
     <string name="preference_server_url">Adresse du serveur</string>
     <string name="preference_server_port">Port</string>
     <string name="preference_server_use_basic_authentication">Utiliser l\'authentification basique</string>
-    <string name="preference_server_basic_authentication_username">Num d\'utilisateur</string>
+    <string name="preference_server_basic_authentication_username">Nom d\'utilisateur</string>
     <string name="preference_server_basic_authentication_password">Mot de passe</string>
     <string name="preference_server_use_https">Utiliser HTTPS</string>
     <string name="preference_server_https_port">Port HTTPS du serveur</string>
