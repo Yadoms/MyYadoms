@@ -29,28 +29,26 @@ class DeviceApi(private val yApi: YadomsApi) {
         armingAlarm,
         batteryLevel,
         cameraMove,
-        colorRGB,
-        colorRGBW,
-        counter,
+        colorrgb,
+        colorrgbw,
+        count,
         current,
         curtain,
         dateTime,
         debit,
         dimmable,
         direction,
-        distance,
+        length,
         duration,
         electricLoad,
         energy,
         event,
-        Forecast,
         frequency,
         humidity,
         illumination,
         illuminationWm2,
         load,
         message,
-        pluginState,
         power,
         powerFactor,
         pressure,
@@ -70,7 +68,11 @@ class DeviceApi(private val yApi: YadomsApi) {
         voltage,
         volume,
         weatherCondition,
-        weight
+        weight,
+        pluginState,
+        pluginStateMessage,
+        deviceState,
+        deviceStateMessage,
     }
 
     enum class Units(val yadomsApiKey: String, val label: String) {
@@ -136,8 +138,16 @@ class DeviceApi(private val yApi: YadomsApi) {
         class Data(val devices: List<Device>, val keywords: List<Keyword>)
     }
 
+    private inline fun <reified T> fromJson(json: String): T? {
+        return try {
+            moshi.adapter(T::class.java).fromJson(json)
+        } catch (e: java.io.EOFException) {
+            Log.w(_logTag, "Sometimes last char is not received (on emulator), so add '}' and retry parse received data...");
+            moshi.adapter(T::class.java).fromJson("$json}")
+        }
+    }
+
     fun getDeviceMatchKeywordCriteria(
-        context: Context?,
         expectedKeywordType: Array<KeywordTypes> = arrayOf(),
         expectedCapacity: Array<StandardCapacities> = arrayOf(),
         expectedKeywordAccess: Array<KeywordAccess> = arrayOf(),
@@ -148,13 +158,11 @@ class DeviceApi(private val yApi: YadomsApi) {
             .toJson(GetDeviceMatchKeywordCriteriaRequestAdapter(expectedKeywordType, expectedCapacity, expectedKeywordAccess))
 
         yApi.post(
-            context,
             url = "/device/matchkeywordcriteria",
             body = body.toString(),
             onOk = {
                 try {
-                    val result: GetDeviceMatchKeywordCriteriaResultAdapter? =
-                        moshi.adapter(GetDeviceMatchKeywordCriteriaResultAdapter::class.java).fromJson(it)
+                    val result = fromJson<GetDeviceMatchKeywordCriteriaResultAdapter>(it)
 
                     if (result?.result != true) {
                         Log.e(_logTag, "Server returns error (${result?.message}) :")//TODO gérer les erreurs dans la fonction post
@@ -167,12 +175,11 @@ class DeviceApi(private val yApi: YadomsApi) {
                     Log.e(_logTag, it)
                     onError(null)
                 }
-            },
-            onError = {
-                Log.e(_logTag, "Error sending request ($it)")//TODO gérer les erreurs dans la fonction post
-                onError(it)
             }
-        )
+        ) {
+            Log.e(_logTag, "Error sending request ($it)")//TODO gérer les erreurs dans la fonction post
+            onError(it)
+        }
     }
 
     class GetDeviceWithCapacityTypeResultAdapter(val result: Boolean, val message: String, val data: Data) {
@@ -187,12 +194,10 @@ class DeviceApi(private val yApi: YadomsApi) {
         onError: (String?) -> Unit,
     ) {
         yApi.get(
-            context,
             url = "/device/matchcapacitytype/$expectedKeywordAccess/$expectedKeywordType",
             onOk = {
                 try {
-                    val result: GetDeviceWithCapacityTypeResultAdapter? =
-                        moshi.adapter(GetDeviceWithCapacityTypeResultAdapter::class.java).fromJson(it)
+                    val result = fromJson<GetDeviceWithCapacityTypeResultAdapter>(it)
 
                     if (result?.result != true) {
                         Log.e(_logTag, "Server returns error (${result?.message}) :")//TODO gérer les erreurs dans la fonction post
@@ -205,12 +210,11 @@ class DeviceApi(private val yApi: YadomsApi) {
                     Log.e(_logTag, it)
                     onError(null)
                 }
-            },
-            onError = {
-                Log.e(_logTag, "Error sending request ($it)")//TODO gérer les erreurs dans la fonction post
-                onError(it)
             }
-        )
+        ) {
+            Log.e(_logTag, "Error sending request ($it)")//TODO gérer les erreurs dans la fonction post
+            onError(it)
+        }
     }
 
     class GetDeviceKeywordsResultAdapter(val result: Boolean, val message: String, val data: Data) {
@@ -218,17 +222,15 @@ class DeviceApi(private val yApi: YadomsApi) {
     }
 
     fun getDeviceKeywords(
-        context: Context?,
         deviceId: Int,
         onOk: (List<Keyword>) -> Unit,
         onError: (String?) -> Unit,
     ) {
         yApi.get(
-            context,
             url = "/device/$deviceId/keyword",
             onOk = {
                 try {
-                    val result: GetDeviceKeywordsResultAdapter? = moshi.adapter(GetDeviceKeywordsResultAdapter::class.java).fromJson(it)
+                    val result = fromJson<GetDeviceKeywordsResultAdapter>(it)
 
                     if (result?.result != true) {
                         Log.e(_logTag, "Server returns error (${result?.message}) :")//TODO gérer les erreurs dans la fonction post
@@ -241,28 +243,25 @@ class DeviceApi(private val yApi: YadomsApi) {
                     Log.e(_logTag, it)
                     onError(null)
                 }
-            },
-            onError = {
-                Log.e(_logTag, "Error sending request ($it)")//TODO gérer les erreurs dans la fonction post
-                onError(it)
             }
-        )
+        ) {
+            Log.e(_logTag, "Error sending request ($it)")//TODO gérer les erreurs dans la fonction post
+            onError(it)
+        }
     }
 
     class GetKeywordResultAdapter(val result: Boolean, val message: String, val data: Keyword)
 
     fun getKeyword(
-        context: Context?,
         keywordId: Int,
         onOk: (Keyword) -> Unit,
         onError: (String?) -> Unit,
     ) {
         yApi.get(
-            context,
             url = "/device/keyword/$keywordId",
             onOk = {
                 try {
-                    val result: GetKeywordResultAdapter? = moshi.adapter(GetKeywordResultAdapter::class.java).fromJson(it)
+                    val result = fromJson<GetKeywordResultAdapter>(it)
 
                     if (result?.result != true) {
                         Log.e(_logTag, "Server returns error (${result?.message}) :")//TODO gérer les erreurs dans la fonction post
@@ -275,30 +274,27 @@ class DeviceApi(private val yApi: YadomsApi) {
                     Log.e(_logTag, it)
                     onError(null)
                 }
-            },
-            onError = {
-                Log.e(_logTag, "Error sending request ($it) :")//TODO gérer les erreurs dans la fonction get
-                onError(it)
             }
-        )
+        ) {
+            Log.e(_logTag, "Error sending request ($it) :")//TODO gérer les erreurs dans la fonction get
+            onError(it)
+        }
     }
 
     class CommandResultAdapter(val result: Boolean, val message: String)
 
     fun command(
-        context: Context?,
         keywordId: Int,
         command: String,
         onOk: () -> Unit,
         onError: (String?) -> Unit
     ) {
         yApi.post(
-            context,
             url = "/device/keyword/${keywordId}/command",
             body = command,
             onOk = {
                 try {
-                    val result: CommandResultAdapter? = moshi.adapter(CommandResultAdapter::class.java).fromJson(it)
+                    val result = fromJson<CommandResultAdapter>(it)
 
                     if (result?.result != true) {
                         Log.e(_logTag, "Server returns error (${result?.message}) :")//TODO gérer les erreurs dans la fonction post
@@ -311,12 +307,11 @@ class DeviceApi(private val yApi: YadomsApi) {
                     Log.e(_logTag, it)
                     onError(null)
                 }
-            },
-            onError = {
-                Log.e(_logTag, "Error sending request ($it) :")//TODO gérer les erreurs dans la fonction post
-                onError(it)
             }
-        )
+        ) {
+            Log.e(_logTag, "Error sending request ($it) :")//TODO gérer les erreurs dans la fonction post
+            onError(it)
+        }
     }
 
     internal class LocalDateTimeAdapter {

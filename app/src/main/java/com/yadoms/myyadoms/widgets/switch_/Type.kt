@@ -2,7 +2,7 @@ package com.yadoms.myyadoms.widgets.switch_
 
 import com.yadoms.myyadoms.R
 import com.yadoms.myyadoms.widgets.WidgetTypes
-import com.yadoms.myyadoms.yadomsApi.DeviceApi
+import com.yadoms.yadroid.widgets.numeric.Model
 
 val type = WidgetTypes.WidgetTypeItem(
     type = WidgetTypes.WidgetType.Switch,
@@ -15,5 +15,5 @@ val type = WidgetTypes.WidgetTypeItem(
     ),
     layout = R.layout.widget_switch_item,
     createViewHolder = { ViewHolder(it) },
-    createModel = { Model(it) }
+    createModel = { widgetPreferences -> Model(widgetPreferences) }
 )
