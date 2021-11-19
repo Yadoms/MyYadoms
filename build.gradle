@@ -27,6 +27,10 @@ allprojects {
         jcenter() // Deprecated (will be deleted on feb 2022), only needed for com.takisoft.preferencex:preferencex
         // See https://github.com/takisoft/preferencex-android/issues/18
         // and https://stackoverflow.com/questions/66400264/jcenter-is-at-end-of-life-android-lint-warning-what-is-the-replacement
+        // This package is used essentially for EditTextPreference control, which is bugged in Androidx (doesn't show the keyboard
+        // associated to corresponding input type).
+        // com.takisoft.preferencex seems to be no more maintained, and the final solution would probably be to switch to Androidx back
+        // when EditTextPreference will be fixed. Waiting for that, using jcenter is not a problem as it will remain online (as read-only repo).
     }
 }
 
