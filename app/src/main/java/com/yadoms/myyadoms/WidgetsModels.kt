@@ -37,9 +37,9 @@ class WidgetsModels(val context: Context) {
 
     fun at(position: Int) = models.elementAt(position)
 
-    fun create(configuration: WidgetConfiguration, atPosition: Int = count - 1): Int {
+    fun create(configuration: WidgetConfiguration, atPosition: Int = count): Int {
         models.add(
-            if (atPosition == -1) count else atPosition,
+            atPosition,
             WidgetTypes.item(configuration.type)!!.createModel(configuration, deviceApi)
         )
         save()

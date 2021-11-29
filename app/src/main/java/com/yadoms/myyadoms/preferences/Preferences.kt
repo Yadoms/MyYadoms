@@ -2,12 +2,14 @@ package com.yadoms.myyadoms.preferences
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.util.Log
 import androidx.preference.PreferenceManager
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import com.yadoms.myyadoms.WidgetConfiguration
 
 class Preferences(private val context: Context) {
+    private val _logTag = javaClass.canonicalName
 
     private val sharedPreference: SharedPreferences
         get() = PreferenceManager.getDefaultSharedPreferences(context)
@@ -42,8 +44,13 @@ class Preferences(private val context: Context) {
         if (widgetsPreferencesString.isEmpty())
             return mutableListOf()
 
-        val widgetsPreferences = moshi.adapter(WidgetsPreferences::class.java).fromJson(widgetsPreferencesString) ?: return mutableListOf()
-        return widgetsPreferences.widgets
+        try {
+            val widgetsPreferences = moshi.adapter(WidgetsPreferences::class.java).fromJson(widgetsPreferencesString) ?: return mutableListOf()
+            return widgetsPreferences.widgets
+        } catch (t: Throwable) {
+            Log.e(_logTag, "Unable to restore widgets configuration")
+            return mutableListOf()
+        }
     }
 
     fun saveWidgets(currentWidgets: MutableList<WidgetConfiguration>) {
