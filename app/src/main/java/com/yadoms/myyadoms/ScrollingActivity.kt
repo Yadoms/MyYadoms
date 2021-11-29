@@ -1,6 +1,5 @@
 package com.yadoms.myyadoms
 
-import com.yadoms.myyadoms.preferences.Preferences
 import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
@@ -13,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import com.yadoms.myyadoms.databinding.ActivityScrollingBinding
+import com.yadoms.myyadoms.preferences.Preferences
 import com.yadoms.myyadoms.preferences.SettingsActivity
 import java.util.*
 import kotlin.concurrent.schedule
@@ -28,8 +28,12 @@ class ScrollingActivity : AppCompatActivity() {
     private val widgetsListViewAdapter: WidgetsRecyclerViewAdapter
         get() = widgetsListView.adapter as WidgetsRecyclerViewAdapter
 
+    private lateinit var widgetsModels: WidgetsModels
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        widgetsModels = WidgetsModels(baseContext)
 
         binding = ActivityScrollingBinding.inflate(layoutInflater)
         val view = binding.root
@@ -55,8 +59,8 @@ class ScrollingActivity : AppCompatActivity() {
                 binding.contentScrollingLayout.noContent.visibility = if (empty) VISIBLE else GONE
             }
         })
-        binding.contentScrollingLayout.widgetsList.visibility = if (Preferences(this).widgets.isEmpty()) GONE else VISIBLE
-        binding.contentScrollingLayout.noContent.visibility = if (Preferences(this).widgets.isEmpty()) VISIBLE else GONE
+        binding.contentScrollingLayout.widgetsList.visibility = if (widgetsModels.empty) GONE else VISIBLE
+        binding.contentScrollingLayout.noContent.visibility = if (widgetsModels.empty) VISIBLE else GONE
 
         val itemTouchHelper = ItemTouchHelper(WidgetSwipeAndDragHandler(this, widgetsListViewAdapter))
         itemTouchHelper.attachToRecyclerView(widgetsListView)
@@ -64,7 +68,7 @@ class ScrollingActivity : AppCompatActivity() {
         with(binding.contentScrollingLayout.swipeLayout) {
             setColorSchemeColors(getColor(R.color.yadomsBlue))
             setOnRefreshListener {
-                widgetsListViewAdapter.notifyDataSetChanged()
+                refreshDataFromServer()
                 isRefreshing = false
             }
         }
@@ -80,13 +84,17 @@ class ScrollingActivity : AppCompatActivity() {
         }
 
         Timer(false).schedule(30000, 30000) {
-            runOnUiThread { widgetsListViewAdapter.notifyDataSetChanged() }
+            runOnUiThread { refreshDataFromServer() }
         }
     }
 
     override fun onResume() {
-        widgetsListViewAdapter.notifyDataSetChanged()
+        refreshDataFromServer()
         super.onResume()
+    }
+
+    private fun refreshDataFromServer() {
+        widgetsModels.refreshAll(widgetsListViewAdapter)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

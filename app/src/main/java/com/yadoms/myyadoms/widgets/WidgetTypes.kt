@@ -1,7 +1,7 @@
 package com.yadoms.myyadoms.widgets
 
 import android.view.View
-import com.yadoms.myyadoms.preferences.Preferences
+import com.yadoms.myyadoms.WidgetConfiguration
 import com.yadoms.myyadoms.yadomsApi.DeviceApi
 
 
@@ -54,6 +54,6 @@ object WidgetTypes {
         val keywordFilter: KeywordFilter,
         val layout: Int,
         val createViewHolder: (View) -> WidgetViewHolder,
-        val createModel: (Preferences.WidgetData) -> Preferences.WidgetModel
+        val createModel: (WidgetConfiguration, DeviceApi) -> WidgetModel
     )
 }

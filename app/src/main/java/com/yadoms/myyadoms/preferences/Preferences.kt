@@ -5,7 +5,7 @@ import android.content.SharedPreferences
 import androidx.preference.PreferenceManager
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
-import com.yadoms.myyadoms.widgets.WidgetTypes
+import com.yadoms.myyadoms.WidgetConfiguration
 
 class Preferences(private val context: Context) {
 
@@ -35,19 +35,9 @@ class Preferences(private val context: Context) {
             sharedPreference.getBoolean("ignore_https_certificate_error", false)
         )
 
-    class WidgetData(val type: WidgetTypes.WidgetType, val name: String, val keywordId: Int)
+    data class WidgetsPreferences(val widgets: MutableList<WidgetConfiguration>)
 
-    //TODO déplacer
-    abstract class WidgetModel(val data: WidgetData) {
-        abstract fun requestState()
-    }
-
-    class WidgetsPreferences(val widgets: MutableList<WidgetData>)
-
-    val widgets: MutableList<WidgetData>
-        get() = loadWidgets()
-
-    private fun loadWidgets(): MutableList<WidgetData> {
+    fun loadWidgets(): MutableList<WidgetConfiguration> {
         val widgetsPreferencesString = sharedPreference.getString("widgets", "") ?: return mutableListOf()
         if (widgetsPreferencesString.isEmpty())
             return mutableListOf()
@@ -56,12 +46,11 @@ class Preferences(private val context: Context) {
         return widgetsPreferences.widgets
     }
 
-    fun saveWidgets(currentWidgets: MutableList<WidgetData>) {
+    fun saveWidgets(currentWidgets: MutableList<WidgetConfiguration>) {
         val widgetsPreferencesString = moshi.adapter(WidgetsPreferences::class.java).toJson(WidgetsPreferences(currentWidgets))
         val preferencesEditor = sharedPreference.edit()
         preferencesEditor.putString("widgets", widgetsPreferencesString)
         preferencesEditor.apply()
-        preferencesEditor.commit()
     }
 
     companion object {

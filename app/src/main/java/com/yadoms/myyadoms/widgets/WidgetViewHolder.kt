@@ -4,7 +4,7 @@ import android.view.View
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.yadoms.myyadoms.R
-import com.yadoms.myyadoms.preferences.Preferences
+import com.yadoms.myyadoms.yadomsApi.YadomsApi
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
@@ -13,7 +13,7 @@ abstract class WidgetViewHolder(val view: View) : RecyclerView.ViewHolder(view) 
     private val nameView: TextView = view.findViewById(R.id.name)
     private val lastUpdateView: TextView = view.findViewById(R.id.last_update)
 
-    abstract fun onBind(widget: Preferences.WidgetModel)
+    abstract fun onBind(model: WidgetModel)
 
     fun setName(name: String) {
         nameView.text = name

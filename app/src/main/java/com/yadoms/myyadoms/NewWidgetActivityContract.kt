@@ -8,22 +8,22 @@ import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import com.yadoms.myyadoms.preferences.Preferences
 
-class NewWidgetActivityContract : ActivityResultContract<Unit, Preferences.WidgetData?>() {
+class NewWidgetActivityContract : ActivityResultContract<Unit, WidgetConfiguration?>() {
 
     override fun createIntent(context: Context, input: Unit?): Intent {
         return Intent(context, NewWidgetActivity::class.java)
     }
 
-    override fun parseResult(resultCode: Int, intent: Intent?): Preferences.WidgetData? {
+    override fun parseResult(resultCode: Int, intent: Intent?): WidgetConfiguration? {
         val data = intent?.getStringExtra(ID)
-        return if (resultCode == Activity.RESULT_OK && data != null)
-            moshi.adapter(Preferences.WidgetData::class.java).fromJson(data)
-        else null
+        if (resultCode != Activity.RESULT_OK || data == null)
+            return null
+        return Preferences.moshi.adapter(WidgetConfiguration::class.java).fromJson(data)
     }
 
     companion object {
         const val ID = "addedWidget"
-        private val moshi: Moshi = Moshi.Builder()
+        val moshi: Moshi = Moshi.Builder()
             .addLast(KotlinJsonAdapterFactory())
             .build()
     }

@@ -10,7 +10,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.yadoms.myyadoms.databinding.ActivityNewWidgetBinding
-import com.yadoms.myyadoms.preferences.Preferences
 import com.yadoms.myyadoms.widgets.WidgetTypes
 import com.yadoms.myyadoms.yadomsApi.DeviceApi
 
@@ -62,11 +61,16 @@ class NewWidgetActivity : AppCompatActivity() {
 
     fun finish(name: String) {
         val returnIntent = Intent()
-        returnIntent.putExtra(
-            NewWidgetActivityContract.ID, Preferences.moshi.adapter(Preferences.WidgetData::class.java).toJson(
-                selectedWidgetType?.let { w -> selectedKeywordId?.let { k -> Preferences.WidgetData(w.type, name, k) } }
-            )
-        )
+        selectedWidgetType?.let { w ->
+            selectedKeywordId?.let { k ->
+                returnIntent.putExtra(
+                    NewWidgetActivityContract.ID,
+                    NewWidgetActivityContract.moshi.adapter(WidgetConfiguration::class.java)
+                        .toJson(WidgetConfiguration(w.type, name, k.toString()))
+                )
+            }
+        }
+
         setResult(Activity.RESULT_OK, returnIntent)
         finish()
     }

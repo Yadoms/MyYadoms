@@ -16,5 +16,5 @@ val type = WidgetTypes.WidgetTypeItem(
     ),
     layout = R.layout.widget_switch_item,
     createViewHolder = { ViewHolder(it) },
-    createModel = { widgetPreferences -> Model(widgetPreferences) }
+    createModel = { configuration, deviceApi -> Model(configuration, deviceApi) }
 )

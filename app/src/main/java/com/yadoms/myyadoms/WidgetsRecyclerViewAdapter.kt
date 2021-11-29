@@ -4,38 +4,16 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.yadoms.myyadoms.preferences.Preferences
 import com.yadoms.myyadoms.widgets.WidgetTypes
 import com.yadoms.myyadoms.widgets.WidgetViewHolder
-import com.yadoms.myyadoms.yadomsApi.DeviceApi
 import com.yadoms.myyadoms.yadomsApi.YadomsApi
 
 
 class WidgetsRecyclerViewAdapter(val context: Context, private val emptyListener: EmptyListener) : RecyclerView.Adapter<WidgetViewHolder>() {
-    private var widgetsModels = createModels()
-
-    private fun createModels(): MutableList<Preferences.WidgetModel> {
-        val widgetModels: MutableList<Preferences.WidgetModel> = mutableListOf()
-        Preferences(context).widgets.map { widgetData ->
-            val item = WidgetTypes.item(widgetData.type)
-            item?.let { widgetModels.add(it.createModel(widgetData)) }
-        }
-        return widgetModels
-    }
-
-    private fun saveWidgets() {
-        val widgetsData: MutableList<Preferences.WidgetData> = mutableListOf()
-        widgetsModels.map { widgetModel ->
-            widgetsData.add(widgetModel.data)
-        }
-        Preferences(context).saveWidgets(widgetsData)
-    }
-
-    private lateinit var recentlyDeletedWidget: Preferences.WidgetModel
-    private var recentlyDeletedWidgetPosition = 0
+    private var widgetsModels = WidgetsModels(context)
 
     override fun getItemViewType(position: Int): Int {
-        return widgetsModels[position].data.type.ordinal
+        return widgetsModels.type(position).ordinal
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WidgetViewHolder {
@@ -44,53 +22,39 @@ class WidgetsRecyclerViewAdapter(val context: Context, private val emptyListener
     }
 
     override fun onBindViewHolder(holder: WidgetViewHolder, position: Int) {
-//TODO virer (et virer le Model ?) ?        widgetsModels[position].requestState()
-        holder.onBind(widgetsModels[position])
+        holder.onBind(widgetsModels.at(position))
     }
 
-    override fun getItemCount(): Int = widgetsModels.size
+    override fun getItemCount(): Int = widgetsModels.count
 
-    fun addNewWidget(widgetData: Preferences.WidgetData) {
-        val item = WidgetTypes.item(widgetData.type)
-        item?.let { widgetsModels.add(it.createModel(widgetData)) }
+    fun addNewWidget(widgetConfiguration: WidgetConfiguration) {
+        val position = widgetsModels.create(widgetConfiguration)
 
-        saveWidgets()
+        notifyItemInserted(position)
 
-        notifyItemInserted(widgetsModels.size - 1)
-
-        if (widgetsModels.size == 1)
+        if (widgetsModels.count == 1)
             emptyListener.onEmptyChange(false)
     }
 
     fun deleteWidget(position: Int) {
-        recentlyDeletedWidget = widgetsModels[position]
-        recentlyDeletedWidgetPosition = position
+        widgetsModels.delete(position)
 
-        widgetsModels.removeAt(position)
-        saveWidgets()
         notifyItemRemoved(position)
-
-        if (widgetsModels.isEmpty())
+        if (widgetsModels.empty)
             emptyListener.onEmptyChange(true)
     }
 
     fun moveWidget(fromPosition: Int, toPosition: Int) {
-        val movedWidget = widgetsModels[fromPosition]
-        widgetsModels.removeAt(fromPosition)
-        widgetsModels.add(if (toPosition > fromPosition + 1) toPosition - 1 else toPosition, movedWidget)
-        saveWidgets()
+        widgetsModels.move(fromPosition, toPosition)
         notifyItemMoved(fromPosition, toPosition)
     }
 
     fun undoDelete() {
-        widgetsModels.add(
-            recentlyDeletedWidgetPosition,
-            recentlyDeletedWidget
-        )
-        saveWidgets()
-        notifyItemInserted(recentlyDeletedWidgetPosition)
+        val restoredPosition = widgetsModels.restore()
 
-        if (widgetsModels.size == 1)
+        notifyItemInserted(restoredPosition)
+
+        if (widgetsModels.count == 1)
             emptyListener.onEmptyChange(false)
     }
 }

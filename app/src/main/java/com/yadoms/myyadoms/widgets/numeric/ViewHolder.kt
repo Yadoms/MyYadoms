@@ -4,30 +4,33 @@ import android.util.Log
 import android.view.View
 import android.widget.TextView
 import com.yadoms.myyadoms.R
-import com.yadoms.myyadoms.preferences.Preferences
+import com.yadoms.myyadoms.widgets.WidgetModel
 import com.yadoms.myyadoms.widgets.WidgetViewHolder
 import com.yadoms.myyadoms.yadomsApi.DeviceApi
-import com.yadoms.myyadoms.yadomsApi.YadomsApi
 
 class ViewHolder(view: View) : WidgetViewHolder(view) {
     private val valueView: TextView = view.findViewById(R.id.value)
     private var value = "-"
 
-    override fun onBind(widget: Preferences.WidgetModel) {
-        Log.d("Numeric", "onBind : ${widget.data.name}(id ${widget.data.keywordId})...")
+    override fun onBind(model: WidgetModel) {
+        (model as Model).refresh(
+            onDone = {
+                val keyword = model.keyword
 
-        setName(widget.data.name)
+                Log.d("Numeric", "onBind : ${model.name}(id ${keyword.id})...")
 
-        DeviceApi(YadomsApi(view.context)).getKeyword(widget.data.keywordId,
-            onOk = {
-                Log.d("Numeric", "onBind/onOk : ${widget.data.name}(id ${widget.data.keywordId}), ${formatValue(it) + formatUnit(it)}")
-                setLastUpdate(it.lastAcquisitionDate)
-                setValue(formatValue(it) + formatUnit(it))
-            }
-        ) {
-            Log.d("Numeric", "onBind/onError : ${widget.data.name}(id ${widget.data.keywordId}), $it")
-            setLastUpdate(null)
-        }
+                setName(model.name)
+
+                if (keyword.lastAcquisitionValue.isEmpty()) {
+                    setLastUpdate(null)
+                } else {
+                    setLastUpdate(keyword.lastAcquisitionDate)
+                    setValue(formatValue(keyword) + formatUnit(keyword))
+                }
+            },
+            onError = {
+                //TODO faire un truc
+            })
     }
 
     private fun formatUnit(keyword: DeviceApi.Keyword): String {

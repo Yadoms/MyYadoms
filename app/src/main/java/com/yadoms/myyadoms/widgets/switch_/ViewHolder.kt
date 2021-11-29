@@ -5,10 +5,8 @@ import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import com.yadoms.myyadoms.R
-import com.yadoms.myyadoms.preferences.Preferences
+import com.yadoms.myyadoms.widgets.WidgetModel
 import com.yadoms.myyadoms.widgets.WidgetViewHolder
-import com.yadoms.myyadoms.yadomsApi.DeviceApi
-import com.yadoms.myyadoms.yadomsApi.YadomsApi
 
 class ViewHolder(view: View) : WidgetViewHolder(view) {
     private var switchAnimation: AnimationDrawable
@@ -17,37 +15,35 @@ class ViewHolder(view: View) : WidgetViewHolder(view) {
         switchAnimation = background as AnimationDrawable
     }
     private var state = false
-    private var widget: Preferences.WidgetModel? = null
 
     init {
         itemView.setOnClickListener {
             setState(!state)
 
-            widget?.let {
-                DeviceApi(YadomsApi(view.context)).command(
-                    it.data.keywordId,
-                    if (state) "1" else "0",
-                    {}) {}
-            }
+            //TODO
+//            widget?.let {
+//                DeviceApi(YadomsApi(view.context)).command(
+//                    it.data.keywordId,
+//                    if (state) "1" else "0",
+//                    {}) {}
+//            }
         }
     }
 
-    override fun onBind(widget: Preferences.WidgetModel) {
-        this.widget = widget
-        Log.d("Switch", "onBind : ${widget.data.name}(id ${widget.data.keywordId})...")
+    override fun onBind(model: WidgetModel) {
+        val keyword = (model as Model).keyword
 
-        setName(widget.data.name)
+        Log.d("Switch", "onBind : ${model.name}(id ${keyword.id})...")
 
-        DeviceApi(YadomsApi(view.context)).getKeyword(widget.data.keywordId,
-            onOk = {
-                Log.d("Switch", "onBind/onOk : ${widget.data.name}(id ${widget.data.keywordId}), ${it.lastAcquisitionValue}")
-                setLastUpdate(it.lastAcquisitionDate)
-                setState(it.lastAcquisitionValue == "1")
-            }
-        ) {
-            Log.d("Switch", "onBind/onError : ${widget.data.name}(id ${widget.data.keywordId}), $it")
+        setName(model.name)
+
+        if (keyword.lastAcquisitionDate == null) {
             setLastUpdate(null)
+            return
         }
+
+        setLastUpdate(keyword.lastAcquisitionDate)
+        setState(keyword.lastAcquisitionValue == "1")
     }
 
     private fun setState(newState: Boolean) {
