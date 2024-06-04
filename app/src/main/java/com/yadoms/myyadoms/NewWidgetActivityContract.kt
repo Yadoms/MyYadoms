@@ -10,7 +10,7 @@ import com.yadoms.myyadoms.preferences.Preferences
 
 class NewWidgetActivityContract : ActivityResultContract<Unit, Preferences.WidgetData?>() {
 
-    override fun createIntent(context: Context, input: Unit?): Intent {
+    override fun createIntent(context: Context, input: Unit): Intent {
         return Intent(context, NewWidgetActivity::class.java)
     }
 

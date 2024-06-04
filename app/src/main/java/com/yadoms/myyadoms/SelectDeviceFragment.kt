@@ -80,22 +80,21 @@ class SelectDeviceFragment : Fragment() {
                         newWidgetActivity.stopWait()
                     } else
                         DeviceApi(yApi).getDeviceWithCapacityType(
-                            activity,
                             kwFilter.expectedKeywordType[0],
                             if (kwFilter.expectedKeywordAccess.size != 1) DeviceApi.KeywordAccess.NoAccess else kwFilter.expectedKeywordAccess[0],
                             onOk = { devices ->
                                 devices.forEach { device -> preselectedDevices.add(device) }
                                 adapter?.notifyDataSetChanged()
                                 newWidgetActivity.stopWait()
-                            },
-                            onError = {
-                                if (activity != null)
-                                    Snackbar.make(
-                                        view, context.getString(R.string.unable_to_reach_the_server),
-                                        Snackbar.LENGTH_LONG
-                                    ).show()
-                                newWidgetActivity.stopWait()
-                            })
+                            }
+                        ) {
+                            if (activity != null)
+                                Snackbar.make(
+                                    view, context.getString(R.string.unable_to_reach_the_server),
+                                    Snackbar.LENGTH_LONG
+                                ).show()
+                            newWidgetActivity.stopWait()
+                        }
                 }
 
                 adapter = SelectDeviceRecyclerViewAdapter(preselectedDevices, onItemClickListener)

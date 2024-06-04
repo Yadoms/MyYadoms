@@ -1,6 +1,5 @@
 package com.yadoms.myyadoms.yadomsApi
 
-import android.content.Context
 import android.util.Log
 import com.squareup.moshi.FromJson
 import com.squareup.moshi.Moshi
@@ -138,14 +137,6 @@ class DeviceApi(private val yApi: YadomsApi) {
         class Data(val devices: List<Device>, val keywords: List<Keyword>)
     }
 
-    private inline fun <reified T> fromJson(json: String): T? {
-        return try {
-            moshi.adapter(T::class.java).fromJson(json)
-        } catch (e: java.io.EOFException) {
-            Log.w(_logTag, "Sometimes last char is not received (on emulator), so add '}' and retry parse received data...");
-            moshi.adapter(T::class.java).fromJson("$json}")
-        }
-    }
 
     fun getDeviceMatchKeywordCriteria(
         expectedKeywordType: Array<KeywordTypes> = arrayOf(),
@@ -154,7 +145,7 @@ class DeviceApi(private val yApi: YadomsApi) {
         onOk: (List<Device>, List<Keyword>) -> Unit,
         onError: (String?) -> Unit,
     ) {
-        val body = moshi.adapter(GetDeviceMatchKeywordCriteriaRequestAdapter::class.java)
+        val body = YadomsApi.moshi.adapter(GetDeviceMatchKeywordCriteriaRequestAdapter::class.java)
             .toJson(GetDeviceMatchKeywordCriteriaRequestAdapter(expectedKeywordType, expectedCapacity, expectedKeywordAccess))
 
         yApi.post(
@@ -162,7 +153,7 @@ class DeviceApi(private val yApi: YadomsApi) {
             body = body.toString(),
             onOk = {
                 try {
-                    val result = fromJson<GetDeviceMatchKeywordCriteriaResultAdapter>(it)
+                    val result = yApi.fromJson<GetDeviceMatchKeywordCriteriaResultAdapter>(it)
 
                     if (result?.result != true) {
                         Log.e(_logTag, "Server returns error (${result?.message}) :")//TODO gérer les erreurs dans la fonction post
@@ -187,7 +178,6 @@ class DeviceApi(private val yApi: YadomsApi) {
     }
 
     fun getDeviceWithCapacityType(
-        context: Context?,
         expectedKeywordType: KeywordTypes,
         expectedKeywordAccess: KeywordAccess = KeywordAccess.NoAccess,
         onOk: (List<Device>) -> Unit,
@@ -197,7 +187,7 @@ class DeviceApi(private val yApi: YadomsApi) {
             url = "/device/matchcapacitytype/$expectedKeywordAccess/$expectedKeywordType",
             onOk = {
                 try {
-                    val result = fromJson<GetDeviceWithCapacityTypeResultAdapter>(it)
+                    val result = yApi.fromJson<GetDeviceWithCapacityTypeResultAdapter>(it)
 
                     if (result?.result != true) {
                         Log.e(_logTag, "Server returns error (${result?.message}) :")//TODO gérer les erreurs dans la fonction post
@@ -230,7 +220,7 @@ class DeviceApi(private val yApi: YadomsApi) {
             url = "/device/$deviceId/keyword",
             onOk = {
                 try {
-                    val result = fromJson<GetDeviceKeywordsResultAdapter>(it)
+                    val result = yApi.fromJson<GetDeviceKeywordsResultAdapter>(it)
 
                     if (result?.result != true) {
                         Log.e(_logTag, "Server returns error (${result?.message}) :")//TODO gérer les erreurs dans la fonction post
@@ -261,7 +251,7 @@ class DeviceApi(private val yApi: YadomsApi) {
             url = "/device/keyword/$keywordId",
             onOk = {
                 try {
-                    val result = fromJson<GetKeywordResultAdapter>(it)
+                    val result = yApi.fromJson<GetKeywordResultAdapter>(it)
 
                     if (result?.result != true) {
                         Log.e(_logTag, "Server returns error (${result?.message}) :")//TODO gérer les erreurs dans la fonction post
@@ -294,7 +284,7 @@ class DeviceApi(private val yApi: YadomsApi) {
             body = command,
             onOk = {
                 try {
-                    val result = fromJson<CommandResultAdapter>(it)
+                    val result = yApi.fromJson<CommandResultAdapter>(it)
 
                     if (result?.result != true) {
                         Log.e(_logTag, "Server returns error (${result?.message}) :")//TODO gérer les erreurs dans la fonction post
@@ -314,23 +304,6 @@ class DeviceApi(private val yApi: YadomsApi) {
         }
     }
 
-    internal class LocalDateTimeAdapter {
-        private val pattern = "yyyyMMdd'T'HHmmss[.SSSSSS]"
-        private val notADateTimeSpecialValue = "not-a-date-time"
-
-        @ToJson
-        fun toJson(dt: LocalDateTime?): String? = when (dt) {
-            null -> notADateTimeSpecialValue
-            else -> dt.format(DateTimeFormatter.ofPattern(pattern))
-        }
-
-        @FromJson
-        fun fromJson(dt: String): LocalDateTime? = when (dt) {
-            notADateTimeSpecialValue -> null
-            else -> LocalDateTime.parse(dt, DateTimeFormatter.ofPattern(pattern))
-        }
-    }
-
     internal class UnitsAdapter {
         @ToJson
         fun toJson(unit: Units?): String? = unit?.yadomsApiKey
@@ -340,13 +313,5 @@ class DeviceApi(private val yApi: YadomsApi) {
             val map = Units.values().associateBy(Units::yadomsApiKey)
             return map[unit]
         }
-    }
-
-    companion object {
-        private val moshi: Moshi = Moshi.Builder()
-            .addLast(KotlinJsonAdapterFactory())
-            .add(LocalDateTimeAdapter())
-            .add(UnitsAdapter())
-            .build()
     }
 }

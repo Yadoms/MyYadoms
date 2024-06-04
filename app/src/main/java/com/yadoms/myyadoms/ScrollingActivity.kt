@@ -42,7 +42,7 @@ class ScrollingActivity : AppCompatActivity() {
                 newWidget?.let { widgetsListViewAdapter.addNewWidget(it) }
             }
             addWidget.setOnClickListener {
-                newWidgetActivityContractLauncher.launch(null)
+                newWidgetActivityContractLauncher.launch(Unit)
             }
         }
 
@@ -82,6 +82,7 @@ class ScrollingActivity : AppCompatActivity() {
         Timer(false).schedule(30000, 30000) {
             runOnUiThread { widgetsListViewAdapter.notifyDataSetChanged() }
         }
+
     }
 
     override fun onResume() {
@@ -106,6 +107,7 @@ class ScrollingActivity : AppCompatActivity() {
                 startActivity(intent)
                 true
             }
+
             else -> super.onOptionsItemSelected(item)
         }
     }

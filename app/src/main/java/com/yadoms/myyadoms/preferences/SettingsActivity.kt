@@ -63,14 +63,14 @@ class SettingsActivity : AppCompatActivity() {
             val slavePreferences: MutableList<Preference?> = ArrayList()
             slaveKeys.forEach { slavePreferences.add(findPreference(it)) }
 
-            val preferences = PreferenceManager.getDefaultSharedPreferences(activity)
+            val preferences = PreferenceManager.getDefaultSharedPreferences(requireContext())
             if (preferences.getBoolean(masterKey, false)) {
                 slavePreferences.forEach { it?.isEnabled = true }
             } else {
                 slavePreferences.forEach { it?.isEnabled = false }
             }
 
-            masterPreference?.setOnPreferenceChangeListener { preference, newValue ->
+            masterPreference?.setOnPreferenceChangeListener { _, newValue ->
                 if (newValue as Boolean) {
                     slavePreferences.forEach { it?.isEnabled = true }
                 } else {

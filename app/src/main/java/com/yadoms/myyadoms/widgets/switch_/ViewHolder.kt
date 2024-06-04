@@ -9,6 +9,7 @@ import com.yadoms.myyadoms.preferences.Preferences
 import com.yadoms.myyadoms.widgets.WidgetViewHolder
 import com.yadoms.myyadoms.yadomsApi.DeviceApi
 import com.yadoms.myyadoms.yadomsApi.YadomsApi
+import java.time.LocalDateTime
 
 class ViewHolder(view: View) : WidgetViewHolder(view) {
     private var switchAnimation: AnimationDrawable
@@ -27,7 +28,9 @@ class ViewHolder(view: View) : WidgetViewHolder(view) {
                 DeviceApi(YadomsApi(view.context)).command(
                     it.data.keywordId,
                     if (state) "1" else "0",
-                    {}) {}
+                    {
+                        setLastUpdate(LocalDateTime.now())
+                    }) {}
             }
         }
     }

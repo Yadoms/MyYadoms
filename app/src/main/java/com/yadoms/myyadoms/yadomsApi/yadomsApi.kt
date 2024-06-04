@@ -3,6 +3,7 @@ package com.yadoms.myyadoms.yadomsApi
 import android.annotation.SuppressLint
 import android.content.Context
 import android.util.Base64
+import android.util.Log
 import com.android.volley.AuthFailureError
 import com.android.volley.NetworkResponse
 import com.android.volley.ParseError
@@ -10,6 +11,10 @@ import com.android.volley.Response
 import com.android.volley.toolbox.HttpHeaderParser
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
+import com.squareup.moshi.FromJson
+import com.squareup.moshi.Moshi
+import com.squareup.moshi.ToJson
+import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import com.yadoms.myyadoms.preferences.Preferences
 import org.json.JSONException
 import java.io.UnsupportedEncodingException
@@ -17,6 +22,8 @@ import java.security.KeyManagementException
 import java.security.NoSuchAlgorithmException
 import java.security.SecureRandom
 import java.security.cert.X509Certificate
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import javax.net.ssl.HttpsURLConnection
 import javax.net.ssl.SSLContext
 import javax.net.ssl.TrustManager
@@ -196,5 +203,22 @@ class YadomsApi(val context: Context) {
         }
 
         addToQueue(stringRequest, serverConnection)
+    }
+
+    inline fun <reified T> fromJson(json: String): T? {
+        return try {
+            moshi.adapter(T::class.java).fromJson(json)
+        } catch (e: java.io.EOFException) {
+            // Sometimes last char is not received (on emulator), so add '}' and retry parse received data...
+            moshi.adapter(T::class.java).fromJson("$json}")
+        }
+    }
+
+    companion object {
+        val moshi: Moshi = Moshi.Builder()
+            .addLast(KotlinJsonAdapterFactory())
+            .add(Helpers.LocalDateTimeAdapter())
+            .add(DeviceApi.UnitsAdapter())
+            .build()
     }
 }

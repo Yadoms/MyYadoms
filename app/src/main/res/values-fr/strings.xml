@@ -36,4 +36,12 @@
     <string name="no_widget_available">Aucun widget à afficher\nCliquer sur \'+\' pour en ajouter un</string>
     <string name="no_server_configuration">Pas de connexion au serveur Yadoms</string>
     <string name="settings">Paramètres</string>
+    <string name="preferences_display">Affichage</string>
+    <string name="preference_display_last_update_as_duration">Durée</string>
+    <string name="preference_display_last_update_mode">Mise à jour Widget</string>
+    <string name="preference_display_last_update_as_time">Date / heure</string>
+    <string name="just_now">à l\'instant</string>
+    <string name="x_minutes">%d minutes</string>
+    <string name="x_hours">%d heures</string>
+    <string name="more_than_one_day">Plus d\'un jour</string>
 </resources>

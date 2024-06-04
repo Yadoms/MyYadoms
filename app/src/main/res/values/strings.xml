@@ -5,6 +5,7 @@
 
     <!-- Preference Titles -->
     <string name="preferences_server_connection">Server connexion</string>
+    <string name="preferences_display">Display</string>
 
     <!-- Server connexion com.yadoms.myyadomss.preferences.Preferences -->
     <string name="preference_server_url">Server URL</string>
@@ -38,4 +39,11 @@
     <string name="no_widget_available">No widget available, clic on \'+\' to add one</string>
     <string name="no_server_configuration">No Yadoms server available, please configure one</string>
     <string name="settings">Settings</string>
+    <string name="preference_display_last_update_as_duration">Duration</string>
+    <string name="preference_display_last_update_mode">Widget last update</string>
+    <string name="preference_display_last_update_as_time">Date / Time</string>
+    <string name="just_now">just now</string>
+    <string name="x_minutes">%d minutes</string>
+    <string name="x_hours">%d hours</string>
+    <string name="more_than_one_day">More than one day</string>
 </resources>

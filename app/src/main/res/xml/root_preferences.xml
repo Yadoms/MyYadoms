@@ -51,4 +51,15 @@
 
     </PreferenceCategory>
 
+    <PreferenceCategory app:title="@string/preferences_display">
+
+        <SwitchPreference
+            app:defaultValue="false"
+            app:key="display_last_update_as_duration"
+            app:summaryOff="@string/preference_display_last_update_as_time"
+            app:summaryOn="@string/preference_display_last_update_as_duration"
+            app:title="@string/preference_display_last_update_mode" />
+
+    </PreferenceCategory>
+
 </PreferenceScreen>
