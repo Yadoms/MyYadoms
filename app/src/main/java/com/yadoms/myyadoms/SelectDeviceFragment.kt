@@ -74,7 +74,8 @@ class SelectDeviceFragment : Fragment() {
                     if (kwFilter.expectedKeywordType.size != 1) {
                         if (activity != null)
                             Snackbar.make(
-                                view, context.getString(R.string.unable_to_reach_the_server),
+                                view,
+                                context.getString(R.string.unable_to_reach_the_server),
                                 Snackbar.LENGTH_LONG
                             ).show()
                         newWidgetActivity.stopWait()
@@ -90,7 +91,8 @@ class SelectDeviceFragment : Fragment() {
                         ) {
                             if (activity != null)
                                 Snackbar.make(
-                                    view, context.getString(R.string.unable_to_reach_the_server),
+                                    view,
+                                    context.getString(R.string.unable_to_reach_the_server),
                                     Snackbar.LENGTH_LONG
                                 ).show()
                             newWidgetActivity.stopWait()

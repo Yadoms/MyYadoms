@@ -3,8 +3,10 @@ package com.yadoms.myyadoms
 import com.yadoms.myyadoms.preferences.Preferences
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import androidx.appcompat.app.AppCompatActivity
@@ -14,11 +16,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import com.yadoms.myyadoms.databinding.ActivityScrollingBinding
 import com.yadoms.myyadoms.preferences.SettingsActivity
+import com.yadoms.myyadoms.yadomsApi.SystemApi
+import com.yadoms.myyadoms.yadomsApi.YadomsApi
 import java.util.*
 import kotlin.concurrent.schedule
 
 
 class ScrollingActivity : AppCompatActivity() {
+    private val _logTag = javaClass.canonicalName
 
     private lateinit var binding: ActivityScrollingBinding
 
@@ -71,7 +76,8 @@ class ScrollingActivity : AppCompatActivity() {
 
         if (Preferences(this).serverConnection.url.isEmpty()) {
             Snackbar.make(
-                view, getString(R.string.no_server_configuration),
+                view,
+                getString(R.string.no_server_configuration),
                 Snackbar.LENGTH_INDEFINITE
             ).setAction(R.string.settings) {
                 val intent = Intent(this@ScrollingActivity, SettingsActivity::class.java)
@@ -86,7 +92,20 @@ class ScrollingActivity : AppCompatActivity() {
     }
 
     override fun onResume() {
-        widgetsListViewAdapter.notifyDataSetChanged()
+        SystemApi(YadomsApi(applicationContext)).getServerTime(
+            onOk = {
+                (application as MyYadomsApp).serverTime.synchronize(it)
+                widgetsListViewAdapter.notifyDataSetChanged()
+            },
+            onError = {
+                Log.e(_logTag, "Unable to retrieve server time")
+                Snackbar.make(
+                    findViewById(android.R.id.content),
+                    getString(R.string.unable_to_reach_the_server),
+                    Snackbar.LENGTH_LONG
+                ).show()
+            })
+
         super.onResume()
     }
 
