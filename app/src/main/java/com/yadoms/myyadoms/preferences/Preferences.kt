@@ -44,7 +44,11 @@ class Preferences(private val context: Context) {
             sharedPreference.getBoolean("display_last_update_as_duration", false)
         )
 
-    class WidgetData(val type: WidgetTypes.WidgetType, val name: String, val keywordId: Int)
+    class WidgetData(
+        val type: WidgetTypes.WidgetType,
+        val name: String,
+        val keywordId: Int
+    )
 
     //TODO déplacer
     abstract class WidgetModel(val data: WidgetData) {

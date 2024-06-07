@@ -125,7 +125,7 @@ class YadomsApi(val context: Context) {
     ) {
         var urlWithParam = url
 
-        //TODO utiliser un vrai URI builder (pour gérer les espaces et autres caractères spéciaux)
+        //TODO utiliser un vrai URI builder (UrlRequest.Builder ?) pour gérer les espaces et autres caractères spéciaux.
         // Volley doesn't support params for GET request (getParams won't be called)
         // So provide param by constructing URL
         if (params.isNotEmpty()) {
