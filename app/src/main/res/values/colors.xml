@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="yadomsBlueDark">#00C7D0</color>
-    <color name="teal_200">#9CF08A</color>
-    <color name="teal_700">#F9F871</color>
+    <color name="yadomsBlueDark">#006AC6</color>
+    <color name="teal_200">#C0DFA1</color>
+    <color name="teal_700">#9FC490</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="yadomsBlue">#428BCA</color>
-    <color name="yadomsGrey">#00ABDA</color>
+    <color name="yadomsBlue">#82A3A1</color>
+    <color name="yadomsGrey">#465362</color>
     <color name="deleteItem">#FF3535</color>
 </resources>
