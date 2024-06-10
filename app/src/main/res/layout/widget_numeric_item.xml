@@ -15,7 +15,7 @@
         android:layout_margin="10dp"
         android:autoSizeTextType="uniform"
         android:maxLines="1"
-        android:textColor="@color/yadomsBlue"
+        android:textColor="@color/on"
         android:text="-"
         android:textAlignment="center"
         tools:text="15.8°"

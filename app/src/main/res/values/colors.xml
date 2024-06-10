@@ -8,4 +8,15 @@
     <color name="yadomsBlue">#82A3A1</color>
     <color name="yadomsGrey">#465362</color>
     <color name="deleteItem">#FF3535</color>
+    <color name="on">#97EC75</color>
+    <color name="off">#82A3A1</color>
+    <color name="transition1">#84ac9b</color>
+    <color name="transition2">#87b496</color>
+    <color name="transition3">#88ba93</color>
+    <color name="transition4">#8ac18f</color>
+    <color name="transition5">#8dc88a</color>
+    <color name="transition6">#8fce86</color>
+    <color name="transition7">#91d583</color>
+    <color name="transition8">#92db7f</color>
+    <color name="transition9">#94e37b</color>
 </resources>
