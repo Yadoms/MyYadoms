@@ -14,7 +14,7 @@ import com.google.android.material.snackbar.Snackbar
 class WidgetSwipeAndDragHandler(context: Context, val adapter: WidgetsRecyclerViewAdapter) :
     ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP or ItemTouchHelper.DOWN, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
     private var icon: Drawable? = ContextCompat.getDrawable(context, android.R.drawable.ic_menu_delete)
-    private var background: ColorDrawable = ColorDrawable(context.getColor(R.color.deleteItem))
+    private var deleteItemBackground: ColorDrawable = ColorDrawable(context.getColor(R.color.deleteItem))
 
     override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
         val fromPosition = viewHolder.bindingAdapterPosition
@@ -64,7 +64,7 @@ class WidgetSwipeAndDragHandler(context: Context, val adapter: WidgetsRecyclerVi
                 val iconLeft = itemView.left + iconMargin
                 val iconRight = itemView.left + iconMargin + icon!!.intrinsicWidth
                 icon!!.setBounds(iconLeft, iconTop, iconRight, iconBottom)
-                background.setBounds(
+                deleteItemBackground.setBounds(
                     itemView.left, itemView.top,
                     itemView.left + dX.toInt() + backgroundCornerOffset,
                     itemView.bottom
@@ -74,18 +74,18 @@ class WidgetSwipeAndDragHandler(context: Context, val adapter: WidgetsRecyclerVi
                 val iconLeft = itemView.right - iconMargin - icon!!.intrinsicWidth
                 val iconRight = itemView.right - iconMargin
                 icon!!.setBounds(iconLeft, iconTop, iconRight, iconBottom)
-                background.setBounds(
+                deleteItemBackground.setBounds(
                     itemView.right + dX.toInt() - backgroundCornerOffset,
                     itemView.top, itemView.right, itemView.bottom
                 )
             }
             else -> { // view is unSwiped
                 icon!!.setBounds(0, 0, 0, 0)
-                background.setBounds(0, 0, 0, 0)
+                deleteItemBackground.setBounds(0, 0, 0, 0)
             }
         }
 
-        background.draw(c)
+        deleteItemBackground.draw(c)
         icon!!.draw(c)
     }
 }
