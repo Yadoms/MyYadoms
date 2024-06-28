@@ -14,6 +14,7 @@ import com.yadoms.myyadoms.yadomsApi.DeviceApi
 import com.yadoms.myyadoms.yadomsApi.YadomsApi
 
 class SelectKeywordFragment : Fragment() {
+    private val _logTag = javaClass.canonicalName
 
     val newWidgetActivity: NewWidgetActivity
         get() = activity as NewWidgetActivity
@@ -38,7 +39,7 @@ class SelectKeywordFragment : Fragment() {
                             newWidgetActivity.selectedKeywordName = newWidgetActivity.preselectedKeywords[position].friendlyName
 
                             Log.d(
-                                SelectDeviceFragment::class.simpleName,
+                                _logTag,
                                 "Selected keyword = ${newWidgetActivity.selectedKeywordName} (${newWidgetActivity.selectedKeywordId})"
                             )
 

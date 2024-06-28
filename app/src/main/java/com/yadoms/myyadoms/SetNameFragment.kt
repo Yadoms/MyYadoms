@@ -9,7 +9,7 @@ import androidx.fragment.app.Fragment
 import com.yadoms.myyadoms.databinding.FragmentSetNameBinding
 
 class SetNameFragment : Fragment() {
-
+    private val _logTag = javaClass.canonicalName
     private lateinit var binding: FragmentSetNameBinding
 
     val newWidgetActivity: NewWidgetActivity
@@ -26,7 +26,7 @@ class SetNameFragment : Fragment() {
 
         binding.finish.setOnClickListener {
             val name = binding.itemName.text.toString().ifEmpty { binding.itemName.hint } as String
-            Log.d(SelectDeviceFragment::class.simpleName, "Set widget name = $name)")
+            Log.d(_logTag, "Set widget name = $name)")
             newWidgetActivity.finish(name)
         }
 

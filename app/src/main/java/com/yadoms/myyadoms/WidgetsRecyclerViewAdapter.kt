@@ -1,6 +1,7 @@
 package com.yadoms.myyadoms
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -13,6 +14,7 @@ import com.yadoms.myyadoms.yadomsApi.YadomsApi
 
 class WidgetsRecyclerViewAdapter(val context: Context, private val emptyListener: EmptyListener) : RecyclerView.Adapter<WidgetViewHolder>() {
     private var widgetsModels = createModels()
+    private val _logTag = javaClass.canonicalName
 
     private fun createModels(): MutableList<Preferences.WidgetModel> {
         val widgetModels: MutableList<Preferences.WidgetModel> = mutableListOf()
@@ -39,7 +41,7 @@ class WidgetsRecyclerViewAdapter(val context: Context, private val emptyListener
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WidgetViewHolder {
-        val widgetTypeItem = WidgetTypes.item(WidgetTypes.WidgetType.values()[viewType])!!
+        val widgetTypeItem = WidgetTypes.item(WidgetTypes.WidgetType.entries[viewType])!!
         return widgetTypeItem.createViewHolder(LayoutInflater.from(context).inflate(widgetTypeItem.layout, parent, false))
     }
 
@@ -92,5 +94,28 @@ class WidgetsRecyclerViewAdapter(val context: Context, private val emptyListener
 
         if (widgetsModels.size == 1)
             emptyListener.onEmptyChange(false)
+    }
+
+
+    fun refreshAllWidgets() {
+        // TODO(Yadoms APIv2) à optimiser en API v2 pour ne faire qu'une requête
+        // TODO optimiser pour ne raffraichir que les éléments visibles
+        widgetsModels.forEach { widgetModel ->
+            DeviceApi(YadomsApi(context)).getKeyword(widgetModel.data.keywordId,
+                onOk = {
+                    Log.d(_logTag, "keyword ${widgetModel.data.keywordId}) = ${it.lastAcquisitionValue} at ${it.lastAcquisitionDate}")
+                    if (widgetModel.lastState != it) {
+                        widgetModel.lastState = it
+                        notifyItemChanged(widgetsModels.indexOf(widgetModel))
+                    }
+                }
+            ) { error ->
+                Log.e(_logTag, "keyword ${widgetModel.data.keywordId}) = error get last acquisition : ${error}")
+                if (widgetModel.lastState != null) {
+                    widgetModel.lastState = null
+                    notifyItemChanged(widgetsModels.indexOf(widgetModel))
+                }
+            }
+        }
     }
 }

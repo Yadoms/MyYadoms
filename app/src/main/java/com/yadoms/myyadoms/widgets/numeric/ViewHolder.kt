@@ -10,24 +10,19 @@ import com.yadoms.myyadoms.yadomsApi.DeviceApi
 import com.yadoms.myyadoms.yadomsApi.YadomsApi
 
 class ViewHolder(view: View) : WidgetViewHolder(view) {
+    private val _logTag = javaClass.canonicalName
     private val valueView: TextView = view.findViewById(R.id.value)
     private var value = "-"
 
     override fun onBind(widget: Preferences.WidgetModel) {
-        Log.d("Numeric", "onBind : ${widget.data.name}(id ${widget.data.keywordId})...")
+        Log.d(_logTag, "onBind : ${widget.data.name}(id ${widget.data.keywordId})...")
 
         setName(widget.data.name)
 
-        DeviceApi(YadomsApi(view.context)).getKeyword(widget.data.keywordId,
-            onOk = {
-                Log.d("Numeric", "onBind/onOk : ${widget.data.name}(id ${widget.data.keywordId}), ${formatValue(it) + formatUnit(it)}")
-                setLastUpdate(it.lastAcquisitionDate)
-                setValue(formatValue(it) + formatUnit(it))
-            }
-        ) {
-            Log.d("Numeric", "onBind/onError : ${widget.data.name}(id ${widget.data.keywordId}), $it")
-            setLastUpdate(null)
+        widget.lastState?.let {
+            setValue(formatValue(it) + formatUnit(it))
         }
+        setLastUpdate(widget.lastState?.lastAcquisitionDate)
     }
 
     private fun formatUnit(keyword: DeviceApi.Keyword): String {

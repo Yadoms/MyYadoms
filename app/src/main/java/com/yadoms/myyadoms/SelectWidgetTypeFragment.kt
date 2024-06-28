@@ -15,7 +15,7 @@ import com.yadoms.myyadoms.widgets.WidgetTypes
  * A fragment representing a list of Items.
  */
 class SelectWidgetTypeFragment : Fragment() {
-
+    private val _logTag = javaClass.canonicalName
     val newWidgetActivity: NewWidgetActivity
         get() = activity as NewWidgetActivity
 
@@ -36,7 +36,7 @@ class SelectWidgetTypeFragment : Fragment() {
                 val onItemClickListener =
                     object : SelectWidgetTypeRecyclerViewAdapter.OnItemClickListener {
                         override fun onItemClick(position: Int) {
-                            Log.d(SelectWidgetTypeFragment::class.simpleName, "Selected widget type = $position")
+                            Log.d(_logTag, "Selected widget type = $position")
                             newWidgetActivity.selectedWidgetType = WidgetTypes.WidgetTypes[position]
                             findNavController().navigate(SelectWidgetTypeFragmentDirections.actionWidgetTypeFragmentToDeviceFragment())
                         }

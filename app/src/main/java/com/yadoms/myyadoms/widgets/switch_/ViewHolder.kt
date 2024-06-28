@@ -12,6 +12,7 @@ import com.yadoms.myyadoms.yadomsApi.YadomsApi
 import java.time.LocalDateTime
 
 class ViewHolder(view: View) : WidgetViewHolder(view) {
+    private val _logTag = javaClass.canonicalName
     private var switchAnimation: AnimationDrawable
     private val buttonView = view.findViewById<ImageView>(R.id.button).apply {
         setBackgroundResource(R.drawable.switch_animation_forward)
@@ -37,20 +38,14 @@ class ViewHolder(view: View) : WidgetViewHolder(view) {
 
     override fun onBind(widget: Preferences.WidgetModel) {
         this.widget = widget
-        Log.d("Switch", "onBind : ${widget.data.name}(id ${widget.data.keywordId})...")
+        Log.d(_logTag, "onBind : ${widget.data.name}(id ${widget.data.keywordId})...")
 
         setName(widget.data.name)
 
-        DeviceApi(YadomsApi(view.context)).getKeyword(widget.data.keywordId,
-            onOk = {
-                Log.d("Switch", "onBind/onOk : ${widget.data.name}(id ${widget.data.keywordId}), ${it.lastAcquisitionValue}")
-                setLastUpdate(it.lastAcquisitionDate)
-                setState(it.lastAcquisitionValue == "1")
-            }
-        ) {
-            Log.d("Switch", "onBind/onError : ${widget.data.name}(id ${widget.data.keywordId}), $it")
-            setLastUpdate(null)
+        widget.lastState?.let {
+            setState(it.lastAcquisitionValue == "1")
         }
+        setLastUpdate(widget.lastState?.lastAcquisitionDate)
     }
 
     private fun setState(newState: Boolean) {

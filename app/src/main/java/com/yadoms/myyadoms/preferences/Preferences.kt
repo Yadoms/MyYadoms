@@ -6,6 +6,8 @@ import androidx.preference.PreferenceManager
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import com.yadoms.myyadoms.widgets.WidgetTypes
+import com.yadoms.myyadoms.yadomsApi.DeviceApi
+import java.time.LocalDateTime
 
 class Preferences(private val context: Context) {
 
@@ -51,7 +53,11 @@ class Preferences(private val context: Context) {
     )
 
     //TODO déplacer
-    abstract class WidgetModel(val data: WidgetData) {
+    abstract class WidgetModel(
+        val data: WidgetData,
+        var lastState: DeviceApi.Keyword? = null
+    ) {
+
         abstract fun requestState()
     }
 

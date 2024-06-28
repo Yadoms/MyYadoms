@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import com.yadoms.myyadoms.databinding.ActivityScrollingBinding
 import com.yadoms.myyadoms.preferences.SettingsActivity
+import com.yadoms.myyadoms.yadomsApi.DeviceApi
 import com.yadoms.myyadoms.yadomsApi.SystemApi
 import com.yadoms.myyadoms.yadomsApi.YadomsApi
 import java.util.*
@@ -69,7 +70,7 @@ class ScrollingActivity : AppCompatActivity() {
         with(binding.contentScrollingLayout.swipeLayout) {
             setColorSchemeColors(getColor(R.color.yadomsBlue))
             setOnRefreshListener {
-                widgetsListViewAdapter.notifyDataSetChanged()
+                widgetsListViewAdapter.refreshAllWidgets()
                 isRefreshing = false
             }
         }
@@ -86,7 +87,7 @@ class ScrollingActivity : AppCompatActivity() {
         }
 
         Timer(false).schedule(30000, 30000) {
-            runOnUiThread { widgetsListViewAdapter.notifyDataSetChanged() }
+            runOnUiThread { widgetsListViewAdapter.refreshAllWidgets() }
         }
 
     }
@@ -95,7 +96,7 @@ class ScrollingActivity : AppCompatActivity() {
         SystemApi(YadomsApi(applicationContext)).getServerTime(
             onOk = {
                 (application as MyYadomsApp).serverTime.synchronize(it)
-                widgetsListViewAdapter.notifyDataSetChanged()
+                widgetsListViewAdapter.refreshAllWidgets()
             },
             onError = {
                 Log.e(_logTag, "Unable to retrieve server time")
