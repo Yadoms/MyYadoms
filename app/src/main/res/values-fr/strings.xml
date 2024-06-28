@@ -44,4 +44,6 @@
     <string name="x_minutes">%d minutes</string>
     <string name="x_hours">%d heures</string>
     <string name="more_than_one_day">Plus d\'un jour</string>
+    <string name="action_about">A propos</string>
+    <string name="yadoms_logo">Logo Yadoms</string>
 </resources>

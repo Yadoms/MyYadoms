@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
+import com.yadoms.myyadoms.about.AboutActivity
 import com.yadoms.myyadoms.databinding.ActivityScrollingBinding
 import com.yadoms.myyadoms.preferences.SettingsActivity
 import com.yadoms.myyadoms.yadomsApi.DeviceApi
@@ -123,8 +124,11 @@ class ScrollingActivity : AppCompatActivity() {
 
         return when (item.itemId) {
             R.id.action_settings -> {
-                val intent = Intent(this@ScrollingActivity, SettingsActivity::class.java)
-                startActivity(intent)
+                startActivity(Intent(this@ScrollingActivity, SettingsActivity::class.java))
+                true
+            }
+            R.id.action_about ->{
+                startActivity(Intent(this@ScrollingActivity, AboutActivity::class.java))
                 true
             }
 

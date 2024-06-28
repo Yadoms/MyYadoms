@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="yadomsBlueDark">#006AC6</color>
+    <color name="yadomsOfficialBlue">#428bca</color>
     <color name="teal_200">#C0DFA1</color>
     <color name="teal_700">#9FC490</color>
     <color name="black">#FF000000</color>

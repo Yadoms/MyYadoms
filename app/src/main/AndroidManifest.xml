@@ -17,6 +17,9 @@
         <activity
             android:name=".preferences.SettingsActivity"
             android:label="@string/action_settings" />
+        <activity
+            android:name=".about.AboutActivity"
+            android:label="@string/action_about" />
         <activity android:name=".NewWidgetActivity" />
         <activity
             android:name=".ScrollingActivity"
