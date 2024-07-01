@@ -2,22 +2,22 @@
 <resources>
     <color name="yadomsBlueDark">#006AC6</color>
     <color name="yadomsOfficialBlue">#428bca</color>
-    <color name="teal_200">#C0DFA1</color>
-    <color name="teal_700">#9FC490</color>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="yadomsBlue">#82A3A1</color>
-    <color name="yadomsGrey">#465362</color>
+    <color name="yadomsBlue">#428BCA</color>
+    <color name="yadomsGrey">#777777</color>
     <color name="deleteItem">#FF3535</color>
-    <color name="on">#97EC75</color>
-    <color name="off">#82A3A1</color>
-    <color name="transition1">#84ac9b</color>
-    <color name="transition2">#87b496</color>
-    <color name="transition3">#88ba93</color>
-    <color name="transition4">#8ac18f</color>
-    <color name="transition5">#8dc88a</color>
-    <color name="transition6">#8fce86</color>
-    <color name="transition7">#91d583</color>
-    <color name="transition8">#92db7f</color>
-    <color name="transition9">#94e37b</color>
+    <color name="on">@color/yadomsBlue</color>
+    <color name="off">#173249</color>
+    <color name="transition1">#1c3a56</color>
+    <color name="transition2">#204462</color>
+    <color name="transition3">#254d70</color>
+    <color name="transition4">#29567d</color>
+    <color name="transition5">#2e5f8b</color>
+    <color name="transition6">#326898</color>
+    <color name="transition7">#3672a5</color>
+    <color name="transition8">#3979af</color>
+    <color name="transition9">#3e82bd</color>
 </resources>
