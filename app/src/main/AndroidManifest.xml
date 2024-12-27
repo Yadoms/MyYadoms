@@ -3,9 +3,12 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
 
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
 
     <application
-        android:name="MyYadomsApp"
+        android:name=".MyYadomsApp"
         android:allowBackup="true"
         android:fullBackupOnly="true"
         android:icon="@mipmap/ic_launcher"
@@ -14,6 +17,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MyYadoms"
         android:usesCleartextTraffic="true">
+        <activity android:name=".awayFromHome.AwayFromHomeActivity" />
         <activity
             android:name=".preferences.SettingsActivity"
             android:label="@string/action_settings" />
@@ -23,8 +27,8 @@
         <activity android:name=".NewWidgetActivity" />
         <activity
             android:name=".ScrollingActivity"
-            android:theme="@style/Theme.MyYadoms.NoActionBar"
-            android:exported="true">
+            android:exported="true"
+            android:theme="@style/Theme.MyYadoms.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

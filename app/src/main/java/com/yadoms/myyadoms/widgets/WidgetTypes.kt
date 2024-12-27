@@ -1,5 +1,7 @@
 package com.yadoms.myyadoms.widgets
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
 import android.view.View
 import com.yadoms.myyadoms.preferences.Preferences
 import com.yadoms.myyadoms.yadomsApi.DeviceApi
@@ -45,7 +47,9 @@ object WidgetTypes {
     /**
      * The widget type item
      */
-    enum class WidgetType { Switch, Numeric }
+    @Parcelize
+    enum class WidgetType: Parcelable { Switch, Numeric }
+
     data class WidgetTypeItem(
         val type: WidgetType,
         val nameRessourceId: Int,

@@ -17,9 +17,9 @@
     <string name="preference_server_https_port">Server HTTPS port</string>
     <string name="preference_ignore_https_certificate_error">Ignore certificate errors</string>
     <string name="accessibility_widget_logo">Widget Logo</string>
-    <string name="select_widget_type_to_add">Select the widget to add</string>
-    <string name="select_device">Select the device to link to widget</string>
-    <string name="select_keyword">Select the keyword to display on the widget</string>
+    <string name="select_widget_type">Select the widget</string>
+    <string name="select_device">Select the device</string>
+    <string name="select_keyword">Select the keyword to display</string>
     <string name="add_a_widget">Add a widget</string>
     <string name="last_update">Last update : %s</string>
     <string name="widget_deleted">Widget deleted</string>
@@ -49,4 +49,18 @@
     <string name="action_about">About</string>
     <string name="yadoms_logo">Yadoms logo</string>
     <string name="yadoms_url" translatable="false">https://yadoms.com/</string>
+    <string name="away_from_home_action">Away from home action</string>
+    <string name="this_function_requires_location">This function requires location</string>
+    <string name="unable_to_retrieve_location">Unable to retrieve current location</string>
+    <string name="location_select_data">Select data</string>
+    <string name="select_keyword_to_drive">Select the data to drive</string>
+    <string name="no_data">No data</string>
+    <string name="away_from_home_explanations">The \'away from home\' function allows you to carry out certain tasks when you leave or return home.\nDefine a reference location, and a data item to be positioned when you leave or approach this location.</string>
+    <string name="when">When</string>
+    <string name="reference_location">Reference location</string>
+    <string name="undefined_location">Undefined (click to select current location)</string>
+    <string name="defined_location">%1$f - %2$f (click to select current location)</string>
+    <string name="location_direction_title">Direction</string>
+    <string name="device_to_control">Device to control</string>
+    <string name="undefined_device">Undefined device</string>
 </resources>

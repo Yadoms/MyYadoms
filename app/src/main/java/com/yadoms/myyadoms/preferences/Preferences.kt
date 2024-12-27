@@ -7,7 +7,6 @@ import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import com.yadoms.myyadoms.widgets.WidgetTypes
 import com.yadoms.myyadoms.yadomsApi.DeviceApi
-import java.time.LocalDateTime
 
 class Preferences(private val context: Context) {
 

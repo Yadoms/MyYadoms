@@ -14,9 +14,9 @@
     <string name="preference_server_https_port">Port HTTPS du serveur</string>
     <string name="preference_ignore_https_certificate_error">Ignorer les erreurs de certificats</string>
     <string name="accessibility_widget_logo">Log du widget</string>
-    <string name="select_widget_type_to_add">Sélectionner le widget à ajouter</string>
-    <string name="select_device">Sélectionner l\'équipement source</string>
-    <string name="select_keyword">Sélectionner la donnée à afficher par le widget</string>
+    <string name="select_widget_type">Sélectionner le type de widget</string>
+    <string name="select_device">Sélectionner l\'équipement</string>
+    <string name="select_keyword">Sélectionner la donnée à afficher</string>
     <string name="add_a_widget">Ajouter un widget</string>
     <string name="last_update">Mise à jour : %s</string>
     <string name="widget_deleted">Widget supprimé</string>
@@ -46,4 +46,18 @@
     <string name="more_than_one_day">Plus d\'un jour</string>
     <string name="action_about">A propos</string>
     <string name="yadoms_logo">Logo Yadoms</string>
+    <string name="away_from_home_action">Fonction d\'éloignement</string>
+    <string name="this_function_requires_location">Cette fonction requière la localisation</string>
+    <string name="unable_to_retrieve_location">Impossible de récupérer la localisation</string>
+    <string name="location_select_data">Sélectionner la donnée</string>
+    <string name="select_keyword_to_drive">Sélectionner la donnée à piloter</string>
+    <string name="no_data">Pas de sélection</string>
+    <string name="away_from_home_explanations">La fonction d\'éloignement vous permet de réaliser certaines tâches lorsque vous quittez votre maison ou lorsque vous y revenez.\nDéfinissez un lieu de référence, et une donnée à positionner lorsque vous quittez ou approchez ce lieu.</string>
+    <string name="when">En</string>
+    <string name="reference_location">Lieu de référence</string>
+    <string name="undefined_location">Non défini (cliquer pour sélectionner la position courante)</string>
+    <string name="defined_location">%1$f - %2$f (cliquer pour sélectionner la position courante)</string>
+    <string name="location_direction_title">Direction</string>
+    <string name="device_to_control">Equipement à contrôler</string>
+    <string name="undefined_device">Equipement non défini</string>
 </resources>

@@ -14,6 +14,7 @@ import com.yadoms.myyadoms.preferences.Preferences
 import com.yadoms.myyadoms.widgets.WidgetTypes
 import com.yadoms.myyadoms.yadomsApi.DeviceApi
 
+
 class NewWidgetActivity : AppCompatActivity() {
 
     var selectedWidgetType: WidgetTypes.WidgetTypeItem? = null
@@ -22,23 +23,37 @@ class NewWidgetActivity : AppCompatActivity() {
     val preselectedKeywords: MutableList<DeviceApi.Keyword> = mutableListOf()
     var selectedKeywordId: Int? = null
     var selectedKeywordName: String? = null
+    var askForName: Boolean = true
 
+    private lateinit var windowTitle: String
+    private lateinit var filteredWidgetTypes: ArrayList<WidgetTypes.WidgetType>
     private lateinit var binding: ActivityNewWidgetBinding
     private lateinit var navController: NavController
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        windowTitle = intent.extras!!.getString("windowTitle")!!
+        filteredWidgetTypes = intent.extras!!.get("filteredWidgetTypes") as ArrayList<WidgetTypes.WidgetType>
+        askForName = intent.extras!!.getBoolean("askForName")
+
         binding = ActivityNewWidgetBinding.inflate(layoutInflater)
         val view = binding.root
 
-        val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        val navHostFragment = supportFragmentManager.findFragmentById(R.id.new_widget_nav_host_fragment) as NavHostFragment
         navController = navHostFragment.navController
+
+        if (filteredWidgetTypes.size == 1) {
+            selectedWidgetType = WidgetTypes.item(filteredWidgetTypes[0])
+            val graph = navHostFragment.navController.navInflater.inflate(R.navigation.new_widget_nav_graph)
+            graph.setStartDestination(R.id.deviceFragment)
+            navController.setGraph(graph, null)
+        }
 
         setContentView(view)
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.title = getString(R.string.add_new_widget)
+        supportActionBar?.title = windowTitle
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -52,6 +67,7 @@ class NewWidgetActivity : AppCompatActivity() {
                     finish()
                 true
             }
+
             else -> super.onOptionsItemSelected(item)
         }
     }
@@ -73,12 +89,12 @@ class NewWidgetActivity : AppCompatActivity() {
 
     fun startWait() {
         binding.pleaseWaitIndicator.visibility = View.VISIBLE
-        binding.navHostFragment.visibility = View.GONE
+        binding.newWidgetNavHostFragment.visibility = View.GONE
     }
 
     fun stopWait() {
         binding.pleaseWaitIndicator.visibility = View.GONE
-        binding.navHostFragment.visibility = View.VISIBLE
+        binding.newWidgetNavHostFragment.visibility = View.VISIBLE
     }
 }
 

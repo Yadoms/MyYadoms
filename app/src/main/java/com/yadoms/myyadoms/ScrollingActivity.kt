@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import androidx.appcompat.app.AppCompatActivity
@@ -16,8 +15,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import com.yadoms.myyadoms.about.AboutActivity
 import com.yadoms.myyadoms.databinding.ActivityScrollingBinding
+import com.yadoms.myyadoms.awayFromHome.AwayFromHomeActivity
 import com.yadoms.myyadoms.preferences.SettingsActivity
-import com.yadoms.myyadoms.yadomsApi.DeviceApi
 import com.yadoms.myyadoms.yadomsApi.SystemApi
 import com.yadoms.myyadoms.yadomsApi.YadomsApi
 import java.util.*
@@ -45,7 +44,7 @@ class ScrollingActivity : AppCompatActivity() {
         setSupportActionBar(binding.toolbar)
         with(binding) {
             toolbarLayout.title = title
-            val newWidgetActivityContractLauncher = registerForActivityResult(NewWidgetActivityContract()) { newWidget ->
+            val newWidgetActivityContractLauncher = registerForActivityResult(NewWidgetActivityContract(getString(R.string.add_new_widget))) { newWidget ->
                 newWidget?.let { widgetsListViewAdapter.addNewWidget(it) }
             }
             addWidget.setOnClickListener {
@@ -125,6 +124,10 @@ class ScrollingActivity : AppCompatActivity() {
         return when (item.itemId) {
             R.id.action_settings -> {
                 startActivity(Intent(this@ScrollingActivity, SettingsActivity::class.java))
+                true
+            }
+            R.id.away_from_home ->{
+                startActivity(Intent(this@ScrollingActivity, AwayFromHomeActivity::class.java))
                 true
             }
             R.id.action_about ->{

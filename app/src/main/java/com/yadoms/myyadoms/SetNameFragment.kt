@@ -12,7 +12,7 @@ class SetNameFragment : Fragment() {
     private val _logTag = javaClass.canonicalName
     private lateinit var binding: FragmentSetNameBinding
 
-    val newWidgetActivity: NewWidgetActivity
+    private val newWidgetActivity: NewWidgetActivity
         get() = activity as NewWidgetActivity
 
     override fun onCreateView(

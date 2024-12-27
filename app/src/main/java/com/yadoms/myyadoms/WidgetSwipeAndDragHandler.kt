@@ -30,7 +30,8 @@ class WidgetSwipeAndDragHandler(context: Context, val adapter: WidgetsRecyclerVi
 
     private fun showUndoSnackbar(itemView: View) {
         val snackbar: Snackbar = Snackbar.make(
-            itemView, itemView.context.getString(R.string.widget_deleted),
+            itemView,
+            itemView.context.getString(R.string.widget_deleted),
             Snackbar.LENGTH_LONG
         )
         snackbar.setAction(itemView.context.getString(R.string.undo)) { adapter.undoDelete() }

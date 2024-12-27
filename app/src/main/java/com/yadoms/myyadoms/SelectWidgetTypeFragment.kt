@@ -31,7 +31,7 @@ class SelectWidgetTypeFragment : Fragment() {
             with(view) {
                 layoutManager = LinearLayoutManager(context)
 
-                (activity as NewWidgetActivity).setOperationDescription(R.string.select_widget_type_to_add)
+                (activity as NewWidgetActivity).setOperationDescription(R.string.select_widget_type)
 
                 val onItemClickListener =
                     object : SelectWidgetTypeRecyclerViewAdapter.OnItemClickListener {

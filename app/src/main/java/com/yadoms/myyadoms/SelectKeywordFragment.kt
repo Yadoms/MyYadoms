@@ -23,6 +23,7 @@ class SelectKeywordFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        //TODO revoir (syntaxe plus moderne dans SetNameFragment.kt)
         val view = inflater.inflate(R.layout.fragment_select_keyword, container, false)
 
         // Set the adapter
@@ -42,6 +43,11 @@ class SelectKeywordFragment : Fragment() {
                                 _logTag,
                                 "Selected keyword = ${newWidgetActivity.selectedKeywordName} (${newWidgetActivity.selectedKeywordId})"
                             )
+
+                            if (!newWidgetActivity.askForName) {
+                                newWidgetActivity.finish("")
+                                return
+                            }
 
                             findNavController().navigate(SelectKeywordFragmentDirections.actionKeywordFragmentToNameFragment())
                         }
