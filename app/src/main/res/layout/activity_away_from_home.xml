@@ -42,8 +42,7 @@
                     android:layout_height="48dp"
                     android:layout_marginEnd="16dp"
                     android:contentDescription="@string/reference_location"
-                    android:foreground="@color/yadomsBlue"
-                    android:src="@android:drawable/btn_plus" />
+                    android:src="@drawable/ic_location_pin" />
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -77,8 +76,7 @@
                     android:layout_height="48dp"
                     android:layout_marginEnd="16dp"
                     android:contentDescription="@string/reference_location"
-                    android:foreground="@color/yadomsBlue"
-                    android:src="@android:drawable/btn_plus" />
+                    android:src="@drawable/ic_location_direction" />
 
                 <LinearLayout
                     android:layout_width="wrap_content"
