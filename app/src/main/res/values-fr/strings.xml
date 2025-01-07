@@ -46,13 +46,13 @@
     <string name="more_than_one_day">Plus d\'un jour</string>
     <string name="action_about">A propos</string>
     <string name="yadoms_logo">Logo Yadoms</string>
-    <string name="away_from_home_action">Fonction d\'éloignement</string>
+    <string name="away_from_home_action">Hors les murs</string>
     <string name="this_function_requires_location">Cette fonction requière la localisation</string>
     <string name="unable_to_retrieve_location">Impossible de récupérer la localisation</string>
     <string name="location_select_data">Sélectionner la donnée</string>
     <string name="select_keyword_to_drive">Sélectionner la donnée à piloter</string>
     <string name="no_data">Pas de sélection</string>
-    <string name="away_from_home_explanations">La fonction d\'éloignement vous permet de réaliser certaines tâches lorsque vous quittez votre maison ou lorsque vous y revenez.\nDéfinissez un lieu de référence, et une donnée à positionner lorsque vous quittez ou approchez ce lieu.</string>
+    <string name="away_from_home_explanations">La fonction hors les murs vous permet de réaliser certaines tâches lorsque vous quittez votre maison ou lorsque vous y revenez.\nDéfinissez un lieu de référence, et une donnée à positionner lorsque vous quittez ou approchez ce lieu.</string>
     <string name="when">En</string>
     <string name="reference_location">Lieu de référence</string>
     <string name="undefined_location">Non défini (cliquer pour sélectionner la position courante)</string>
@@ -60,4 +60,7 @@
     <string name="location_direction_title">Direction</string>
     <string name="device_to_control">Equipement à contrôler</string>
     <string name="undefined_device">Equipement non défini</string>
+    <string name="away_from_home_location_explanations">Définir la condition sur la position déclenchant l\'action</string>
+    <string name="away_from_home_action_explanations">Définir l\'action à exécuter lorsque la condition ci-dessus est remplie</string>
+    <string name="away_from_home_enable">Activer/désactiver la fonction hors les murs</string>
 </resources>

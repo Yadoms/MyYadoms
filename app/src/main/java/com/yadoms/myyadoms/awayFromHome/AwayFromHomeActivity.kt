@@ -52,6 +52,10 @@ class AwayFromHomeActivity : AppCompatActivity() {
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
         with(binding) {
+            awayFromHomeEnable.setOnCheckedChangeListener { _, isChecked ->
+                enableLayout(conditionLayout, isChecked)
+                enableLayout(actionLayout, isChecked)
+            }
             referenceLocation.setOnClickListener {
                 checkLocationPermissions()
                 fusedLocationClient!!.lastLocation
@@ -112,6 +116,14 @@ class AwayFromHomeActivity : AppCompatActivity() {
         }
     }
 
+    private fun enableLayout(layout: android.view.ViewGroup, enable: Boolean) {
+        for (i in 0 until layout.childCount) {
+            val child = layout.getChildAt(i)
+            child.isEnabled = enable
+        }
+        layout.alpha = if (enable) 1.0f else 0.3f
+    }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
@@ -122,6 +134,7 @@ class AwayFromHomeActivity : AppCompatActivity() {
                 finish()
                 true
             }
+
             else -> super.onOptionsItemSelected(item)
         }
     }

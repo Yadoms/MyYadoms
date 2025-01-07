@@ -63,4 +63,7 @@
     <string name="location_direction_title">Direction</string>
     <string name="device_to_control">Device to control</string>
     <string name="undefined_device">Undefined device</string>
+    <string name="away_from_home_location_explanations">Define here the location condition firing the event</string>
+    <string name="away_from_home_action_explanations">Define here the action to execute when condition above is meet</string>
+    <string name="away_from_home_enable">Enable/disable Away From Home</string>
 </resources>
