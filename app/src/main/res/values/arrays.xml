@@ -14,4 +14,9 @@
         <item>Entering</item>
         <item>Leaving</item>
     </string-array>
+
+    <string-array name="reference_location">
+        <item>Yadoms server location</item>
+        <item>Current phone location</item>
+    </string-array>
 </resources>

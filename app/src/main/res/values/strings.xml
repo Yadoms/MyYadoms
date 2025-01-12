@@ -2,6 +2,7 @@
     <string name="app_name" translatable="false">MyYadoms</string>
     <string name="app_version" translatable="false">v%s%s</string>
     <string name="action_settings">Settings</string>
+    <string name="action_away_from_home_settings">Away from home settings</string>
 
     <!-- Preference Titles -->
     <string name="preferences_server_connection">Server connexion</string>
@@ -36,7 +37,7 @@
     <!-- Numeric -->
     <string name="numeric_name">Numeric display</string>
     <string name="numeric_description">A widget to display numeric data</string>
-    <string name="no_widget_available">No widget available, clic on \'+\' to add one</string>
+    <string name="no_widget_available">No widget available, click on \'+\' to add one</string>
     <string name="no_server_configuration">No Yadoms server available, please configure one</string>
     <string name="settings">Settings</string>
     <string name="preference_display_last_update_as_duration">Duration</string>
@@ -66,4 +67,6 @@
     <string name="away_from_home_location_explanations">Define here the location condition firing the event</string>
     <string name="away_from_home_action_explanations">Define here the action to execute when condition above is meet</string>
     <string name="away_from_home_enable">Enable/disable Away From Home</string>
+    <string name="preferences_away_from_home_function">Away from home function</string>
+    <string name="away_from_home_condition">Firing condition</string>
 </resources>

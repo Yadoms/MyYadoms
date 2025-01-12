@@ -16,6 +16,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.yadoms.myyadoms.about.AboutActivity
 import com.yadoms.myyadoms.databinding.ActivityScrollingBinding
 import com.yadoms.myyadoms.awayFromHome.AwayFromHomeActivity
+import com.yadoms.myyadoms.preferences.AwayFromHomeSettingsActivity
 import com.yadoms.myyadoms.preferences.SettingsActivity
 import com.yadoms.myyadoms.yadomsApi.SystemApi
 import com.yadoms.myyadoms.yadomsApi.YadomsApi
@@ -128,6 +129,10 @@ class ScrollingActivity : AppCompatActivity() {
             }
             R.id.away_from_home ->{
                 startActivity(Intent(this@ScrollingActivity, AwayFromHomeActivity::class.java))
+                true
+            }
+            R.id.action_away_from_home_settings ->{
+                startActivity(Intent(this@ScrollingActivity, AwayFromHomeSettingsActivity::class.java))
                 true
             }
             R.id.action_about ->{

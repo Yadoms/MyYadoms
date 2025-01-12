@@ -4,4 +4,9 @@
         <item>Entrant</item>
         <item>Quittant</item>
     </string-array>
+
+    <string-array name="reference_location">
+        <item>Position du serveur Yadoms</item>
+        <item>Position actuelle du téléphone</item>
+    </string-array>
 </resources>

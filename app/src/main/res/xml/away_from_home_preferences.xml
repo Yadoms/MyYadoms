@@ -1,0 +1,36 @@
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceCategory app:title="@string/preferences_away_from_home_function">
+
+        <SwitchPreference
+            app:defaultValue="false"
+            app:key="away_from_home_enable"
+            app:title="@string/away_from_home_enable" />
+
+        <PreferenceCategory app:title="@string/away_from_home_condition"
+            app:key="reference_location_category">
+
+            <ListPreference
+                app:key="reference_location"
+                app:entries="@array/reference_location"
+                app:title="@string/reference_location" />
+
+            <ListPreference
+                app:key="reference_direction"
+                app:entries="@array/entering_or_leaving_array"
+                app:title="@string/location_direction_title" />
+
+        </PreferenceCategory>
+
+        <PreferenceCategory app:title="@string/device_to_control"
+            app:key="device_to_control">
+
+            <EditTextPreference
+                app:key="device_to_control"
+                app:title="@string/reference_location" />
+
+        </PreferenceCategory>
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

@@ -22,6 +22,9 @@
             android:name=".preferences.SettingsActivity"
             android:label="@string/action_settings" />
         <activity
+            android:name=".preferences.AwayFromHomeSettingsActivity"
+            android:label="@string/action_away_from_home_settings" />
+        <activity
             android:name=".about.AboutActivity"
             android:label="@string/action_about" />
         <activity android:name=".NewWidgetActivity" />
