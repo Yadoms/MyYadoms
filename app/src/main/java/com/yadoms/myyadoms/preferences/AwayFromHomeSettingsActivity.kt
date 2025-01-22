@@ -1,23 +1,34 @@
 package com.yadoms.myyadoms.preferences
 
+import LocationConverter
+import android.Manifest
+import android.annotation.SuppressLint
+import android.content.pm.PackageManager
+import android.location.Location
 import android.os.Bundle
 import android.view.MenuItem
+import android.widget.TextView
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import androidx.preference.ListPreference
 import androidx.preference.Preference
 import androidx.preference.PreferenceManager
+import androidx.preference.SwitchPreference
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
+import com.google.android.material.snackbar.Snackbar
 import com.takisoft.preferencex.PreferenceFragmentCompat
 import com.yadoms.myyadoms.R
 
 class AwayFromHomeSettingsActivity : AppCompatActivity() {
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.away_from_home_settings_activity)
         if (savedInstanceState == null) {
-            supportFragmentManager
-                .beginTransaction()
-                .replace(R.id.away_from_home_settings, AwayFromHomeSettingsFragment())
-                .commit()
+            supportFragmentManager.beginTransaction().replace(R.id.away_from_home_settings, AwayFromHomeSettingsFragment()).commit()
         }
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
@@ -32,52 +43,109 @@ class AwayFromHomeSettingsActivity : AppCompatActivity() {
                 finish()
                 true
             }
+
             else -> super.onOptionsItemSelected(item)
         }
     }
 
     class AwayFromHomeSettingsFragment : PreferenceFragmentCompat() {
+        private lateinit var fusedLocationClient: FusedLocationProviderClient
+        private val requestPermissionLauncher = registerForActivityResult(
+            ActivityResultContracts.RequestMultiplePermissions()
+        ) { permissions ->
+            awayFromHomeEnablePreference.isChecked =
+                permissions.getOrDefault(Manifest.permission.ACCESS_FINE_LOCATION, false)
+                        || permissions.getOrDefault(Manifest.permission.ACCESS_COARSE_LOCATION, false)
+
+            awayFromHomePreferenceCategories.forEach {
+                it.isEnabled = awayFromHomeEnablePreference.isChecked
+            }
+        }
+        private lateinit var awayFromHomeEnablePreference: SwitchPreference
+        private lateinit var awayFromHomePreferenceCategories: MutableList<Preference>
+        private lateinit var awayFromHomeReferenceLocationPreference: ListPreference
+
         override fun onCreatePreferencesFix(savedInstanceState: Bundle?, rootKey: String?) {
             setPreferencesFromResource(R.xml.away_from_home_preferences, rootKey)
 
-            enablePreferencesFrom(
-                "away_from_home_enable",
-                arrayOf(
-                    "reference_location_category",
-                    "device_to_control"
-                )
-            )
-
-//            enablePreferencesFrom(
-//                "server_use_basic_authentication",
-//                arrayOf(
-//                    "server_basic_authentication_username",
-//                    "server_basic_authentication_password"
-//                )
-//            )
-        }
-
-        private fun enablePreferencesFrom(masterKey: String, slaveKeys: Array<String>) {
-            val masterPreference = findPreference<Preference>(masterKey)
-
-            val slavePreferences: MutableList<Preference?> = ArrayList()
-            slaveKeys.forEach { slavePreferences.add(findPreference(it)) }
-
             val preferences = PreferenceManager.getDefaultSharedPreferences(requireContext())
-            if (preferences.getBoolean(masterKey, false)) {
-                slavePreferences.forEach { it?.isEnabled = true }
-            } else {
-                slavePreferences.forEach { it?.isEnabled = false }
+            val awayFromHomeEnablePreferenceKey = "away_from_home_enable"
+            awayFromHomeEnablePreference = findPreference(awayFromHomeEnablePreferenceKey)!!
+            awayFromHomePreferenceCategories = arrayListOf(
+                findPreference("reference_location_category")!!,
+                findPreference("device_to_control_category")!!
+            )
+            awayFromHomeReferenceLocationPreference = findPreference("reference_location")!!
+
+            val hasLocationPermissions = checkLocationPermissions()
+
+            if (!hasLocationPermissions && preferences.getBoolean(awayFromHomeEnablePreferenceKey, false))
+                awayFromHomeEnablePreference.isChecked = false
+
+            awayFromHomePreferenceCategories.forEach {
+                it.isEnabled = awayFromHomeEnablePreference.isChecked
             }
 
-            masterPreference?.setOnPreferenceChangeListener { _, newValue ->
-                if (newValue as Boolean) {
-                    slavePreferences.forEach { it?.isEnabled = true }
-                } else {
-                    slavePreferences.forEach { it?.isEnabled = false }
-                }
+            awayFromHomeEnablePreference.setOnPreferenceChangeListener { _, newValue ->
+                if (newValue as Boolean && !checkLocationPermissions())
+                    requestLocationPermissions()
+                else
+                    awayFromHomePreferenceCategories.forEach {
+                        it.isEnabled = newValue
+                    }
+
                 true
             }
+
+            awayFromHomeReferenceLocationPreference.setOnPreferenceChangeListener { _, newValue ->
+                if (newValue == "YadomsServerPosition") getYadomsServerPosition() else getCurrentPosition()
+                true
+            }
+
+            if (hasLocationPermissions)
+                fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
+        }
+
+        @SuppressLint("MissingPermission")
+        private fun getCurrentPosition() {
+            fusedLocationClient.lastLocation
+                .addOnSuccessListener()
+                { location ->
+                    if (location != null) {
+                        val converter =LocationConverter
+                        awayFromHomeReferenceLocationPreference.summary =
+                            getString(R.string.defined_location,
+                                converter.latitudeAsDMS(location.latitude, 10),
+                                converter.longitudeAsDMS(location.longitude, 10))
+                    } else {
+                        Snackbar.make(
+                            listView,
+                            requireContext().getString(R.string.unable_to_retrieve_location),
+                            Snackbar.LENGTH_LONG
+                        ).show()
+                    }
+                }
+        }
+
+        private fun getYadomsServerPosition(): Location {
+            TODO("Not yet implemented")
+        }
+
+        private fun checkLocationPermissions(): Boolean {
+            return (ContextCompat.checkSelfPermission(
+                requireContext(), Manifest.permission.ACCESS_FINE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(
+                requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED)
+        }
+
+        private fun requestLocationPermissions() {
+            requestPermissionLauncher.launch(
+                arrayOf(
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.ACCESS_COARSE_LOCATION
+                )
+            )
         }
     }
 }

@@ -1,16 +1,9 @@
 <resources>
-    <!-- Reply Preference -->
-    <string-array name="reply_entries">
-        <item>Reply</item>
-        <item>Reply to all</item>
+    <string-array name="entering_or_leaving">
+        <item>Entering</item>
+        <item>Leaving</item>
     </string-array>
-
-    <string-array name="reply_values">
-        <item>reply</item>
-        <item>reply_all</item>
-    </string-array>
-
-    <string-array name="entering_or_leaving_array">
+    <string-array name="entering_or_leaving_values">
         <item>Entering</item>
         <item>Leaving</item>
     </string-array>
@@ -18,5 +11,9 @@
     <string-array name="reference_location">
         <item>Yadoms server location</item>
         <item>Current phone location</item>
+    </string-array>
+    <string-array name="reference_location_values">
+        <item>YadomsServerPosition</item>
+        <item>PhoneCurrentPosition</item>
     </string-array>
 </resources>

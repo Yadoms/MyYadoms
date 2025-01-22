@@ -37,6 +37,7 @@ android {
         buildConfig true
     }
     namespace 'com.yadoms.myyadoms'
+    buildToolsVersion '36.0.0 rc3'
 }
 
 dependencies {
@@ -64,7 +65,7 @@ dependencies {
 
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
 
-    implementation "com.squareup.moshi:moshi-kotlin:1.14.0"
+    implementation 'com.squareup.moshi:moshi-kotlin:1.15.2'
 
     implementation 'com.android.volley:volley:1.2.1'
 

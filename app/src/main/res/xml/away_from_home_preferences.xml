@@ -13,21 +13,27 @@
             <ListPreference
                 app:key="reference_location"
                 app:entries="@array/reference_location"
+                app:entryValues="@array/reference_location_values"
+                app:defaultValue="YadomsServerPosition"
+                app:useSimpleSummaryProvider="false"
                 app:title="@string/reference_location" />
 
             <ListPreference
                 app:key="reference_direction"
-                app:entries="@array/entering_or_leaving_array"
+                app:entries="@array/entering_or_leaving"
+                app:entryValues="@array/entering_or_leaving_values"
+                app:defaultValue="leaving"
+                app:useSimpleSummaryProvider="true"
                 app:title="@string/location_direction_title" />
 
         </PreferenceCategory>
 
         <PreferenceCategory app:title="@string/device_to_control"
-            app:key="device_to_control">
+            app:key="device_to_control_category">
 
             <EditTextPreference
                 app:key="device_to_control"
-                app:title="@string/reference_location" />
+                app:title="@string/device_to_control" />
 
         </PreferenceCategory>
 

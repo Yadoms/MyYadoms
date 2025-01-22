@@ -57,7 +57,7 @@
     <string name="when">En</string>
     <string name="reference_location">Lieu de référence</string>
     <string name="undefined_location">Non défini (cliquer pour sélectionner la position courante)</string>
-    <string name="defined_location">%1$f - %2$f (cliquer pour sélectionner la position courante)</string>
+    <string name="defined_location">Lat : %1s - Long : %2s</string>
     <string name="location_direction_title">Direction</string>
     <string name="device_to_control">Equipement à contrôler</string>
     <string name="undefined_device">Equipement non défini</string>

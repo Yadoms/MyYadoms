@@ -74,7 +74,7 @@ class AwayFromHomeActivity : AppCompatActivity() {
                     }
             }
 
-            val locationDirectionsStrings = getResources().getStringArray(R.array.entering_or_leaving_array)
+            val locationDirectionsStrings = getResources().getStringArray(R.array.entering_or_leaving)
             locationDirectionValue.text = locationDirectionsStrings[if (entering) 0 else 1]
 
             locationDirection.setOnClickListener {

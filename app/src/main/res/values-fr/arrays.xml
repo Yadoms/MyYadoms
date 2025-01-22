@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string-array name="entering_or_leaving_array">
+    <string-array name="entering_or_leaving">
         <item>Entrant</item>
         <item>Quittant</item>
     </string-array>
