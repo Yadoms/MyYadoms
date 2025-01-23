@@ -112,11 +112,13 @@ class AwayFromHomeSettingsActivity : AppCompatActivity() {
                 .addOnSuccessListener()
                 { location ->
                     if (location != null) {
-                        val converter =LocationConverter
+                        val converter = LocationConverter
                         awayFromHomeReferenceLocationPreference.summary =
-                            getString(R.string.defined_location,
+                            getString(
+                                R.string.defined_location,
                                 converter.latitudeAsDMS(location.latitude, 10),
-                                converter.longitudeAsDMS(location.longitude, 10))
+                                converter.longitudeAsDMS(location.longitude, 10)
+                            )
                     } else {
                         Snackbar.make(
                             listView,
