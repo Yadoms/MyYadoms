@@ -12,7 +12,7 @@ object LocationConverter {
     }
 
     fun longitudeAsDMS(longitude: Double, decimalPlace: Int): String {
-        val direction = if (longitude > 0) "W" else "E"
+        val direction = if (longitude > 0) "E" else "W"
         var strLongitude = Location.convert(longitude.absoluteValue, Location.FORMAT_SECONDS)
         strLongitude = replaceDelimiters(strLongitude, decimalPlace)
         strLongitude += " $direction"

@@ -7,7 +7,6 @@ import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Bundle
 import android.view.MenuItem
-import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -20,6 +19,8 @@ import com.google.android.gms.location.LocationServices
 import com.google.android.material.snackbar.Snackbar
 import com.takisoft.preferencex.PreferenceFragmentCompat
 import com.yadoms.myyadoms.R
+import com.yadoms.myyadoms.yadomsApi.ConfigurationApi
+import com.yadoms.myyadoms.yadomsApi.YadomsApi
 
 class AwayFromHomeSettingsActivity : AppCompatActivity() {
 
@@ -109,26 +110,33 @@ class AwayFromHomeSettingsActivity : AppCompatActivity() {
         @SuppressLint("MissingPermission")
         private fun getCurrentPosition() {
             fusedLocationClient.lastLocation
-                .addOnSuccessListener()
-                { location ->
-                    if (location != null) {
-                        val converter =LocationConverter
-                        awayFromHomeReferenceLocationPreference.summary =
-                            getString(R.string.defined_location,
-                                converter.latitudeAsDMS(location.latitude, 10),
-                                converter.longitudeAsDMS(location.longitude, 10))
-                    } else {
-                        Snackbar.make(
-                            listView,
-                            requireContext().getString(R.string.unable_to_retrieve_location),
-                            Snackbar.LENGTH_LONG
-                        ).show()
-                    }
-                }
+                .addOnSuccessListener(::updateLocation)
         }
 
-        private fun getYadomsServerPosition(): Location {
-            TODO("Not yet implemented")
+        private fun updateLocation(location: Location?) {
+            if (location != null) {
+                val converter = LocationConverter
+                awayFromHomeReferenceLocationPreference.summary =
+                    getString(
+                        R.string.defined_location,
+                        converter.latitudeAsDMS(location.latitude, 10),
+                        converter.longitudeAsDMS(location.longitude, 10)
+                    )
+            } else {
+                Snackbar.make(
+                    listView,
+                    requireContext().getString(R.string.unable_to_retrieve_location),
+                    Snackbar.LENGTH_LONG
+                ).show()
+            }
+        }
+
+        private fun getYadomsServerPosition() {
+            val yApi = YadomsApi(requireContext())
+            ConfigurationApi(yApi).getYadomsServerPosition(
+                onOk = ::updateLocation,
+                onError = {updateLocation(null)}
+            )
         }
 
         private fun checkLocationPermissions(): Boolean {
