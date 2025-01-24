@@ -135,7 +135,7 @@ class AwayFromHomeSettingsActivity : AppCompatActivity() {
             val yApi = YadomsApi(requireContext())
             ConfigurationApi(yApi).getYadomsServerPosition(
                 onOk = ::updateLocation,
-                onError = {updateLocation(null)}
+                onError = { updateLocation(null) }
             )
         }
 

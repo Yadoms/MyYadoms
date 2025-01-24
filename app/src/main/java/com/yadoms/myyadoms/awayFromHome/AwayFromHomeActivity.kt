@@ -1,5 +1,6 @@
 package com.yadoms.myyadoms.awayFromHome
 
+import LocationConverter
 import android.Manifest
 import android.annotation.SuppressLint
 import android.app.AlertDialog
@@ -62,8 +63,11 @@ class AwayFromHomeActivity : AppCompatActivity() {
                     .addOnSuccessListener()
                     { location ->
                         if (location != null) {
+                            val converter = LocationConverter
                             val currentLocation = findViewById<TextView>(R.id.selected_reference_location)
-                            currentLocation.text = getString(R.string.defined_location, location.latitude, location.longitude)
+                            currentLocation.text = getString(R.string.defined_location,
+                                converter.latitudeAsDMS(location.latitude, 10),
+                                converter.longitudeAsDMS(location.longitude, 10))
                         } else {
                             Snackbar.make(
                                 view,
