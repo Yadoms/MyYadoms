@@ -2,6 +2,7 @@ package com.yadoms.myyadoms
 
 import com.yadoms.myyadoms.preferences.Preferences
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
@@ -9,6 +10,7 @@ import android.view.MenuItem
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import androidx.appcompat.app.AppCompatActivity
+import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -18,6 +20,7 @@ import com.yadoms.myyadoms.databinding.ActivityScrollingBinding
 import com.yadoms.myyadoms.awayFromHome.AwayFromHomeActivity
 import com.yadoms.myyadoms.preferences.AwayFromHomeSettingsActivity
 import com.yadoms.myyadoms.preferences.SettingsActivity
+import com.yadoms.myyadoms.yadomsApi.ConfigurationApi
 import com.yadoms.myyadoms.yadomsApi.SystemApi
 import com.yadoms.myyadoms.yadomsApi.YadomsApi
 import java.util.*
@@ -45,9 +48,10 @@ class ScrollingActivity : AppCompatActivity() {
         setSupportActionBar(binding.toolbar)
         with(binding) {
             toolbarLayout.title = title
-            val newWidgetActivityContractLauncher = registerForActivityResult(NewWidgetActivityContract(getString(R.string.add_new_widget))) { newWidget ->
-                newWidget?.let { widgetsListViewAdapter.addNewWidget(it) }
-            }
+            val newWidgetActivityContractLauncher =
+                registerForActivityResult(NewWidgetActivityContract(getString(R.string.add_new_widget))) { newWidget ->
+                    newWidget?.let { widgetsListViewAdapter.addNewWidget(it) }
+                }
             addWidget.setOnClickListener {
                 newWidgetActivityContractLauncher.launch(Unit)
             }
@@ -94,7 +98,10 @@ class ScrollingActivity : AppCompatActivity() {
     }
 
     override fun onResume() {
-        SystemApi(YadomsApi(applicationContext)).getServerTime(
+        val yApi = YadomsApi(applicationContext)
+
+        // Update server time
+        SystemApi(yApi).getServerTime(
             onOk = {
                 (application as MyYadomsApp).serverTime.synchronize(it)
                 widgetsListViewAdapter.refreshAllWidgets()
@@ -107,6 +114,25 @@ class ScrollingActivity : AppCompatActivity() {
                     Snackbar.LENGTH_LONG
                 ).show()
             })
+
+        // Update server location
+        ConfigurationApi(yApi).getYadomsServerPosition(
+            onOk = { location ->
+                val preferences = PreferenceManager.getDefaultSharedPreferences(application)
+                with(preferences.edit()) {
+                    putString("reference_location", location.toString())
+                    apply()
+                }
+            },
+            onError = {
+                Log.e(_logTag, "Unable to retrieve server location")
+                Snackbar.make(
+                    findViewById(android.R.id.content),
+                    getString(R.string.unable_to_retrieve_location),
+                    Snackbar.LENGTH_LONG
+                ).show()
+            }
+        )
 
         super.onResume()
     }
@@ -127,15 +153,18 @@ class ScrollingActivity : AppCompatActivity() {
                 startActivity(Intent(this@ScrollingActivity, SettingsActivity::class.java))
                 true
             }
-            R.id.away_from_home ->{
+
+            R.id.away_from_home -> {
                 startActivity(Intent(this@ScrollingActivity, AwayFromHomeActivity::class.java))
                 true
             }
-            R.id.action_away_from_home_settings ->{
+
+            R.id.action_away_from_home_settings -> {
                 startActivity(Intent(this@ScrollingActivity, AwayFromHomeSettingsActivity::class.java))
                 true
             }
-            R.id.action_about ->{
+
+            R.id.action_about -> {
                 startActivity(Intent(this@ScrollingActivity, AboutActivity::class.java))
                 true
             }
