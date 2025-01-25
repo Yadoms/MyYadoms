@@ -3,6 +3,7 @@ package com.yadoms.myyadoms.preferences
 import LocationConverter
 import android.Manifest
 import android.annotation.SuppressLint
+import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Bundle
@@ -62,6 +63,7 @@ class AwayFromHomeSettingsActivity : AppCompatActivity() {
                 it.isEnabled = awayFromHomeEnablePreference.isChecked
             }
         }
+        private lateinit var preferences: SharedPreferences
         private lateinit var awayFromHomeEnablePreference: SwitchPreference
         private lateinit var awayFromHomePreferenceCategories: MutableList<Preference>
         private lateinit var awayFromHomeReferenceLocationPreference: ListPreference
@@ -69,7 +71,7 @@ class AwayFromHomeSettingsActivity : AppCompatActivity() {
         override fun onCreatePreferencesFix(savedInstanceState: Bundle?, rootKey: String?) {
             setPreferencesFromResource(R.xml.away_from_home_preferences, rootKey)
 
-            val preferences = PreferenceManager.getDefaultSharedPreferences(requireContext())
+            preferences = PreferenceManager.getDefaultSharedPreferences(requireContext())
             val awayFromHomeEnablePreferenceKey = "away_from_home_enable"
             awayFromHomeEnablePreference = findPreference(awayFromHomeEnablePreferenceKey)!!
             awayFromHomePreferenceCategories = arrayListOf(
@@ -115,6 +117,10 @@ class AwayFromHomeSettingsActivity : AppCompatActivity() {
 
         private fun updateLocation(location: Location?) {
             if (location != null) {
+                with(preferences.edit()) {
+                    putString("reference_location", location.toString())
+                    apply()
+                }
                 val converter = LocationConverter
                 awayFromHomeReferenceLocationPreference.summary =
                     getString(
