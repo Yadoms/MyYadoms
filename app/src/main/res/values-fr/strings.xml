@@ -65,5 +65,11 @@
     <string name="away_from_home_action_explanations">Définir l\'action à exécuter lorsque la condition ci-dessus est remplie</string>
     <string name="away_from_home_enable">Activer/désactiver la fonction hors les murs</string>
     <string name="preferences_away_from_home_function">Fonction hors les murs</string>
-    <string name="away_from_home_condition">Condition de déclenchement</string>
+    <string name="condition">Condition</string>
+    <string name="action">Action</string>
+    <string name="unknown_device">Unknown device</string>
+    <string name="select_a_device">Sélectionner un équipement</string>
+    <string name="select">Sélectionner</string>
+    <string name="cancel">Annuler</string>
+    <string name="search_device">Rechercher un équipement</string>
 </resources>

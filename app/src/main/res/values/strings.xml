@@ -68,5 +68,11 @@
     <string name="away_from_home_action_explanations">Define here the action to execute when condition above is meet</string>
     <string name="away_from_home_enable">Enable/disable Away From Home</string>
     <string name="preferences_away_from_home_function">Away from home function</string>
-    <string name="away_from_home_condition">Firing condition</string>
+    <string name="condition">Condition</string>
+    <string name="action">Action</string>
+    <string name="unknown_device">Unknown device</string>
+    <string name="select_a_device">Select a device</string>
+    <string name="select">Select</string>
+    <string name="cancel">Cancel</string>
+    <string name="search_device">Search device</string>
 </resources>

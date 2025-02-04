@@ -27,7 +27,7 @@ class ConfigurationApi(private val yApi: YadomsApi) {
         onError: (String?) -> Unit,
     ) {
         yApi.get(
-            url = "/configurations/server",
+            url = "/configuration/server",
             onOk = {
                 try {
                     val result = yApi.fromJson<GetCurrentTimeResultAdapter>(it)

@@ -271,6 +271,37 @@ class DeviceApi(private val yApi: YadomsApi) {
         }
     }
 
+    class GetDeviceResultAdapter(val result: Boolean, val message: String, val data: Device)
+
+    fun getDevice(
+        deviceId: Int,
+        onOk: (Device) -> Unit,
+        onError: (String?) -> Unit,
+    ) {
+        yApi.get(
+            url = "/device/$deviceId",
+            onOk = {
+                try {
+                    val result = yApi.fromJson<GetDeviceResultAdapter>(it)
+
+                    if (result?.result != true) {
+                        Log.e(_logTag, "Server returns error (${result?.message}) :")//TODO gérer les erreurs dans la fonction post
+                        onError(result?.message)
+                    } else {
+                        onOk(result.data)
+                    }
+                } catch (e: Exception) {
+                    Log.e(_logTag, "Unable to parse JSON answer ($e) :")//TODO gérer les erreurs dans la fonction post
+                    Log.e(_logTag, it)
+                    onError(null)
+                }
+            }
+        ) {
+            Log.e(_logTag, "Error sending request ($it) :")//TODO gérer les erreurs dans la fonction get
+            onError(it)
+        }
+    }
+
     class CommandResultAdapter(val result: Boolean, val message: String)
 
     fun command(

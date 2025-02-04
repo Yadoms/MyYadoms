@@ -11,15 +11,17 @@ import android.view.MenuItem
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.commit
 import androidx.preference.ListPreference
 import androidx.preference.Preference
+import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.PreferenceManager
 import androidx.preference.SwitchPreference
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.material.snackbar.Snackbar
-import com.takisoft.preferencex.PreferenceFragmentCompat
 import com.yadoms.myyadoms.R
+import com.yadoms.myyadoms.SelectKeywordPreferenceDialogFragment
 import com.yadoms.myyadoms.yadomsApi.ConfigurationApi
 import com.yadoms.myyadoms.yadomsApi.YadomsApi
 
@@ -29,9 +31,15 @@ class AwayFromHomeSettingsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.away_from_home_settings_activity)
+
+        // TODO les 2 instructions sont utiles ?
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction().replace(R.id.away_from_home_settings, AwayFromHomeSettingsFragment()).commit()
         }
+        supportFragmentManager.commit {
+            replace(R.id.away_from_home_settings, AwayFromHomeSettingsFragment())
+        }
+
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
 
@@ -50,7 +58,7 @@ class AwayFromHomeSettingsActivity : AppCompatActivity() {
         }
     }
 
-    class AwayFromHomeSettingsFragment : PreferenceFragmentCompat() {
+    class AwayFromHomeSettingsFragment : PreferenceFragmentCompat(), PreferenceFragmentCompat.OnPreferenceDisplayDialogCallback {
         private lateinit var fusedLocationClient: FusedLocationProviderClient
         private val requestPermissionLauncher = registerForActivityResult(
             ActivityResultContracts.RequestMultiplePermissions()
@@ -67,8 +75,9 @@ class AwayFromHomeSettingsActivity : AppCompatActivity() {
         private lateinit var awayFromHomeEnablePreference: SwitchPreference
         private lateinit var awayFromHomePreferenceCategories: MutableList<Preference>
         private lateinit var awayFromHomeReferenceLocationPreference: ListPreference
+//        private lateinit var awayFromHomeDeviceToControlPreferenceOld: EditTextPreference //TODO virer
 
-        override fun onCreatePreferencesFix(savedInstanceState: Bundle?, rootKey: String?) {
+        override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
             setPreferencesFromResource(R.xml.away_from_home_preferences, rootKey)
 
             preferences = PreferenceManager.getDefaultSharedPreferences(requireContext())
@@ -105,8 +114,47 @@ class AwayFromHomeSettingsActivity : AppCompatActivity() {
                 true
             }
 
+            //TODO virer
+//            val newWidgetActivityContractLauncherOld =
+//                registerForActivityResult(
+//                    NewWidgetActivityContract(
+//                        getString(R.string.select_keyword_to_drive),
+//                        arrayOf(WidgetTypes.WidgetType.Switch),
+//                        false
+//                    )
+//                ) { selectedData: Preferences.WidgetData? ->
+//                    if (selectedData == null) {
+//                        awayFromHomeDeviceToControlPreferenceOld.text = getString(R.string.no_data)
+//                    } else {
+//                        DeviceApi(YadomsApi(requireContext())).getKeyword(
+//                            selectedData.keywordId,
+//                            onOk = {
+//                                awayFromHomeDeviceToControlPreferenceOld.text = it.friendlyName
+//                            },
+//                            onError = {
+//                                awayFromHomeDeviceToControlPreferenceOld.text = selectedData.keywordId.toString()
+//                            })
+//                    }
+//                }
+//
+//            awayFromHomeDeviceToControlPreferenceOld = findPreference("device_to_control_old")!!
+//            awayFromHomeDeviceToControlPreferenceOld.setOnPreferenceClickListener {
+//                newWidgetActivityContractLauncherOld.launch(Unit)
+//                true
+//            }
+
             if (hasLocationPermissions)
                 fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
+        }
+
+        override fun onPreferenceDisplayDialog(caller: PreferenceFragmentCompat, pref: Preference): Boolean {
+            if (pref is SelectKeywordPreference) {
+                val dialogFragment = SelectKeywordPreferenceDialogFragment.newInstance(pref.key)
+                dialogFragment.setTargetFragment(caller, 0) //TODO revoir
+                dialogFragment.show(parentFragmentManager, "SelectKeywordPreference")
+                return true
+            }
+            return false
         }
 
         @SuppressLint("MissingPermission")

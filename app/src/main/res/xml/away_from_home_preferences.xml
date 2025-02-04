@@ -7,7 +7,7 @@
             app:key="away_from_home_enable"
             app:title="@string/away_from_home_enable" />
 
-        <PreferenceCategory app:title="@string/away_from_home_condition"
+        <PreferenceCategory app:title="@string/condition"
             app:key="reference_location_category">
 
             <ListPreference
@@ -28,12 +28,18 @@
 
         </PreferenceCategory>
 
-        <PreferenceCategory app:title="@string/device_to_control"
+        <PreferenceCategory app:title="@string/action"
             app:key="device_to_control_category">
 
-            <EditTextPreference
-                app:key="device_to_control"
-                app:title="@string/device_to_control" />
+            <!-- TODO virer-->
+<!--            <EditTextPreference-->
+<!--                app:key="device_to_control_old"-->
+<!--                app:title="EditText Device to control" />-->
+
+            <com.yadoms.myyadoms.preferences.SelectKeywordPreference
+                app:key="away_from_home_device_to_control"
+                app:title="@string/device_to_control"
+                app:useSimpleSummaryProvider="true"/>
 
         </PreferenceCategory>
 

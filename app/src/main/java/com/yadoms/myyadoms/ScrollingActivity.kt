@@ -1,8 +1,6 @@
 package com.yadoms.myyadoms
 
-import com.yadoms.myyadoms.preferences.Preferences
 import android.content.Intent
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
@@ -17,13 +15,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import com.yadoms.myyadoms.about.AboutActivity
 import com.yadoms.myyadoms.databinding.ActivityScrollingBinding
-import com.yadoms.myyadoms.awayFromHome.AwayFromHomeActivity
 import com.yadoms.myyadoms.preferences.AwayFromHomeSettingsActivity
+import com.yadoms.myyadoms.preferences.Preferences
 import com.yadoms.myyadoms.preferences.SettingsActivity
 import com.yadoms.myyadoms.yadomsApi.ConfigurationApi
 import com.yadoms.myyadoms.yadomsApi.SystemApi
 import com.yadoms.myyadoms.yadomsApi.YadomsApi
-import java.util.*
+import java.util.Timer
 import kotlin.concurrent.schedule
 
 
@@ -151,11 +149,6 @@ class ScrollingActivity : AppCompatActivity() {
         return when (item.itemId) {
             R.id.action_settings -> {
                 startActivity(Intent(this@ScrollingActivity, SettingsActivity::class.java))
-                true
-            }
-
-            R.id.away_from_home -> {
-                startActivity(Intent(this@ScrollingActivity, AwayFromHomeActivity::class.java))
                 true
             }
 

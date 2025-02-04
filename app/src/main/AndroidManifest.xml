@@ -17,7 +17,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MyYadoms"
         android:usesCleartextTraffic="true">
-        <activity android:name=".awayFromHome.AwayFromHomeActivity" />
         <activity
             android:name=".preferences.SettingsActivity"
             android:label="@string/action_settings" />

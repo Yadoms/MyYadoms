@@ -8,11 +8,6 @@
         android:title="@string/action_settings"
         app:showAsAction="never" />
     <item
-        android:id="@+id/away_from_home"
-        android:orderInCategory="100"
-        android:title="@string/away_from_home_action"
-        app:showAsAction="never" />
-    <item
         android:id="@+id/action_away_from_home_settings"
         android:orderInCategory="100"
         android:title="@string/away_from_home_action"
