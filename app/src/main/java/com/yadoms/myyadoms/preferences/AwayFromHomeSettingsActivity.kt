@@ -75,7 +75,6 @@ class AwayFromHomeSettingsActivity : AppCompatActivity() {
         private lateinit var awayFromHomeEnablePreference: SwitchPreference
         private lateinit var awayFromHomePreferenceCategories: MutableList<Preference>
         private lateinit var awayFromHomeReferenceLocationPreference: ListPreference
-//        private lateinit var awayFromHomeDeviceToControlPreferenceOld: EditTextPreference //TODO virer
 
         override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
             setPreferencesFromResource(R.xml.away_from_home_preferences, rootKey)
@@ -113,35 +112,6 @@ class AwayFromHomeSettingsActivity : AppCompatActivity() {
                 if (newValue == "YadomsServerPosition") getYadomsServerPosition() else getCurrentPosition()
                 true
             }
-
-            //TODO virer
-//            val newWidgetActivityContractLauncherOld =
-//                registerForActivityResult(
-//                    NewWidgetActivityContract(
-//                        getString(R.string.select_keyword_to_drive),
-//                        arrayOf(WidgetTypes.WidgetType.Switch),
-//                        false
-//                    )
-//                ) { selectedData: Preferences.WidgetData? ->
-//                    if (selectedData == null) {
-//                        awayFromHomeDeviceToControlPreferenceOld.text = getString(R.string.no_data)
-//                    } else {
-//                        DeviceApi(YadomsApi(requireContext())).getKeyword(
-//                            selectedData.keywordId,
-//                            onOk = {
-//                                awayFromHomeDeviceToControlPreferenceOld.text = it.friendlyName
-//                            },
-//                            onError = {
-//                                awayFromHomeDeviceToControlPreferenceOld.text = selectedData.keywordId.toString()
-//                            })
-//                    }
-//                }
-//
-//            awayFromHomeDeviceToControlPreferenceOld = findPreference("device_to_control_old")!!
-//            awayFromHomeDeviceToControlPreferenceOld.setOnPreferenceClickListener {
-//                newWidgetActivityContractLauncherOld.launch(Unit)
-//                true
-//            }
 
             if (hasLocationPermissions)
                 fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
