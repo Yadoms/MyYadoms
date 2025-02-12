@@ -11,7 +11,7 @@
             app:key="reference_location_category">
 
             <ListPreference
-                app:key="reference_location"
+                app:key="reference_location_choice"
                 app:entries="@array/reference_location"
                 app:entryValues="@array/reference_location_values"
                 app:defaultValue="YadomsServerLocation"

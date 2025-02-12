@@ -113,25 +113,23 @@ class ScrollingActivity : AppCompatActivity() {
                 ).show()
             })
 
-        // Update server location
-        ConfigurationApi(yApi).getYadomsServerLocation(
-            onOk = { location ->
-                val preferences = PreferenceManager.getDefaultSharedPreferences(application)
-                with(preferences.edit()) {
-                    putString("reference_location", location.toString())
-                    apply()
+        // Update server location if needed
+        if (PreferenceManager.getDefaultSharedPreferences(application).getString("reference_location_choice", "")
+            == "YadomsServerLocation"
+        ) {
+            ConfigurationApi(yApi).getYadomsServerLocation(
+                onOk = { location ->
+                    val preferences = PreferenceManager.getDefaultSharedPreferences(application)
+                    with(preferences.edit()) {
+                        putString("reference_location", location.toString())
+                        apply()
+                    }
+                },
+                onError = {
+                    Log.e(_logTag, "Unable to retrieve server location")
                 }
-            },
-            onError = {
-                Log.e(_logTag, "Unable to retrieve server location")
-                Snackbar.make(
-                    findViewById(android.R.id.content),
-                    getString(R.string.unable_to_retrieve_location),
-                    Snackbar.LENGTH_LONG
-                ).show()
-            }
-        )
-
+            )
+        }
         super.onResume()
     }
 

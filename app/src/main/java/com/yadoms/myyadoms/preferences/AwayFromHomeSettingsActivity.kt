@@ -86,7 +86,7 @@ class AwayFromHomeSettingsActivity : AppCompatActivity() {
                 findPreference("reference_location_category")!!,
                 findPreference("device_to_control_category")!!
             )
-            awayFromHomeReferenceLocationPreference = findPreference("reference_location")!!
+            awayFromHomeReferenceLocationPreference = findPreference("reference_location_choice")!!
 
             val hasLocationPermissions = checkLocationPermissions()
 
