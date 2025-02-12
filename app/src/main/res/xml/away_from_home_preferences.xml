@@ -14,7 +14,7 @@
                 app:key="reference_location"
                 app:entries="@array/reference_location"
                 app:entryValues="@array/reference_location_values"
-                app:defaultValue="YadomsServerPosition"
+                app:defaultValue="YadomsServerLocation"
                 app:useSimpleSummaryProvider="false"
                 app:title="@string/reference_location" />
 

@@ -109,7 +109,7 @@ class AwayFromHomeSettingsActivity : AppCompatActivity() {
             }
 
             awayFromHomeReferenceLocationPreference.setOnPreferenceChangeListener { _, newValue ->
-                if (newValue == "YadomsServerPosition") getYadomsServerPosition() else getCurrentPosition()
+                if (newValue == "YadomsServerLocation") getYadomsServerLocation() else getCurrentLocation()
                 true
             }
 
@@ -128,17 +128,18 @@ class AwayFromHomeSettingsActivity : AppCompatActivity() {
         }
 
         @SuppressLint("MissingPermission")
-        private fun getCurrentPosition() {
+        private fun getCurrentLocation() {
             fusedLocationClient.lastLocation
                 .addOnSuccessListener(::updateLocation)
         }
 
         private fun updateLocation(location: Location?) {
+            with(preferences.edit()) {
+                putString("reference_location", location?.toString() ?: "")
+                apply()
+            }
+
             if (location != null) {
-                with(preferences.edit()) {
-                    putString("reference_location", location.toString())
-                    apply()
-                }
                 val converter = LocationConverter
                 awayFromHomeReferenceLocationPreference.summary =
                     getString(
@@ -147,6 +148,7 @@ class AwayFromHomeSettingsActivity : AppCompatActivity() {
                         converter.longitudeAsDMS(location.longitude, 10)
                     )
             } else {
+                awayFromHomeReferenceLocationPreference.summary = ""
                 Snackbar.make(
                     listView,
                     requireContext().getString(R.string.unable_to_retrieve_location),
@@ -155,9 +157,9 @@ class AwayFromHomeSettingsActivity : AppCompatActivity() {
             }
         }
 
-        private fun getYadomsServerPosition() {
+        private fun getYadomsServerLocation() {
             val yApi = YadomsApi(requireContext())
-            ConfigurationApi(yApi).getYadomsServerPosition(
+            ConfigurationApi(yApi).getYadomsServerLocation(
                 onOk = ::updateLocation,
                 onError = { updateLocation(null) }
             )

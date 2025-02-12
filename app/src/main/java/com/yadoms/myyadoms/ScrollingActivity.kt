@@ -114,7 +114,7 @@ class ScrollingActivity : AppCompatActivity() {
             })
 
         // Update server location
-        ConfigurationApi(yApi).getYadomsServerPosition(
+        ConfigurationApi(yApi).getYadomsServerLocation(
             onOk = { location ->
                 val preferences = PreferenceManager.getDefaultSharedPreferences(application)
                 with(preferences.edit()) {
