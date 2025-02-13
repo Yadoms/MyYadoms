@@ -18,6 +18,7 @@ import androidx.preference.SwitchPreference
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.material.snackbar.Snackbar
+import com.yadoms.myyadoms.GeofencingHelper
 import com.yadoms.myyadoms.R
 import com.yadoms.myyadoms.SelectKeywordPreferenceDialogFragment
 import com.yadoms.myyadoms.checkLocationPermissions
@@ -146,8 +147,18 @@ class AwayFromHomeSettingsActivity : AppCompatActivity() {
                         converter.latitudeAsDMS(location.latitude, 10),
                         converter.longitudeAsDMS(location.longitude, 10)
                     )
+
+                val geofencingHelper = GeofencingHelper(requireContext())
+                geofencingHelper.addGeofence(
+                    location.latitude,
+                    location.longitude
+                )
             } else {
                 awayFromHomeReferenceLocationPreference.summary = ""
+
+                val geofencingHelper = GeofencingHelper(requireContext())
+                geofencingHelper.removeGeofence()
+
                 Snackbar.make(
                     listView,
                     requireContext().getString(R.string.unable_to_retrieve_location),
@@ -168,7 +179,8 @@ class AwayFromHomeSettingsActivity : AppCompatActivity() {
             requestPermissionLauncher.launch(
                 arrayOf(
                     Manifest.permission.ACCESS_FINE_LOCATION,
-                    Manifest.permission.ACCESS_COARSE_LOCATION
+                    Manifest.permission.ACCESS_COARSE_LOCATION,
+                    Manifest.permission.ACCESS_BACKGROUND_LOCATION
                 )
             )
         }

@@ -125,6 +125,12 @@ class ScrollingActivity : AppCompatActivity() {
                         putString("reference_location", location.toString())
                         apply()
                     }
+
+                    val geofencingHelper = GeofencingHelper(this)
+                    geofencingHelper.addGeofence(
+                        location.latitude,
+                        location.longitude
+                    )
                 },
                 onError = {
                     Log.e(_logTag, "Unable to retrieve server location")
