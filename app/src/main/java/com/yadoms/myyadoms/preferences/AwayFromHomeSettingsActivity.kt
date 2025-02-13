@@ -4,13 +4,11 @@ import LocationConverter
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.SharedPreferences
-import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.commit
 import androidx.preference.ListPreference
 import androidx.preference.Preference
@@ -22,6 +20,7 @@ import com.google.android.gms.location.LocationServices
 import com.google.android.material.snackbar.Snackbar
 import com.yadoms.myyadoms.R
 import com.yadoms.myyadoms.SelectKeywordPreferenceDialogFragment
+import com.yadoms.myyadoms.checkLocationPermissions
 import com.yadoms.myyadoms.yadomsApi.ConfigurationApi
 import com.yadoms.myyadoms.yadomsApi.YadomsApi
 
@@ -88,7 +87,7 @@ class AwayFromHomeSettingsActivity : AppCompatActivity() {
             )
             awayFromHomeReferenceLocationPreference = findPreference("reference_location_choice")!!
 
-            val hasLocationPermissions = checkLocationPermissions()
+            val hasLocationPermissions = checkLocationPermissions(requireContext())
 
             if (!hasLocationPermissions && preferences.getBoolean(awayFromHomeEnablePreferenceKey, false))
                 awayFromHomeEnablePreference.isChecked = false
@@ -98,7 +97,7 @@ class AwayFromHomeSettingsActivity : AppCompatActivity() {
             }
 
             awayFromHomeEnablePreference.setOnPreferenceChangeListener { _, newValue ->
-                if (newValue as Boolean && !checkLocationPermissions())
+                if (newValue as Boolean && !checkLocationPermissions(requireContext()))
                     requestLocationPermissions()
                 else
                     awayFromHomePreferenceCategories.forEach {
@@ -163,14 +162,6 @@ class AwayFromHomeSettingsActivity : AppCompatActivity() {
                 onOk = ::updateLocation,
                 onError = { updateLocation(null) }
             )
-        }
-
-        private fun checkLocationPermissions(): Boolean {
-            return (ContextCompat.checkSelfPermission(
-                requireContext(), Manifest.permission.ACCESS_FINE_LOCATION
-            ) == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(
-                requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION
-            ) == PackageManager.PERMISSION_GRANTED)
         }
 
         private fun requestLocationPermissions() {

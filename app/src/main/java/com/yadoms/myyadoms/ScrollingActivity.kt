@@ -115,7 +115,8 @@ class ScrollingActivity : AppCompatActivity() {
 
         // Update server location if needed
         val preferences = PreferenceManager.getDefaultSharedPreferences(application)
-        if (preferences.getBoolean("away_from_home_enable", false) &&
+        if (checkLocationPermissions(this) &&
+            preferences.getBoolean("away_from_home_enable", false) &&
             preferences.getString("reference_location_choice", "") == "YadomsServerLocation"
         ) {
             ConfigurationApi(yApi).getYadomsServerLocation(
@@ -130,6 +131,7 @@ class ScrollingActivity : AppCompatActivity() {
                 }
             )
         }
+
         super.onResume()
     }
 
