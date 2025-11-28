@@ -66,6 +66,8 @@ class SelectDeviceFragment : Fragment() {
                         devices.forEach { preselectedDevices.add(it) }
                         keywords.forEach { preselectedKeywords.add(it) }
 
+                        preselectedDevices.sortBy { it.friendlyName.lowercase() }
+
                         adapter?.notifyDataSetChanged()
                         newWidgetActivity.stopWait()
                     }
@@ -85,6 +87,7 @@ class SelectDeviceFragment : Fragment() {
                             if (kwFilter.expectedKeywordAccess.size != 1) DeviceApi.KeywordAccess.NoAccess else kwFilter.expectedKeywordAccess[0],
                             onOk = { devices ->
                                 devices.forEach { device -> preselectedDevices.add(device) }
+                                preselectedDevices.sortBy { it.friendlyName.lowercase() }
                                 adapter?.notifyDataSetChanged()
                                 newWidgetActivity.stopWait()
                             }

@@ -73,6 +73,8 @@ class SelectKeywordFragment : Fragment() {
                                     }
                                     newWidgetActivity.preselectedKeywords.add(keyword)
                                 }
+                                newWidgetActivity.preselectedKeywords.sortBy { it.friendlyName.lowercase() }
+
                                 adapter?.notifyDataSetChanged()
                                 newWidgetActivity.stopWait()
                             }
