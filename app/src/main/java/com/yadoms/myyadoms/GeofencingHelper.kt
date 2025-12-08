@@ -26,11 +26,11 @@ class GeofencingHelper(private val context: Context) {
             .setRequestId(GEOFENCE_ID)
             .setCircularRegion(latitude, longitude, GEOFENCE_RADIUS_IN_METERS)
             .setExpirationDuration(Geofence.NEVER_EXPIRE)
-            .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER or Geofence.GEOFENCE_TRANSITION_EXIT)
+            .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER or Geofence.GEOFENCE_TRANSITION_EXIT or Geofence.GEOFENCE_TRANSITION_DWELL)
             .build()
 
         val geofencingRequest = GeofencingRequest.Builder()
-            .setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_ENTER)
+            .setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_ENTER or GeofencingRequest.INITIAL_TRIGGER_EXIT or GeofencingRequest.INITIAL_TRIGGER_DWELL)
             .addGeofence(geofence)
             .build()
 
@@ -62,7 +62,7 @@ class GeofencingHelper(private val context: Context) {
         }
         return PendingIntent.getBroadcast(
             context,
-            0,
+            168,
             intent,
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
