@@ -24,6 +24,7 @@ import com.yadoms.myyadoms.SelectKeywordPreferenceDialogFragment
 import com.yadoms.myyadoms.checkLocationPermissions
 import com.yadoms.myyadoms.yadomsApi.ConfigurationApi
 import com.yadoms.myyadoms.yadomsApi.YadomsApi
+import androidx.core.content.edit
 
 class AwayFromHomeSettingsActivity : AppCompatActivity() {
 
@@ -134,9 +135,8 @@ class AwayFromHomeSettingsActivity : AppCompatActivity() {
         }
 
         private fun updateLocation(location: Location?) {
-            with(preferences.edit()) {
+            preferences.edit {
                 putString("reference_location", location?.toString() ?: "")
-                apply()
             }
 
             if (location != null) {
