@@ -1,10 +1,10 @@
 package com.yadoms.myyadoms.widgets
 
 import android.os.Parcelable
-import kotlinx.parcelize.Parcelize
 import android.view.View
 import com.yadoms.myyadoms.preferences.Preferences
 import com.yadoms.myyadoms.yadomsApi.DeviceApi
+import kotlinx.parcelize.Parcelize
 
 
 object WidgetTypes {

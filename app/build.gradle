@@ -1,16 +1,18 @@
 plugins {
     id 'com.android.application'
-    id 'kotlin-android'
-    id 'kotlin-parcelize'
+    id 'org.jetbrains.kotlin.android'
+    id 'org.jetbrains.kotlin.plugin.parcelize'
+    id 'androidx.navigation.safeargs.kotlin'
 }
 
 android {
-    compileSdk 35
+    namespace 'com.yadoms.myyadoms'
+    compileSdk 36
 
     defaultConfig {
         applicationId "com.yadoms.myyadoms"
-        minSdkVersion 26
-        targetSdk 35
+        minSdk 26
+        targetSdk 36
         versionCode 3
         versionName "1.2"
 
@@ -34,21 +36,18 @@ android {
         viewBinding true
         buildConfig true
     }
-    namespace 'com.yadoms.myyadoms'
-    buildToolsVersion '36.0.0 rc3'
 }
 
 dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     implementation 'androidx.core:core-ktx:1.15.0'
     implementation 'androidx.appcompat:appcompat:1.7.0'
     implementation 'com.google.android.material:material:1.12.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'androidx.recyclerview:recyclerview:1.4.0'
+    implementation 'androidx.recyclerview:recyclerview:1.3.2'
     implementation 'androidx.constraintlayout:constraintlayout:2.2.0'
     implementation 'androidx.preference:preference-ktx:1.2.1'
     implementation 'com.takisoft.preferencex:preferencex:1.1.0'
-    implementation 'androidx.activity:activity-ktx:1.10.0'
+    implementation 'androidx.activity:activity-ktx:1.9.3'
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.2.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.6.1'
@@ -61,9 +60,7 @@ dependencies {
 
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
 
-    implementation 'com.squareup.moshi:moshi-kotlin:1.15.2'
+    implementation 'com.squareup.moshi:moshi-kotlin:1.15.0'
 
     implementation 'com.android.volley:volley:1.2.1'
-
-    apply plugin: "androidx.navigation.safeargs.kotlin"
 }
