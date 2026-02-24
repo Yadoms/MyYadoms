@@ -1,4 +1,5 @@
-<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
     <PreferenceCategory app:title="@string/preferences_away_from_home_function">
 
@@ -7,34 +8,37 @@
             app:key="away_from_home_enable"
             app:title="@string/away_from_home_enable" />
 
-        <PreferenceCategory app:title="@string/condition"
-            app:key="reference_location_category">
+        <PreferenceCategory
+            app:key="reference_location_category"
+            app:title="@string/condition">
 
             <ListPreference
-                app:key="reference_location_choice"
+                app:defaultValue="YadomsServerLocation"
                 app:entries="@array/reference_location"
                 app:entryValues="@array/reference_location_values"
-                app:defaultValue="YadomsServerLocation"
-                app:useSimpleSummaryProvider="false"
-                app:title="@string/reference_location" />
+                app:key="reference_location_choice"
+                app:title="@string/reference_location"
+                app:useSimpleSummaryProvider="false" />
 
-            <ListPreference
-                app:key="reference_direction"
-                app:entries="@array/entering_or_leaving"
-                app:entryValues="@array/entering_or_leaving_values"
-                app:defaultValue="leaving"
-                app:useSimpleSummaryProvider="true"
-                app:title="@string/location_direction_title" />
-
+            <SeekBarPreference
+                app:key="reference_location_distance"
+                app:title="@string/distance"
+                app:summary="@string/distance_help"
+                app:defaultValue="150"
+                app:min="50"
+                android:max="500"
+                app:showSeekBarValue="true" />
         </PreferenceCategory>
 
-        <PreferenceCategory app:title="@string/action"
-            app:key="device_to_control_category">
+        <PreferenceCategory
+            app:key="device_to_control_category"
+            app:title="@string/action">
 
             <com.yadoms.myyadoms.preferences.SelectKeywordPreference
                 app:key="away_from_home_device_to_control"
                 app:title="@string/device_to_control"
-                app:useSimpleSummaryProvider="true"/>
+                app:summary="@string/device_to_control_help"
+                app:useSimpleSummaryProvider="true" />
 
         </PreferenceCategory>
 

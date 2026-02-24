@@ -2,6 +2,7 @@ package com.yadoms.myyadoms.preferences
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.location.Location
 import androidx.preference.PreferenceManager
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
@@ -34,6 +35,24 @@ class Preferences(private val context: Context) {
             sharedPreference.getBoolean("server_use_https", false),
             (sharedPreference.getString("server_https_port", "443") ?: "443").toInt(),
             sharedPreference.getBoolean("ignore_https_certificate_error", false)
+        )
+
+    data class AwayFromHome(
+        val enable: Boolean,
+        val referenceLocation: Location,
+        val referenceLocationDistance: Int,
+        val device: Int
+    )
+
+    val awayFromHome: AwayFromHome
+        get() = AwayFromHome(
+            sharedPreference.getBoolean("away_from_home_enable", false),
+            Location("").apply {
+                latitude = sharedPreference.getFloat("reference_location_latitude", 0.0f).toDouble()
+                longitude = sharedPreference.getFloat("reference_location_longitude", 0.0f).toDouble()
+            },
+            sharedPreference.getInt("reference_location_distance", 150),
+            sharedPreference.getInt("away_from_home_device_to_control", -1)
         )
 
     data class Display(

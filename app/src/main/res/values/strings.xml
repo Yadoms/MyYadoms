@@ -61,7 +61,8 @@
     <string name="reference_location">Reference location</string>
     <string name="undefined_location">Undefined (click to select current location)</string>
     <string name="defined_location">Lat : %1s - Long : %2s</string>
-    <string name="location_direction_title">Direction</string>
+    <string name="distance">Distance</string>
+    <string name="distance_help">The action will be triggered at this distance from the reference position.</string>
     <string name="device_to_control">Device to control</string>
     <string name="undefined_device">Undefined device</string>
     <string name="away_from_home_location_explanations">Define here the location condition firing the event</string>
@@ -75,4 +76,10 @@
     <string name="select">Select</string>
     <string name="cancel">Cancel</string>
     <string name="search_device">Search device</string>
+    <string name="away_from_home">Away from home</string>
+    <string name="away_from_home_state_at_home">At home. Configured action sent to Yadoms</string>
+    <string name="away_from_home_state_near">Near at home…</string>
+    <string name="away_from_home_state_far">Away From Home function is enable</string>
+    <string name="away_from_home_no_location">Location is not available</string>
+    <string name="device_to_control_help">The equipment to be activated when you approach the reference location, and deactivated when you move away from it.</string>
 </resources>

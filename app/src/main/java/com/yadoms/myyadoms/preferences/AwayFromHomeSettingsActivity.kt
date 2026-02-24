@@ -3,29 +3,32 @@ package com.yadoms.myyadoms.preferences
 import LocationConverter
 import android.Manifest
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.content.SharedPreferences
 import android.location.Location
+import android.location.LocationManager
+import android.os.Build
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import androidx.core.content.edit
 import androidx.fragment.app.commit
 import androidx.preference.ListPreference
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.PreferenceManager
 import androidx.preference.SwitchPreference
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationServices
 import com.google.android.material.snackbar.Snackbar
-import com.yadoms.myyadoms.GeofencingHelper
 import com.yadoms.myyadoms.R
 import com.yadoms.myyadoms.SelectKeywordPreferenceDialogFragment
 import com.yadoms.myyadoms.checkLocationPermissions
+import com.yadoms.myyadoms.location.LocationTrackingService
 import com.yadoms.myyadoms.yadomsApi.ConfigurationApi
 import com.yadoms.myyadoms.yadomsApi.YadomsApi
 
-class AwayFromHomeSettingsActivity : AppCompatActivity() {
+class AwayFromHomeSettingsActivity : AppCompatActivity() { //TODO renommer la fonction en "AtHome" ?
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -59,17 +62,22 @@ class AwayFromHomeSettingsActivity : AppCompatActivity() {
     }
 
     class AwayFromHomeSettingsFragment : PreferenceFragmentCompat(), PreferenceFragmentCompat.OnPreferenceDisplayDialogCallback {
-        private lateinit var fusedLocationClient: FusedLocationProviderClient
         private val requestPermissionLauncher = registerForActivityResult(
             ActivityResultContracts.RequestMultiplePermissions()
         ) { permissions ->
             awayFromHomeEnablePreference.isChecked =
                 permissions.getOrDefault(Manifest.permission.ACCESS_FINE_LOCATION, false)
-                        || permissions.getOrDefault(Manifest.permission.ACCESS_COARSE_LOCATION, false)
+                        && permissions.getOrDefault(Manifest.permission.ACCESS_COARSE_LOCATION, false)
+                        && (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q || permissions.getOrDefault(
+                    Manifest.permission.ACCESS_BACKGROUND_LOCATION,
+                    false
+                ))
 
             awayFromHomePreferenceCategories.forEach {
                 it.isEnabled = awayFromHomeEnablePreference.isChecked
             }
+
+            startStopLocationTrackingService(awayFromHomeEnablePreference.isChecked)
         }
         private lateinit var preferences: SharedPreferences
         private lateinit var awayFromHomeEnablePreference: SwitchPreference
@@ -78,6 +86,8 @@ class AwayFromHomeSettingsActivity : AppCompatActivity() {
 
         override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
             setPreferencesFromResource(R.xml.away_from_home_preferences, rootKey)
+
+            //TODO le champ Direction est vraiment utile ?
 
             preferences = PreferenceManager.getDefaultSharedPreferences(requireContext())
             val awayFromHomeEnablePreferenceKey = "away_from_home_enable"
@@ -97,14 +107,17 @@ class AwayFromHomeSettingsActivity : AppCompatActivity() {
                 it.isEnabled = awayFromHomeEnablePreference.isChecked
             }
 
+            updateReferenceLocationSummary()
+
             awayFromHomeEnablePreference.setOnPreferenceChangeListener { _, newValue ->
-                if (newValue as Boolean && !checkLocationPermissions(requireContext()))
+                if (newValue as Boolean && !checkLocationPermissions(requireContext())) {
                     requestLocationPermissions()
-                else
+                } else {
                     awayFromHomePreferenceCategories.forEach {
                         it.isEnabled = newValue
                     }
-
+                    startStopLocationTrackingService(newValue)
+                }
                 true
             }
 
@@ -112,9 +125,6 @@ class AwayFromHomeSettingsActivity : AppCompatActivity() {
                 if (newValue == "YadomsServerLocation") getYadomsServerLocation() else getCurrentLocation()
                 true
             }
-
-            if (hasLocationPermissions)
-                fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
         }
 
         override fun onPreferenceDisplayDialog(caller: PreferenceFragmentCompat, pref: Preference): Boolean {
@@ -127,37 +137,28 @@ class AwayFromHomeSettingsActivity : AppCompatActivity() {
             return false
         }
 
-        @SuppressLint("MissingPermission")
-        private fun getCurrentLocation() {
-            fusedLocationClient.lastLocation
-                .addOnSuccessListener(::updateLocation)
-        }
+        private fun setReferenceLocation(location: Location?) {
+            if (location != null)
+                preferences.edit {
+                    putFloat("reference_location_latitude", location.latitude.toFloat())
+                    putFloat("reference_location_longitude", location.longitude.toFloat())
+                }
 
-        private fun updateLocation(location: Location?) {
-            with(preferences.edit()) {
-                putString("reference_location", location?.toString() ?: "")
-                apply()
-            }
+            updateReferenceLocationSummary()
+
+            startStopLocationTrackingService(awayFromHomeEnablePreference.isChecked)
 
             if (location != null) {
-                val converter = LocationConverter
-                awayFromHomeReferenceLocationPreference.summary =
-                    getString(
-                        R.string.defined_location,
-                        converter.latitudeAsDMS(location.latitude, 10),
-                        converter.longitudeAsDMS(location.longitude, 10)
-                    )
-
-                val geofencingHelper = GeofencingHelper(requireContext())
-                geofencingHelper.addGeofence(
-                    location.latitude,
-                    location.longitude
-                )
+                //TODO le onResumde l'activité principale ne suffit pas ?
+//                val geofencingHelper = GeofencingHelper(requireContext())
+//                geofencingHelper.addGeofence(
+//                    location.latitude,
+//                    location.longitude
+//                )
             } else {
-                awayFromHomeReferenceLocationPreference.summary = ""
-
-                val geofencingHelper = GeofencingHelper(requireContext())
-                geofencingHelper.removeGeofence()
+                //TODO le onResumde l'activité principale ne suffit pas ?
+//                val geofencingHelper = GeofencingHelper(requireContext())
+//                geofencingHelper.removeGeofence()
 
                 Snackbar.make(
                     listView,
@@ -167,22 +168,91 @@ class AwayFromHomeSettingsActivity : AppCompatActivity() {
             }
         }
 
+        private fun updateReferenceLocationSummary() {
+            val referenceLocation = Location("")
+            referenceLocation.latitude = preferences.getFloat("reference_location_latitude", 0.0f).toDouble()
+            referenceLocation.longitude = preferences.getFloat("reference_location_longitude", 0.0f).toDouble()
+
+            if (if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    referenceLocation.isComplete
+                } else {
+                    referenceLocation.latitude != 0.0 && referenceLocation.longitude != 0.0
+                }
+            ) {
+                val converter = LocationConverter
+                awayFromHomeReferenceLocationPreference.summary =
+                    getString(
+                        R.string.defined_location,
+                        converter.latitudeAsDMS(referenceLocation.latitude, 10),
+                        converter.longitudeAsDMS(referenceLocation.longitude, 10)
+                    )
+            } else {
+                awayFromHomeReferenceLocationPreference.summary = ""
+            }
+        }
+
         private fun getYadomsServerLocation() {
             val yApi = YadomsApi(requireContext())
             ConfigurationApi(yApi).getYadomsServerLocation(
-                onOk = ::updateLocation,
-                onError = { updateLocation(null) }
+                onOk = ::setReferenceLocation,
+                onError = { setReferenceLocation(null) }
             )
         }
 
+        @SuppressLint("MissingPermission")
+        private fun getCurrentLocation() {
+            val locationManager = context?.getSystemService(LOCATION_SERVICE) as LocationManager
+
+            val providers = locationManager.getProviders(true)
+
+            // Manage providers preferences : Network ==> GPS ==> others
+            var location: Location? = null
+
+            if (providers.contains(LocationManager.NETWORK_PROVIDER))
+                location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
+
+            if (location == null && providers.contains(LocationManager.GPS_PROVIDER))
+                location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
+
+            if (location == null) {
+                for (provider in providers) {
+                    location = locationManager.getLastKnownLocation(provider)
+                    if (location != null)
+                        break
+                }
+            }
+
+            setReferenceLocation(location)
+        }
+
         private fun requestLocationPermissions() {
-            requestPermissionLauncher.launch(
-                arrayOf(
-                    Manifest.permission.ACCESS_FINE_LOCATION,
-                    Manifest.permission.ACCESS_COARSE_LOCATION,
-                    Manifest.permission.ACCESS_BACKGROUND_LOCATION
-                )
+            var permissions = arrayOf(
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_COARSE_LOCATION
             )
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
+                permissions += Manifest.permission.ACCESS_BACKGROUND_LOCATION
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P)
+                permissions += Manifest.permission.FOREGROUND_SERVICE
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
+                permissions += Manifest.permission.FOREGROUND_SERVICE_LOCATION
+
+            requestPermissionLauncher.launch(permissions)
+        }
+
+        private fun startStopLocationTrackingService(awayFromHomeEnablePreferenceIsChecked: Boolean) {
+
+            if (awayFromHomeEnablePreferenceIsChecked) {
+                ContextCompat.startForegroundService(
+                    requireContext(),
+                    Intent(context, LocationTrackingService::class.java)
+                )
+            } else {
+                val intent = Intent(context, LocationTrackingService::class.java).apply {
+                    action = LocationTrackingService.ACTION_STOP
+                }
+                requireContext().startService(intent)
+            }
         }
     }
 }

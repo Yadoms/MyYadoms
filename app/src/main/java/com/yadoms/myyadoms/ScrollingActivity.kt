@@ -1,6 +1,8 @@
 package com.yadoms.myyadoms
 
+import android.annotation.SuppressLint
 import android.content.Intent
+import android.location.Location
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
@@ -8,6 +10,7 @@ import android.view.MenuItem
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -15,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import com.yadoms.myyadoms.about.AboutActivity
 import com.yadoms.myyadoms.databinding.ActivityScrollingBinding
+import com.yadoms.myyadoms.location.LocationTrackingService
 import com.yadoms.myyadoms.preferences.AwayFromHomeSettingsActivity
 import com.yadoms.myyadoms.preferences.Preferences
 import com.yadoms.myyadoms.preferences.SettingsActivity
@@ -93,6 +97,12 @@ class ScrollingActivity : AppCompatActivity() {
             runOnUiThread { widgetsListViewAdapter.refreshAllWidgets() }
         }
 
+        if (Preferences(this).awayFromHome.enable) {
+            ContextCompat.startForegroundService(
+                this,
+                Intent(this, LocationTrackingService::class.java)
+            )
+        }
     }
 
     override fun onResume() {
@@ -113,6 +123,8 @@ class ScrollingActivity : AppCompatActivity() {
                 ).show()
             })
 
+        forceSetGeofence()
+
         // Update server location if needed
         val preferences = PreferenceManager.getDefaultSharedPreferences(application)
         if (checkLocationPermissions(this) &&
@@ -122,15 +134,16 @@ class ScrollingActivity : AppCompatActivity() {
             ConfigurationApi(yApi).getYadomsServerLocation(
                 onOk = { location ->
                     with(preferences.edit()) {
-                        putString("reference_location", location.toString())
+                        putFloat("reference_location_latitude", location.latitude.toFloat())
+                        putFloat("reference_location_longitude", location.longitude.toFloat())
                         apply()
                     }
 
-                    val geofencingHelper = GeofencingHelper(this)
-                    geofencingHelper.addGeofence(
-                        location.latitude,
-                        location.longitude
-                    )
+//                    val geofencingHelper = GeofencingHelper(this)
+//                    geofencingHelper.setGeofence(
+//                        location.latitude,
+//                        location.longitude
+//                    )
                 },
                 onError = {
                     Log.e(_logTag, "Unable to retrieve server location")
@@ -139,6 +152,47 @@ class ScrollingActivity : AppCompatActivity() {
         }
 
         super.onResume()
+    }
+
+    @SuppressLint("MissingPermission")
+    private fun forceSetGeofence() {
+        //TODO("Pour test, on ne devrait pas avoir besoin de set la geofence à chaque resume")
+
+        if (!checkLocationPermissions(this))
+            return
+
+        val preferences = PreferenceManager.getDefaultSharedPreferences(application)
+
+        val referenceLocation = Location("")
+        referenceLocation.latitude = preferences.getFloat("reference_location_latitude", 0.0f).toDouble()
+        referenceLocation.longitude = preferences.getFloat("reference_location_longitude", 0.0f).toDouble()
+
+//        val geofencingHelper = GeofencingHelper(this)
+//        geofencingHelper.setGeofence(
+//            referenceLocation.latitude,
+//            referenceLocation.longitude
+//        )
+
+
+        // TODO à virer (pour test : utiliser les LocationServices permet de déclencher le receiver
+//        val fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+//
+//        val locationRequest: LocationRequest = LocationRequest.create()
+//            .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
+//            .setInterval(10000) // 10 secondes
+//            .setFastestInterval(5000)
+//
+//        locationCallback = object : LocationCallback() {
+//            override fun onLocationResult(p0: LocationResult) {
+//                Log.d(_logTag, "Location : ${p0.lastLocation?.latitude}, ${p0.lastLocation?.longitude}")
+//            }
+//        }
+//        fusedLocationClient.requestLocationUpdates(
+//            locationRequest,
+//            locationCallback,
+//            Looper.getMainLooper()
+//        )
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

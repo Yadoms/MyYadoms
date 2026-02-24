@@ -1,13 +1,4 @@
 <resources>
-    <string-array name="entering_or_leaving">
-        <item>Entering</item>
-        <item>Leaving</item>
-    </string-array>
-    <string-array name="entering_or_leaving_values">
-        <item>Entering</item>
-        <item>Leaving</item>
-    </string-array>
-
     <string-array name="reference_location">
         <item>Yadoms server location</item>
         <item>Current phone location</item>

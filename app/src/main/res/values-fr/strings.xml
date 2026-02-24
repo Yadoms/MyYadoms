@@ -58,7 +58,8 @@
     <string name="reference_location">Lieu de référence</string>
     <string name="undefined_location">Non défini (cliquer pour sélectionner la position courante)</string>
     <string name="defined_location">Lat : %1s - Long : %2s</string>
-    <string name="location_direction_title">Direction</string>
+    <string name="distance">Distance</string>
+    <string name="distance_help">L\'action sera déclenchée à cette distance de la position de référence</string>
     <string name="device_to_control">Equipement à contrôler</string>
     <string name="undefined_device">Equipement non défini</string>
     <string name="away_from_home_location_explanations">Définir la condition sur la position déclenchant l\'action</string>
@@ -72,4 +73,10 @@
     <string name="select">Sélectionner</string>
     <string name="cancel">Annuler</string>
     <string name="search_device">Rechercher un équipement</string>
+    <string name="away_from_home">Hors les murs</string>
+    <string name="away_from_home_state_at_home">Vous êtes arrivé. Action configurée envoyée à Yadoms</string>
+    <string name="away_from_home_state_near">Approche…</string>
+    <string name="away_from_home_state_far">La fonction Hors Les Murs est active</string>
+    <string name="away_from_home_no_location">La localisation n\'est pas disponible</string>
+    <string name="device_to_control_help">L\'équipement à activer lorsque vous approchez de la localisation de référence, et à désactiver lorsque vous vous vous en éloignez</string>
 </resources>
