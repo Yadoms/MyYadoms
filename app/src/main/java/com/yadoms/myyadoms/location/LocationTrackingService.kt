@@ -23,9 +23,8 @@ import com.yadoms.myyadoms.yadomsApi.YadomsApi
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.time.LocalDateTime
 
-class LocationTrackingService : Service() {
+class LocationTrackingService : Service() { //TODO virer ?
     private val logTag = this.javaClass.simpleName
 
     private lateinit var locationManager: LocationManager

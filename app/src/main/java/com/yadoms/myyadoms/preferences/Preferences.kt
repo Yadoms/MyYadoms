@@ -51,7 +51,7 @@ class Preferences(private val context: Context) {
                 latitude = sharedPreference.getFloat("reference_location_latitude", 0.0f).toDouble()
                 longitude = sharedPreference.getFloat("reference_location_longitude", 0.0f).toDouble()
             },
-            sharedPreference.getInt("reference_location_distance", 150),
+            sharedPreference.getInt("reference_location_distance", 150), //TODO passer en float ?
             sharedPreference.getInt("away_from_home_device_to_control", -1)
         )
 

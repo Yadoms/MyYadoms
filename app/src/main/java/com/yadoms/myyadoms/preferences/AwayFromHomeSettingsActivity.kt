@@ -11,6 +11,7 @@ import android.os.Build
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresPermission
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.content.edit
@@ -19,12 +20,14 @@ import androidx.preference.ListPreference
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.PreferenceManager
+import androidx.preference.SeekBarPreference
 import androidx.preference.SwitchPreference
 import com.google.android.material.snackbar.Snackbar
 import com.yadoms.myyadoms.R
 import com.yadoms.myyadoms.SelectKeywordPreferenceDialogFragment
 import com.yadoms.myyadoms.checkLocationPermissions
 import com.yadoms.myyadoms.location.LocationTrackingService
+import com.yadoms.myyadoms.location.ProximityAlert
 import com.yadoms.myyadoms.yadomsApi.ConfigurationApi
 import com.yadoms.myyadoms.yadomsApi.YadomsApi
 
@@ -84,6 +87,8 @@ class AwayFromHomeSettingsActivity : AppCompatActivity() { //TODO renommer la fo
         private lateinit var awayFromHomePreferenceCategories: MutableList<Preference>
         private lateinit var awayFromHomeReferenceLocationPreference: ListPreference
 
+        private lateinit var awayFromHomeReferenceLocationDistancePreference: SeekBarPreference
+
         override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
             setPreferencesFromResource(R.xml.away_from_home_preferences, rootKey)
 
@@ -97,6 +102,7 @@ class AwayFromHomeSettingsActivity : AppCompatActivity() { //TODO renommer la fo
                 findPreference("device_to_control_category")!!
             )
             awayFromHomeReferenceLocationPreference = findPreference("reference_location_choice")!!
+            awayFromHomeReferenceLocationDistancePreference = findPreference("reference_location_distance")!!
 
             val hasLocationPermissions = checkLocationPermissions(requireContext())
 
@@ -124,6 +130,23 @@ class AwayFromHomeSettingsActivity : AppCompatActivity() { //TODO renommer la fo
             awayFromHomeReferenceLocationPreference.setOnPreferenceChangeListener { _, newValue ->
                 if (newValue == "YadomsServerLocation") getYadomsServerLocation() else getCurrentLocation()
                 true
+            }
+
+            awayFromHomeReferenceLocationDistancePreference.setOnPreferenceChangeListener { _, newValue ->
+
+                // TODO vraiment pas ouf : on force l'enregistrement en avance pour pouvoir l'utiliser
+                //  dans le démarrage du service, mais il est normalement fait après le return true de cette fonction
+                //  du coup ça fait doublon... :-/
+                preferences.edit {
+                    putInt("reference_location_distance", newValue?.toString()?.toInt()?:300)
+                }
+
+                if (awayFromHomeEnablePreference.isChecked) {
+                    startStopLocationTrackingService(false)
+                    startStopLocationTrackingService(true)
+                }
+                true
+
             }
         }
 
@@ -240,19 +263,26 @@ class AwayFromHomeSettingsActivity : AppCompatActivity() { //TODO renommer la fo
             requestPermissionLauncher.launch(permissions)
         }
 
-        private fun startStopLocationTrackingService(awayFromHomeEnablePreferenceIsChecked: Boolean) {
 
-            if (awayFromHomeEnablePreferenceIsChecked) {
-                ContextCompat.startForegroundService(
-                    requireContext(),
-                    Intent(context, LocationTrackingService::class.java)
-                )
-            } else {
-                val intent = Intent(context, LocationTrackingService::class.java).apply {
-                    action = LocationTrackingService.ACTION_STOP
-                }
-                requireContext().startService(intent)
-            }
+        @SuppressLint("MissingPermission")
+        private fun startStopLocationTrackingService(awayFromHomeEnablePreferenceIsChecked: Boolean) {
+            if (awayFromHomeEnablePreferenceIsChecked)
+                ProximityAlert.register(requireContext())
+            else
+                ProximityAlert.remove(requireContext())
+
+
+//            if (awayFromHomeEnablePreferenceIsChecked) {
+//                ContextCompat.startForegroundService(
+//                    requireContext(),
+//                    Intent(context, LocationTrackingService::class.java)
+//                )
+//            } else {
+//                val intent = Intent(context, LocationTrackingService::class.java).apply {
+//                    action = LocationTrackingService.ACTION_STOP
+//                }
+//                requireContext().startService(intent)
+//            }
         }
     }
 }

@@ -98,10 +98,11 @@ class ScrollingActivity : AppCompatActivity() {
         }
 
         if (Preferences(this).awayFromHome.enable) {
-            ContextCompat.startForegroundService(
-                this,
-                Intent(this, LocationTrackingService::class.java)
-            )
+            //TODO à faire au boot et mise à jour package
+//            ContextCompat.startForegroundService(
+//                this,
+//                Intent(this, LocationTrackingService::class.java)
+//            )
         }
     }
 
